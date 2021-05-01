@@ -131,7 +131,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ImageLine: {fileID: 1551218063471392, guid: 7efa12b7c35d1a749aaae848eba0d8e2, type: 3}
   ImageLinesJoint: {fileID: 1586272661960996, guid: 6d0cc624a21c645cc81a888903aa4d14, type: 3}
-  IBEntryView: {fileID: 6153180444533016688, guid: a1066284c11c70b47a56e10e020cc76d, type: 3}
+  CardView: {fileID: 0}
+  StudySetTileView: {fileID: 5657792996969880692, guid: 8c9947dcac5cc4c1681259592582cf7c, type: 3}
 --- !u!1 &1742042021377422
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,7 +6,7 @@ public class MenuController : MonoBehaviour
 {
     // References
     [SerializeField] private BasePanel panel_edit=null;
-    [SerializeField] private BasePanel panel_study=null;
+    [SerializeField] private BasePanel panel_studyChooseSet =null;
 
 
     // ================================================================
@@ -14,7 +14,7 @@ public class MenuController : MonoBehaviour
     // ================================================================
     void Start()
     {
-        ShowPanel(panel_study);
+        ShowPanel(panel_studyChooseSet );
     }
 
 
@@ -24,7 +24,7 @@ public class MenuController : MonoBehaviour
     public void ShowPanel(BasePanel _panel)
     {
         panel_edit.SetVisibility(false);
-        panel_study.SetVisibility(false);
+        panel_studyChooseSet.SetVisibility(false);
 
         _panel.SetVisibility(true);
     }
@@ -33,7 +33,7 @@ public class MenuController : MonoBehaviour
     //  Events
     // ================================================================
     public void OpenPanel_IBs() { ShowPanel(panel_edit); }
-    public void OpenPanel_Today() { ShowPanel(panel_study); }
+    public void OpenPanel_Today() { ShowPanel(panel_studyChooseSet); }
 
 
 
@@ -42,8 +42,7 @@ public class MenuController : MonoBehaviour
     // ================================================================
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Delete))
-        {
+        if (Input.GetKeyDown(KeyCode.Delete)) {
             GameManagers.Instance.DataManager.ClearAllSaveData();
         }
     }
