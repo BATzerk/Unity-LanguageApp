@@ -9,6 +9,7 @@ public class PanelEditSet : BasePanel
 {
     // Components
     [SerializeField] private TMP_InputField if_setName;
+    [SerializeField] public RectTransform rt_preDelete;
     [SerializeField] public RectTransform rt_termTileContent; // all the TermTiles go on here.
     private List<TermEditableTile> termTiles = new List<TermEditableTile>();
     // References
@@ -54,7 +55,7 @@ public class PanelEditSet : BasePanel
         }
 
         // Now go through the whole list and add/remove
-        float tempY = -20;
+        float tempY = 0;
         for (int i=0; i<currStudySet.allTerms.Count; i++) {
             Term term = currStudySet.allTerms[i];
             TermEditableTile tile = termTiles[i];
@@ -64,7 +65,9 @@ public class PanelEditSet : BasePanel
         }
 
         // Update the parent content RT height!
-        rt_termTileContent.sizeDelta = new Vector2(rt_termTileContent.sizeDelta.x, -tempY + 100);
+        rt_termTileContent.sizeDelta = new Vector2(rt_termTileContent.sizeDelta.x, -tempY);
+
+        HidePreDelete();
 
     }
 
@@ -85,6 +88,17 @@ public class PanelEditSet : BasePanel
         UpdateTileList();
         // Scroll down to the bottom now.
         rt_termTileContent.anchoredPosition = new Vector2(rt_termTileContent.anchoredPosition.x, rt_termTileContent.sizeDelta.y);
+    }
+    public void ShowPreDelete() {
+        rt_preDelete.gameObject.SetActive(true);
+    }
+    public void HidePreDelete() {
+        rt_preDelete.gameObject.SetActive(false);
+    }
+    public void OnClickConfirmDeleteSet() {
+        GameManagers.Instance.DataManager.library.sets.Remove(currStudySet);
+        GameManagers.Instance.DataManager.SaveStudySetLibrary();
+        SceneHelper.ReloadScene(); // TODO: Boot me back to the previous panel instead.
     }
 
 
