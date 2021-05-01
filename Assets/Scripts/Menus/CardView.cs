@@ -12,7 +12,7 @@ public class CardView : MonoBehaviour {
     [SerializeField] TextMeshProUGUI t_phonetic;
     // References
     [SerializeField] private PanelStudyFlashcards myPanel;
-    public Card MyCard { get; private set; }
+    public Term MyTerm { get; private set; }
     // Properties
     private bool isNativeSide; // if FALSE, we're showing the foreign side.
 
@@ -20,14 +20,14 @@ public class CardView : MonoBehaviour {
     // ----------------------------------------------------------------
     //  Setting Visuals
     // ----------------------------------------------------------------
-    public void SetMyCard(Card card)
+    public void SetMyTerm(Term term)
     {
-        this.MyCard = card;
+        this.MyTerm = term;
 
         // Update visuals!
-        t_english.text = card.english;
-        t_danish.text = card.danish;
-        t_phonetic.text = card.phonetic;
+        t_english.text = term.english;
+        t_danish.text = term.danish;
+        t_phonetic.text = term.phonetic;
         ShowSideNative(true);
     }
 

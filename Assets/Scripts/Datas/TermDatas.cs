@@ -23,22 +23,18 @@ public struct CustomDate
 
 
 [Serializable]
-public class Card
+public class Term
 {
-    public Guid myGuid;
     public string english;
     public string danish;
     public string phonetic;
-    public Card(Guid myGuid)
-    {
-        this.myGuid = myGuid;
+    [NonSerialized] public StudySet mySet;
+    public Term() {
         english = "";
         danish = "";
         phonetic = "";
     }
-    public Card(Guid myGuid, string english,string danish,string phonetic)
-    {
-        this.myGuid = myGuid;
+    public Term(string english,string danish,string phonetic) {
         this.english = english;
         this.danish = danish;
         this.phonetic = phonetic;
@@ -49,64 +45,81 @@ public class Card
     //public bool IsEmpty() { return String.IsNullOrWhiteSpace(belief) && String.IsNullOrWhiteSpace(debate); }
 }
 
-
+[Serializable]
+public class StudySetLibrary {
+    public List<StudySet> sets = new List<StudySet>();
+}
 [Serializable]
 public class StudySet
 {
-    public List<Card> allCards;
+    public List<Term> allTerms;
     public string name;
-    public List<Card> pileYes;
-    public List<Card> pileNo;
-    public List<Card> pileQueue;
-    public List<Card> pileYesesAndNos; // the yesses and nos, in order. So we can rewind.
+    public List<Term> pileYes;
+    public List<Term> pileNo;
+    public List<Term> pileQueue;
+    public List<Term> pileYesesAndNos; // the yesses and nos, in order. So we can rewind.
 
     // Getters
     public int NumDone { get { return pileYesesAndNos.Count; } }
-    public int NumTotal { get { return allCards.Count; } }
+    public int NumTotal { get { return allTerms.Count; } }
     public int NumInCurrentRound { get { return pileQueue.Count + pileYesesAndNos.Count; } }
     public bool IsInProgress { get { return pileQueue!=null && pileQueue.Count>0; } }
-    public Card GetCurrCard() {
+    public Term GetCurrTerm() {
         // Safety check.
-        if (pileQueue==null || pileQueue.Count<=0) { Debug.LogError("Oops! Trying to GetCurrCard, but there's nothing in this StudySet's pileQueue."); return null; }
+        if (pileQueue==null || pileQueue.Count<=0) { Debug.LogError("Oops! Trying to GetCurrTerm, but there's nothing in this StudySet's pileQueue."); return null; }
         return pileQueue[0];
     }
 
     // Initialize
-    public StudySet(string name, List<Card> cards) {
+    public StudySet(string name, List<Term> terms) {
         this.name = name;
-        this.allCards = cards;
+        this.allTerms = terms;
+        foreach (Term t in terms) t.mySet = this; // go through the list so they all know they belong to me.
     }
 
     // Doers
+    public void AddTerm() {
+        Term newTerm = new Term();
+        newTerm.mySet = this;
+        allTerms.Add(newTerm);
+    }
+    public void RemoveTerm(Term term) {
+        allTerms.Remove(term);
+        // Remove from all possible lists.
+        pileYes.Remove(term);
+        pileNo.Remove(term);
+        pileQueue.Remove(term);
+        pileYesesAndNos.Remove(term);
+    }
     public void ShuffleAndRestartDeck() {
-        pileQueue = new List<Card>(allCards);
-        pileYes = new List<Card>();
-        pileNo = new List<Card>();
-        pileYesesAndNos = new List<Card>();
+        pileQueue = new List<Term>(allTerms);
+        pileYes = new List<Term>();
+        pileNo = new List<Term>();
+        pileYesesAndNos = new List<Term>();
         // Shuffle 'em!
         GameUtils.Shuffle(pileQueue);
     }
-    /// Makes a new round, but made up of the "no" pile cards.
+    /// Makes a new round, but made up of the "no" pile terms.
     public void RestartNewRound() {
-        pileQueue = new List<Card>(pileNo);
-        pileYes = new List<Card>();
-        pileNo = new List<Card>();
-        pileYesesAndNos = new List<Card>();
+        pileQueue = new List<Term>(pileNo);
+        pileYes = new List<Term>();
+        pileNo = new List<Term>();
+        pileYesesAndNos = new List<Term>();
         // Shuffle 'em!
         GameUtils.Shuffle(pileQueue);
     }
 
     // Events
-    public void OnClickCurrCardYes()
+    public void OnClickCurrTermYes()
     {
-        Card c = GetCurrCard();
+        Term c = GetCurrTerm();
         pileQueue.Remove(c);
         pileYes.Add(c);
         pileYesesAndNos.Add(c);
     }
-    public void OnClickCurrCardNo()
+    public void OnClickCurrTermNo()
     {
-        Card c = GetCurrCard();
+        Term c = GetCurrTerm();
         pileQueue.Remove(c);
         pileNo.Add(c);
         pileYesesAndNos.Add(c);
@@ -114,7 +127,7 @@ public class StudySet
     public void OnClickRewindOne()
     {
         if (pileYesesAndNos.Count == 0) { Debug.LogError("Oops, trying to rewind, but we have nothing in pileYesesAndNos list."); }
-        Card prev = pileYesesAndNos[pileYesesAndNos.Count-1];
+        Term prev = pileYesesAndNos[pileYesesAndNos.Count-1];
         pileQueue.Insert(0, prev);
         if (pileYes.Contains(prev)) pileYes.Remove(prev);
         else pileNo.Remove(prev);

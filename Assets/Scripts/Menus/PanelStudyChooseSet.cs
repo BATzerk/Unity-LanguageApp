@@ -34,7 +34,7 @@ public class PanelStudyChooseSet : BasePanel
 
         // Make 'em all.
         float tempY = -20;
-        foreach (StudySet set in dm.studySets)
+        foreach (StudySet set in dm.library.sets)
         {
             StudySetTileView newView = Instantiate(ResourcesHandler.Instance.StudySetTileView).GetComponent<StudySetTileView>();
             newView.Initialize(this, rt_tileViewsContent, set, tempY);
@@ -47,8 +47,11 @@ public class PanelStudyChooseSet : BasePanel
     // ================================================================
     //  Events
     // ================================================================
-    public void OnClickedTileView(StudySet studySet) {
+    public void OnClickedStudyASet(StudySet studySet) {
         menuController.OpenPanel_StudyFlashcards(studySet);
+    }
+    public void OnClickedEditASet(StudySet studySet) {
+        menuController.OpenPanel_EditSet(studySet);
     }
 
 

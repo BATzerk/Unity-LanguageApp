@@ -5,9 +5,12 @@ using UnityEngine;
 public class MenuController : MonoBehaviour
 {
     // References
-    [SerializeField] private BasePanel panel_edit;
+    [SerializeField] private PanelEditSet panel_editSet;
     [SerializeField] private BasePanel panel_studyChooseSet;
     [SerializeField] private PanelStudyFlashcards panel_studyFlashcards;
+
+    // Getters
+    private DataManager dm { get { return GameManagers.Instance.DataManager; } }
 
 
     // ================================================================
@@ -24,7 +27,7 @@ public class MenuController : MonoBehaviour
     // ================================================================
     public void ShowPanel(BasePanel _panel)
     {
-        panel_edit.SetVisibility(false);
+        panel_editSet.SetVisibility(false);
         panel_studyChooseSet.SetVisibility(false);
         panel_studyFlashcards.SetVisibility(false);
 
@@ -34,7 +37,7 @@ public class MenuController : MonoBehaviour
     // ================================================================
     //  Events
     // ================================================================
-    public void OpenPanel_Edit() { ShowPanel(panel_edit); }
+    public void OpenPanel_EditSet(StudySet set) { ShowPanel(panel_editSet); panel_editSet.OpenSet(set); }
     public void OpenPanel_StudyChooseSet() { ShowPanel(panel_studyChooseSet); }
     public void OpenPanel_StudyFlashcards(StudySet set) { ShowPanel(panel_studyFlashcards); panel_studyFlashcards.OpenSet(set); }
 
@@ -51,9 +54,8 @@ public class MenuController : MonoBehaviour
     // ================================================================
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Delete)) {
-            GameManagers.Instance.DataManager.ClearAllSaveData();
-        }
+        if (Input.GetKeyDown(KeyCode.Delete)) dm.ClearAllSaveData();
+        //if (Input.GetKeyDown(KeyCode.R)) dm.ReplaceAllStudySetsWithPremadeHardcodedOnes();
     }
 
 

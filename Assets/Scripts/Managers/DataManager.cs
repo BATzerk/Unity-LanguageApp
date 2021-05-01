@@ -6,134 +6,30 @@ using UnityEngine;
 
 public class DataManager {
     // Properties
-    public List<StudySet> studySets;
+    public StudySetLibrary library;
+    //public List<StudySet> studySets=new List<StudySet>();
 
 
-    //// ----------------------------------------------------------------
-    ////  Getters
-    //// ----------------------------------------------------------------
-    //   public PackData GetPackData (LevelAddress address) {
-    //       return GetPackData (address.pack);
-    //   }
-    //   public PackData GetPackData (int pack) {
-    //       if (pack<0 || pack>=packDatas.Length) { return null; } // Safety check.
-    //       return packDatas[pack];
-    //   }
-    //   public LevelData GetLevelData(int pack, int level) {
-    //       PackData packData = GetPackData(pack);
-    //       if (packData == null) { return null; } // Safety check.
-    //       return packData.GetLevelData(level);
-    //   }
-    //public LevelData GetLevelData (LevelAddress address) {
-    //	return GetLevelData (address.pack, address.level);
-    //}
-
-    //   public bool DidCompleteLevel (int packIndex, int levelIndex) {
-    //       LevelData levelData = GetLevelData (packIndex, levelIndex);
-    //       if (levelData == null) { return false; } // Safety check.
-    //       return levelData.DidCompleteLevel;
-    //   }
-
-    //public LevelAddress GetLastPlayedLevelAddress() {
-    //	// Save data? Use it!
-    //	if (SaveStorage.HasKey (SaveKeys.LastPlayedLevelAddress)) { 
-    //		return LevelAddress.FromString (SaveStorage.GetString (SaveKeys.LastPlayedLevelAddress));
-    //	}
-    //	// No save data. Default to the first level, I guess.
-    //	else {
-    //		return new LevelAddress(0, 0);
-    //	}
-    //}
-    //   public LevelAddress PrevLevelAddress(LevelAddress addr) {
-    //       if (addr==LevelAddress.zero) { return addr; } // Safety check; can't go before 0,0.
-    //       addr.level --;
-    //       if (addr.level < 0) { // Wrap back to previous pack.
-    //           addr.pack --;
-    //           addr.level = GetPackData(addr.pack).NumLevels-1;
-    //       }
-    //       return addr;
-    //   }
-    //   public LevelAddress NextLevelAddress(LevelAddress addr) {
-    //       PackData pack = GetPackData(addr.pack);
-    //       if (pack == null) { return LevelAddress.undefined; } // Safety check.
-    //       addr.level ++;
-    //       if (addr.level >= pack.NumLevels) { // Wrap over to next pack.
-    //           addr.pack ++;
-    //           addr.level = 0;
-    //       }
-    //       return addr;
-    //   }
+    // ----------------------------------------------------------------
+    //  Getters
+    // ----------------------------------------------------------------
 
 
     // ----------------------------------------------------------------
     //  Initialize
     // ----------------------------------------------------------------
-    public DataManager()
-    {
-        ReloadStudySets();
+    public DataManager() {
+        ReloadStudySetLibrary();
     }
-    public void ReloadStudySets()
-    {
-        // TEMP!
-        List<Card> cards0 = new List<Card>();
-        cards0.Add(new Card(System.Guid.NewGuid(), "House", "Hus", "hoos"));
-        cards0.Add(new Card(System.Guid.NewGuid(), "Car", "Bil", "beel"));
-        List<Card> cards1 = new List<Card>();
-        cards1.Add(new Card(System.Guid.NewGuid(), "Green", "Grøn", "grøn"));
-        cards1.Add(new Card(System.Guid.NewGuid(), "Blue", "Blå", "blå"));
-        List<Card> cardsNumbers = new List<Card>();
-        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Zero", "Nul", "nul"));
-        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "One", "En", "en"));
-        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Two", "To", "to"));
-        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Three", "Tre", "tRe"));
-        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Four", "Fire", "feeah"));
-        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Five", "Fem", "fem"));
-        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Six", "Seks", "seks"));
-        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Seven", "Syv", "sYv"));
-        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Eight", "Otte", "otte"));
-        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Nine", "Ni", "nee"));
-        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Ten", "Ti", "tee"));
-
-        studySets = new List<StudySet>();
-        studySets.Add(new StudySet("Objects", cards0));
-        studySets.Add(new StudySet("Colors", cards1));
-        studySets.Add(new StudySet("Numbers", cardsNumbers));
+    public void ReloadStudySetLibrary() {
+        string jsonString = SaveStorage.GetString(SaveKeys.StudySetLibrary);
+        library = JsonUtility.FromJson<StudySetLibrary>(jsonString);
     }
-    //public DataManager() {
-    //       ReloadLevels ();
-    //}
-
-    //public void ReloadLevels () {
-    //       // Read Levels.xml file.
-    //       PackCollectionDataXML collectionXML;
-    //       TextAsset levelsXML = Resources.Load<TextAsset>("Levels/Levels");
-    //       if (levelsXML != null) {
-    //           XmlSerializer serializer = new XmlSerializer(typeof(PackCollectionDataXML));
-    //           StringReader reader = new StringReader(levelsXML.text);
-    //           collectionXML = serializer.Deserialize(reader) as PackCollectionDataXML;
-    //       }
-    //       else {
-    //           Debug.LogError("Can't find Levels.xml file!");
-    //           collectionXML = new PackCollectionDataXML();
-    //       }
-
-    //       // Make those PackDatas from the XML!
-    //       int numPacks = collectionXML.packDataXMLs.Count;
-    //       packDatas = new PackData[numPacks];
-    //       for (int i=0; i<numPacks; i++) {
-    //           LevelAddress packAddress = new LevelAddress(i, -1);
-    //           packDatas[i] = new PackData (packAddress, collectionXML.packDataXMLs[i]);
-    //       }
-    //   }
-
-
-    // ----------------------------------------------------------------
-    //  Events
-    // ----------------------------------------------------------------
-    //public void OnCompleteLevel (LevelAddress levelAddress) {
-    //  PackData packData = GetPackData (levelAddress);
-    //  packData.OnCompleteLevel (levelAddress);
-    //}
+    public void SaveStudySetLibrary() {
+        string jsonString = JsonUtility.ToJson(library);
+        Debug.Log(jsonString);
+        SaveStorage.SetString(SaveKeys.StudySetLibrary, jsonString);
+    }
 
 
     // ----------------------------------------------------------------
@@ -145,7 +41,35 @@ public class DataManager {
 		//ReloadLevels ();
 		Debug.Log ("All SaveStorage CLEARED!");
 	}
+    public void ReplaceAllStudySetsWithPremadeHardcodedOnes() {
+        // TEMP!
+        List<Term> cards0 = new List<Term>();
+        List<Term> cards1 = new List<Term>();
+        List<Term> cardsNumbers = new List<Term>();
+        cards0.Add(new Term("House", "Hus", "hoos"));
+        cards0.Add(new Term("Car", "Bil", "beel"));
+        cards1.Add(new Term("Green", "Grøn", "grøn"));
+        cards1.Add(new Term("Blue", "Blå", "blå"));
+        cardsNumbers.Add(new Term("Zero", "Nul", "nul"));
+        cardsNumbers.Add(new Term("One", "En", "en"));
+        cardsNumbers.Add(new Term("Two", "To", "to"));
+        cardsNumbers.Add(new Term("Three", "Tre", "tRe"));
+        cardsNumbers.Add(new Term("Four", "Fire", "feeah"));
+        cardsNumbers.Add(new Term("Five", "Fem", "fem"));
+        cardsNumbers.Add(new Term("Six", "Seks", "seks"));
+        cardsNumbers.Add(new Term("Seven", "Syv", "sYv"));
+        cardsNumbers.Add(new Term("Eight", "Otte", "otte"));
+        cardsNumbers.Add(new Term("Nine", "Ni", "nee"));
+        cardsNumbers.Add(new Term("Ten", "Ti", "tee"));
 
+        library = new StudySetLibrary();
+        library.sets = new List<StudySet>();
+        library.sets.Add(new StudySet("Objects", cards0));
+        library.sets.Add(new StudySet("Colors", cards1));
+        library.sets.Add(new StudySet("Numbers", cardsNumbers));
+
+        SaveStudySetLibrary();
+    }
 
 
 

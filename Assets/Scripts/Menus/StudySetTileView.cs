@@ -9,24 +9,26 @@ public class StudySetTileView : MonoBehaviour
     [SerializeField] private RectTransform myRectTransform;
     [SerializeField] private TextMeshProUGUI t_name;
     // References
-    private StudySet myStudySet;
+    private StudySet mySet;
     private PanelStudyChooseSet myPanel;
 
 
-    public void Initialize(PanelStudyChooseSet myPanel, RectTransform tf_parent, StudySet myStudySet, float posY)
+    public void Initialize(PanelStudyChooseSet myPanel, RectTransform tf_parent, StudySet mySet, float posY)
     {
         this.myPanel = myPanel;
-        this.myStudySet = myStudySet;
+        this.mySet = mySet;
         GameUtils.ParentAndReset(gameObject, tf_parent);
         myRectTransform.anchoredPosition = new Vector2(0, posY);
 
         // Update visuals
-        t_name.text = myStudySet.name;
+        t_name.text = mySet.name;
     }
 
 
-    public void OnClicked()
-    {
-        myPanel.OnClickedTileView(myStudySet);
+    public void OnClickedStudyMe() {
+        myPanel.OnClickedStudyASet(mySet);
+    }
+    public void OnClickedEditMe() {
+        myPanel.OnClickedEditASet(mySet);
     }
 }

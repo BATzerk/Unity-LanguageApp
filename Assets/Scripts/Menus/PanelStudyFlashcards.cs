@@ -42,9 +42,10 @@ public class PanelStudyFlashcards : BasePanel {
 
         // We've finished the set??
         if (currStudySet.NumDone >= currStudySet.NumInCurrentRound) {
-            int numUnderstood = currStudySet.NumTotal - currStudySet.pileNo.Count;
+            //int numUnderstood = currStudySet.NumTotal - currStudySet.pileNo.Count;
+            int numNewYeses = currStudySet.pileYes.Count;
             int numRemaining = currStudySet.pileNo.Count;
-            t_finishedHeader.text = "Round complete!\n\n" + numUnderstood + " mastered\n" + numRemaining + " remaining";
+            t_finishedHeader.text = "Round complete!\n\n" + "learned " + numNewYeses + " new ones!\n" + numRemaining + " remaining";
             rt_setFinished.gameObject.SetActive(true);
             rt_setInProgress.gameObject.SetActive(false);
         }
@@ -52,16 +53,16 @@ public class PanelStudyFlashcards : BasePanel {
         else {
             rt_setFinished.gameObject.SetActive(false);
             rt_setInProgress.gameObject.SetActive(true);
-            currCardView.SetMyCard(currStudySet.GetCurrCard());
+            currCardView.SetMyTerm(currStudySet.GetCurrTerm());
         }
     }
 
     public void OnClickYes() {
-        currStudySet.OnClickCurrCardYes();
+        currStudySet.OnClickCurrTermYes();
         RefreshCardVisuals();
     }
     public void OnClickNo() {
-        currStudySet.OnClickCurrCardNo();
+        currStudySet.OnClickCurrTermNo();
         RefreshCardVisuals();
     }
     public void OnClickRewindOne() {

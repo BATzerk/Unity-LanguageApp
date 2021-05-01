@@ -9,7 +9,7 @@ public class ResourcesHandler : MonoBehaviour {
     [SerializeField] public GameObject ImageLinesJoint;
 
     [Header("LanguageApp")]
-    [SerializeField] public GameObject CardView;
+    [SerializeField] public GameObject TermEditableTile;
     [SerializeField] public GameObject StudySetTileView;
 
 
