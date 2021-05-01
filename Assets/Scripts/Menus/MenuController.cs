@@ -5,8 +5,9 @@ using UnityEngine;
 public class MenuController : MonoBehaviour
 {
     // References
-    [SerializeField] private BasePanel panel_edit=null;
-    [SerializeField] private BasePanel panel_studyChooseSet =null;
+    [SerializeField] private BasePanel panel_edit;
+    [SerializeField] private BasePanel panel_studyChooseSet;
+    [SerializeField] private PanelStudyFlashcards panel_studyFlashcards;
 
 
     // ================================================================
@@ -14,7 +15,7 @@ public class MenuController : MonoBehaviour
     // ================================================================
     void Start()
     {
-        ShowPanel(panel_studyChooseSet );
+        ShowPanel(panel_studyChooseSet);
     }
 
 
@@ -25,6 +26,7 @@ public class MenuController : MonoBehaviour
     {
         panel_edit.SetVisibility(false);
         panel_studyChooseSet.SetVisibility(false);
+        panel_studyFlashcards.SetVisibility(false);
 
         _panel.SetVisibility(true);
     }
@@ -32,8 +34,15 @@ public class MenuController : MonoBehaviour
     // ================================================================
     //  Events
     // ================================================================
-    public void OpenPanel_IBs() { ShowPanel(panel_edit); }
-    public void OpenPanel_Today() { ShowPanel(panel_studyChooseSet); }
+    public void OpenPanel_Edit() { ShowPanel(panel_edit); }
+    public void OpenPanel_StudyChooseSet() { ShowPanel(panel_studyChooseSet); }
+    public void OpenPanel_StudyFlashcards(StudySet set) { ShowPanel(panel_studyFlashcards); panel_studyFlashcards.OpenSet(set); }
+
+    [UnityEditor.Callbacks.DidReloadScripts]
+    private static void OnScriptsReloaded() {
+        if (Application.isPlaying)
+            SceneHelper.ReloadScene();
+    }
 
 
 
@@ -46,5 +55,7 @@ public class MenuController : MonoBehaviour
             GameManagers.Instance.DataManager.ClearAllSaveData();
         }
     }
+
+
 
 }

@@ -81,10 +81,23 @@ public class DataManager {
         List<Card> cards1 = new List<Card>();
         cards1.Add(new Card(System.Guid.NewGuid(), "Green", "Grøn", "grøn"));
         cards1.Add(new Card(System.Guid.NewGuid(), "Blue", "Blå", "blå"));
+        List<Card> cardsNumbers = new List<Card>();
+        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Zero", "Nul", "nul"));
+        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "One", "En", "en"));
+        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Two", "To", "to"));
+        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Three", "Tre", "tRe"));
+        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Four", "Fire", "feeah"));
+        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Five", "Fem", "fem"));
+        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Six", "Seks", "seks"));
+        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Seven", "Syv", "sYv"));
+        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Eight", "Otte", "otte"));
+        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Nine", "Ni", "nee"));
+        cardsNumbers.Add(new Card(System.Guid.NewGuid(), "Ten", "Ti", "tee"));
 
         studySets = new List<StudySet>();
         studySets.Add(new StudySet("Objects", cards0));
         studySets.Add(new StudySet("Colors", cards1));
+        studySets.Add(new StudySet("Numbers", cardsNumbers));
     }
     //public DataManager() {
     //       ReloadLevels ();

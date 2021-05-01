@@ -9,8 +9,8 @@ public class PanelStudyChooseSet : BasePanel
     // Components
     [SerializeField] public  RectTransform rt_tileViewsContent = null; // all the TileViews go on here.
     private List<StudySetTileView> tileViews=new List<StudySetTileView>();
-    // Properties
-    private DateTime selectedDate;
+    // References
+    [SerializeField] private MenuController menuController;
 
 
     // Getters
@@ -21,8 +21,6 @@ public class PanelStudyChooseSet : BasePanel
     //  Start
     // ================================================================
     void Start() {
-        selectedDate = DateTime.Today;
-
         RemakeTileViews();
     }
 
@@ -46,17 +44,11 @@ public class PanelStudyChooseSet : BasePanel
     }
 
 
-    private void AddTileView(StudySet studySet) {
-    }
-
-
     // ================================================================
     //  Events
     // ================================================================
-        public void OnClickedTileView(StudySet studySet)
-    {
-        Debug.Log("Clicked study set: " + studySet.name);
-
+    public void OnClickedTileView(StudySet studySet) {
+        menuController.OpenPanel_StudyFlashcards(studySet);
     }
 
 
