@@ -9,6 +9,8 @@ public class PanelStudyFlashcards : BasePanel {
     // Components
     [SerializeField] private Button b_undo;
     [SerializeField] private CardView currCardView;
+    [SerializeField] private Image i_progressBarBack;
+    [SerializeField] private Image i_progressBarFill;
     [SerializeField] private MoveTermPopup moveTermPopup;
     [SerializeField] private TextMeshProUGUI t_progress;
     [SerializeField] private TextMeshProUGUI t_finishedHeader;
@@ -47,8 +49,13 @@ public class PanelStudyFlashcards : BasePanel {
         b_undo.interactable = currStudySet.pileYesesAndNos.Count > 0;
     }
     public void RefreshCardVisuals() {
-        // Update progress text
-        t_progress.text = Mathf.Min(currStudySet.NumInCurrentRound, currStudySet.NumDone+1) + " / " + currStudySet.NumInCurrentRound;
+        // Update progress visuals
+        int numDone = currStudySet.NumDone;
+        int numInRound = currStudySet.NumInCurrentRound;
+        t_progress.text = Mathf.Min(numInRound, numDone+1) + " / " + numInRound;
+        float barWidth = i_progressBarBack.rectTransform.rect.width;
+        float progressLoc = numDone / (float)numInRound;
+        i_progressBarFill.rectTransform.sizeDelta = new Vector2(barWidth * progressLoc, i_progressBarFill.rectTransform.sizeDelta.y);
 
         // We've finished the set??
         if (currStudySet.NumDone >= currStudySet.NumInCurrentRound) {

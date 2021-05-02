@@ -118,8 +118,8 @@ public class CardView : MonoBehaviour {
         isSwiping = true;
         mouseDownPos = getMousePos();// myRectTransform.anchoredPosition - getMousePos();
         // Randomize swipeRotScale.
-        swipeRotScale = Random.Range(0.01f, 0.05f);
-        if (Random.Range(0, 1f) < 0.5f) swipeRotScale *= -1;
+        swipeRotScale = Random.Range(0.02f, 0.05f);
+        //if (Random.Range(0, 1f) < 0.5f) swipeRotScale *= -1;
     }
     public void OnCursorUp() {
         isSwiping = false;

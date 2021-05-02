@@ -41,11 +41,13 @@ public class MenuController : MonoBehaviour
     public void OpenPanel_StudyChooseSet() { ShowPanel(panel_studyChooseSet); }
     public void OpenPanel_StudyFlashcards(StudySet set) { ShowPanel(panel_studyFlashcards); panel_studyFlashcards.OpenSet(set); }
 
+#if UNITY_EDITOR
     [UnityEditor.Callbacks.DidReloadScripts]
     private static void OnScriptsReloaded() {
         if (Application.isPlaying)
             SceneHelper.ReloadScene();
     }
+#endif
 
 
 

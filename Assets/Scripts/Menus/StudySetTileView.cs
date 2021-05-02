@@ -11,8 +11,8 @@ public class StudySetTileView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI t_name;
     [SerializeField] private TextMeshProUGUI t_numTerms;
     [SerializeField] private GameObject go_progressBar;
-    [SerializeField] private Image i_progressBarFill;
     [SerializeField] private Image i_progressBarBack;
+    [SerializeField] private Image i_progressBarFill;
     // References
     private StudySet mySet;
     private PanelStudyChooseSet myPanel;
@@ -36,7 +36,7 @@ public class StudySetTileView : MonoBehaviour
     public void UpdateVisuals() {
         // Update visuals
         t_name.text = mySet.name;
-        t_numTerms.text = mySet.NumTotal.ToString() + " TERMS";
+        t_numTerms.text = mySet.NumTotal.ToString() + " terms";
         //t_progress.text = mySet.IsInProgress ?
         //    ("progress: " + (int)(mySet.NumDone/(float)mySet.NumInCurrentRound)*100 + "%")
         //    : ""

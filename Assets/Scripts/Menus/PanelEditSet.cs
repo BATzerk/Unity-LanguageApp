@@ -65,9 +65,9 @@ public class PanelEditSet : BasePanel
         }
 
         // Update the parent content RT height!
-        const float tileHeight = 120;
+        const float tileHeight = 130;
         float tileSpacing = rt_tilesContent.GetComponent<VerticalLayoutGroup>().spacing;
-        float contentHeight = termTiles.Count * (tileHeight + tileSpacing) + 200;
+        float contentHeight = termTiles.Count * (tileHeight + tileSpacing) + 450;
         rt_scrollContent.sizeDelta = new Vector2(rt_scrollContent.sizeDelta.x, contentHeight);
 
         HideOptions();
