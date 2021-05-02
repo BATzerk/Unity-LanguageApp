@@ -69,12 +69,47 @@ public class StudySet
         if (pileQueue==null || pileQueue.Count<=0) { Debug.LogError("Oops! Trying to GetCurrTerm, but there's nothing in this StudySet's pileQueue."); return null; }
         return pileQueue[0];
     }
+    public string GetAsExportedString() {
+        string str = "";
+        foreach (Term term in allTerms) {
+            str += term.english + " - " + term.danish + " - " + term.phonetic;
+            str += "\n";
+        }
+        return str;
+    }
 
     // Initialize
     public StudySet(string name, List<Term> terms) {
         this.name = name;
         this.allTerms = terms;
-        foreach (Term t in terms) t.mySet = this; // go through the list so they all know they belong to me.
+        foreach (Term t in allTerms) t.mySet = this; // go through the list so they all know they belong to me.
+    }
+    public StudySet(string name, string allTermsStr) {
+        this.name = name;
+        string[] termStrings = allTermsStr.Split('\n');
+
+        this.allTerms = new List<Term>();
+        foreach (string str in termStrings) {
+            try {
+                int splitIndex = str.IndexOf(" - ");
+                string native = str.Substring(splitIndex+3);
+                string foreign = str.Substring(0, splitIndex);
+                string phonetic = "";
+                // pull out the phonetic pronunciation
+                int lbIndex = foreign.LastIndexOf('['); // left bracket index
+                int rbIndex = foreign.LastIndexOf(']'); // right bracket index
+                if (rbIndex == foreign.Length-1) { // if this one ENDS in a phonetic explanation...
+                    phonetic = foreign.Substring(lbIndex+1);
+                    phonetic = phonetic.Substring(0, phonetic.Length - 1); // get rid of that last ] char.
+                    foreign = foreign.Substring(0, lbIndex - 1);
+                }
+                allTerms.Add(new Term(native, foreign, phonetic));
+            }
+            catch {
+                Debug.LogError("Issue with imported term string: " + str);
+            }
+        }
+        foreach (Term t in allTerms) t.mySet = this; // go through the list so they all know they belong to me.
     }
 
     // Doers
@@ -124,11 +159,11 @@ public class StudySet
         pileNo.Add(c);
         pileYesesAndNos.Add(c);
     }
-    public void OnClickRewindOne()
-    {
-        if (pileYesesAndNos.Count == 0) { Debug.LogError("Oops, trying to rewind, but we have nothing in pileYesesAndNos list."); }
+    public void RewindOneCard() {
+        if (pileYesesAndNos.Count == 0) { Debug.LogError("Oops, trying to rewind, but we have nothing in pileYesesAndNos list."); return; }
         Term prev = pileYesesAndNos[pileYesesAndNos.Count-1];
         pileQueue.Insert(0, prev);
+        pileYesesAndNos.Remove(prev);
         if (pileYes.Contains(prev)) pileYes.Remove(prev);
         else pileNo.Remove(prev);
     }

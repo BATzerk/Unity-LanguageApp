@@ -55,7 +55,13 @@ public class MenuController : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Delete)) dm.ClearAllSaveData();
-        //if (Input.GetKeyDown(KeyCode.R)) dm.ReplaceAllStudySetsWithPremadeHardcodedOnes();
+        // CTRL + ___
+        if (Input.GetKey(KeyCode.LeftControl)) {
+            if (Input.GetKeyDown(KeyCode.R)) {
+                dm.ReplaceAllStudySetsWithPremadeHardcodedOnes();
+                SceneHelper.ReloadScene();
+            }
+        }
     }
 
 

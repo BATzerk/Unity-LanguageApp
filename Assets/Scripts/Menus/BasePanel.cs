@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class BasePanel : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+
+    public void SetVisibility(bool _isVisible) {
+        this.gameObject.SetActive(_isVisible);
+        if (_isVisible) OnOpened();
+        else OnClosed();
     }
 
-    public void SetVisibility(bool _isVisible)
-    {
-        this.gameObject.SetActive(_isVisible);
-    }
+    virtual protected void OnOpened() { }
+    virtual protected void OnClosed() { }
 }

@@ -5,11 +5,15 @@ using TMPro;
 
 public class CardView : MonoBehaviour {
     // Components
-    [SerializeField] private RectTransform rt_native;
-    [SerializeField] private RectTransform rt_foreign;
-    [SerializeField] TextMeshProUGUI t_english;
-    [SerializeField] TextMeshProUGUI t_danish;
+    [SerializeField] private RectTransform rt_options;
+    [SerializeField] private RectTransform rt_sideNative;
+    [SerializeField] private RectTransform rt_sideForeign;
+    [SerializeField] TextMeshProUGUI t_native;
+    [SerializeField] TextMeshProUGUI t_foreign;
     [SerializeField] TextMeshProUGUI t_phonetic;
+    [SerializeField] TMP_InputField if_native;
+    [SerializeField] TMP_InputField if_foreign;
+    [SerializeField] TMP_InputField if_phonetic;
     // References
     [SerializeField] private PanelStudyFlashcards myPanel;
     public Term MyTerm { get; private set; }
@@ -20,31 +24,35 @@ public class CardView : MonoBehaviour {
     // ----------------------------------------------------------------
     //  Setting Visuals
     // ----------------------------------------------------------------
-    public void SetMyTerm(Term term)
-    {
+    public void SetMyTerm(Term term) {
         this.MyTerm = term;
 
         // Update visuals!
-        t_english.text = term.english;
-        t_danish.text = term.danish;
-        t_phonetic.text = term.phonetic;
+        UpdateTextFieldsFromTerm();
+        HideOptions();
         ShowSideNative(true);
     }
 
+    private void UpdateTextFieldsFromTerm() {
+        t_native.text = MyTerm.english;
+        t_foreign.text = MyTerm.danish;
+        t_phonetic.text = MyTerm.phonetic;
+        if_native.text = MyTerm.english;
+        if_foreign.text = MyTerm.danish;
+        if_phonetic.text = MyTerm.phonetic;
+    }
 
-    void ShowSideNative(bool doAnimate=true)
-    {
+    void ShowSideNative(bool doAnimate=true) {
         isNativeSide = true;
-        rt_native.gameObject.SetActive(isNativeSide);
-        rt_foreign.gameObject.SetActive(!isNativeSide);
+        rt_sideNative.gameObject.SetActive(isNativeSide);
+        rt_sideForeign.gameObject.SetActive(!isNativeSide);
     }
-    void ShowSideForeign(bool doAnimate=true)
-    {
+    void ShowSideForeign(bool doAnimate=true) {
         isNativeSide = false;
-        rt_native.gameObject.SetActive(isNativeSide);
-        rt_foreign.gameObject.SetActive(!isNativeSide);
+        rt_sideNative.gameObject.SetActive(isNativeSide);
+        rt_sideForeign.gameObject.SetActive(!isNativeSide);
     }
-    void FlipCard() {
+    public void FlipCard() {
         if (isNativeSide) ShowSideForeign();
         else ShowSideNative();
     }
@@ -54,14 +62,24 @@ public class CardView : MonoBehaviour {
     // ----------------------------------------------------------------
     //  Events
     // ----------------------------------------------------------------
-    //public void OnClickYes() {
-    //    myPanel.OnClickCurrCardYes();
-    //}
-    //public void OnClickNo() {
-    //    myPanel.OnClickCurrCardNo();
-    //}
     public void OnClickCardFace() {
         FlipCard();
+    }
+    public void HideOptions() {
+        rt_options.gameObject.SetActive(false);
+    }
+    public void ShowOptions() {
+        rt_options.gameObject.SetActive(true);
+    }
+    public void OnEndEditAnyTextField() {
+        // Update my actual term now!
+        MyTerm.english = if_native.text;
+        MyTerm.danish = if_foreign.text;
+        MyTerm.phonetic = if_phonetic.text;
+        // Save 'em, Joe. :)
+        GameManagers.Instance.DataManager.SaveStudySetLibrary();
+        // Refresh all my texts now.
+        UpdateTextFieldsFromTerm();
     }
 
 

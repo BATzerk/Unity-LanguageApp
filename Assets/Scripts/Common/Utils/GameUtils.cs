@@ -72,7 +72,6 @@ public static class GameUtils {
         original.CopyTo(newArray, 0);
         return newArray;
     }
-    //TODO: Test this works! :)
     public static void Shuffle<T>(this IList<T> list) {
         int n = list.Count;
         while (n > 1) {

@@ -7,7 +7,8 @@ using UnityEngine;
 public class PanelStudyChooseSet : BasePanel
 {
     // Components
-    [SerializeField] public  RectTransform rt_tileViewsContent = null; // all the TileViews go on here.
+    [SerializeField] public RectTransform rt_scrollContent; // we just control the size of this. rt_tilesContent is parented to this.
+    [SerializeField] public RectTransform rt_tilesContent; // all the TileViews go on here.
     private List<StudySetTileView> tileViews=new List<StudySetTileView>();
     // References
     [SerializeField] private MenuController menuController;
@@ -32,14 +33,21 @@ public class PanelStudyChooseSet : BasePanel
         tileViews = new List<StudySetTileView>();
 
         // Make 'em all.
-        float tempY = 0;
         foreach (StudySet set in dm.library.sets) {
             StudySetTileView newView = Instantiate(ResourcesHandler.Instance.StudySetTileView).GetComponent<StudySetTileView>();
-            newView.Initialize(this, rt_tileViewsContent, set, tempY);
+            newView.Initialize(this, rt_tilesContent, set);
             tileViews.Add(newView);
-            tempY -= 70;
         }
-        rt_tileViewsContent.sizeDelta = new Vector2(rt_tileViewsContent.sizeDelta.x, -tempY);
+        const float tileHeight = 60;
+        const float tileSpacing = 10;
+        float contentHeight = tileViews.Count * (tileHeight+tileSpacing) + 200;
+        rt_scrollContent.sizeDelta = new Vector2(rt_scrollContent.sizeDelta.x, contentHeight);
+    }
+
+    protected override void OnOpened() {
+        base.OnOpened();
+        // Update all tile visuals!
+        foreach (StudySetTileView tile in tileViews) tile.UpdateVisuals();
     }
 
 

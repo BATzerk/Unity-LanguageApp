@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PanelStudyFlashcards : BasePanel {
     // Components
+    [SerializeField] private Button b_undo;
     [SerializeField] private CardView currCardView;
     [SerializeField] private TextMeshProUGUI t_progress;
     [SerializeField] private TextMeshProUGUI t_finishedHeader;
@@ -15,7 +17,6 @@ public class PanelStudyFlashcards : BasePanel {
     private StudySet currStudySet;
 
 
-
     // Getters
     private DataManager dm { get { return GameManagers.Instance.DataManager; } }
 
@@ -23,9 +24,7 @@ public class PanelStudyFlashcards : BasePanel {
     // ================================================================
     //  Start
     // ================================================================
-    void Start() {
-    }
-
+    void Start() { }
     public void OpenSet(StudySet currStudySet) {
         this.currStudySet = currStudySet;
 
@@ -37,8 +36,17 @@ public class PanelStudyFlashcards : BasePanel {
         // Start us off, boi.
         RefreshCardVisuals();
     }
+
+
+    // ================================================================
+    //  Update Visuals
+    // ================================================================
+    private void UpdateUndoButtonInteractable() {
+        b_undo.interactable = currStudySet.pileYesesAndNos.Count > 0;
+    }
     private void RefreshCardVisuals() {
-        t_progress.text = currStudySet.NumDone + " / " + currStudySet.NumInCurrentRound;
+        // Update progress text
+        t_progress.text = Mathf.Min(currStudySet.NumInCurrentRound, currStudySet.NumDone+1) + " / " + currStudySet.NumInCurrentRound;
 
         // We've finished the set??
         if (currStudySet.NumDone >= currStudySet.NumInCurrentRound) {
@@ -55,8 +63,13 @@ public class PanelStudyFlashcards : BasePanel {
             rt_setInProgress.gameObject.SetActive(true);
             currCardView.SetMyTerm(currStudySet.GetCurrTerm());
         }
+
+        UpdateUndoButtonInteractable();
     }
 
+    // ================================================================
+    //  Events
+    // ================================================================
     public void OnClickYes() {
         currStudySet.OnClickCurrTermYes();
         RefreshCardVisuals();
@@ -65,8 +78,8 @@ public class PanelStudyFlashcards : BasePanel {
         currStudySet.OnClickCurrTermNo();
         RefreshCardVisuals();
     }
-    public void OnClickRewindOne() {
-        currStudySet.OnClickRewindOne();
+    public void OnClickUndo() {
+        currStudySet.RewindOneCard();
         RefreshCardVisuals();
     }
     public void OnClickShuffleAndReset() {
@@ -76,6 +89,24 @@ public class PanelStudyFlashcards : BasePanel {
     public void OnClickStudyAgain() {
         currStudySet.RestartNewRound();
         RefreshCardVisuals();
+    }
+
+
+
+    // ================================================================
+    //  Update
+    // ================================================================
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.Space))
+            currCardView.FlipCard();
+
+        if (Input.GetKeyDown(KeyCode.Z))
+            OnClickUndo();
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+            OnClickNo();
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+            OnClickYes();
     }
 
 
