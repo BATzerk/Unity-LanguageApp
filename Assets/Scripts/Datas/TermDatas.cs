@@ -25,6 +25,8 @@ public struct CustomDate
 [Serializable]
 public class Term
 {
+    public int totalYeses=0; // increments whenever we swipe RIGHT to this term.
+    public int totalNos=0;
     public string english;
     public string danish;
     public string phonetic;
@@ -82,7 +84,7 @@ public class StudySet
     public StudySet(string name, List<Term> terms) {
         this.name = name;
         this.allTerms = terms;
-        foreach (Term t in allTerms) t.mySet = this; // go through the list so they all know they belong to me.
+        GiveAllMyTermsRefToMe();
     }
     public StudySet(string name, string allTermsStr) {
         this.name = name;
@@ -109,12 +111,23 @@ public class StudySet
                 Debug.LogError("Issue with imported term string: " + str);
             }
         }
-        foreach (Term t in allTerms) t.mySet = this; // go through the list so they all know they belong to me.
+        GiveAllMyTermsRefToMe();
     }
 
     // Doers
+    public void GiveAllMyTermsRefToMe() {
+        foreach (Term t in allTerms) t.mySet = this; // go through the list so they all know they belong to me.
+        //// QQQ
+        //foreach (Term t in pileNo) t.mySet = this; // go through the list so they all know they belong to me.
+        //foreach (Term t in pileQueue) t.mySet = this; // go through the list so they all know they belong to me.
+        //foreach (Term t in pileYes) t.mySet = this; // go through the list so they all know they belong to me.
+        //foreach (Term t in pileYesesAndNos) t.mySet = this; // go through the list so they all know they belong to me.
+
+    }
     public void AddTerm() {
-        Term newTerm = new Term();
+        AddTerm(new Term());
+    }
+    public void AddTerm(Term newTerm) {
         newTerm.mySet = this;
         allTerms.Add(newTerm);
     }
@@ -145,16 +158,16 @@ public class StudySet
     }
 
     // Events
-    public void OnClickCurrTermYes()
-    {
+    public void OnClickCurrTermYes() {
         Term c = GetCurrTerm();
+        c.totalYeses++;
         pileQueue.Remove(c);
         pileYes.Add(c);
         pileYesesAndNos.Add(c);
     }
-    public void OnClickCurrTermNo()
-    {
+    public void OnClickCurrTermNo() {
         Term c = GetCurrTerm();
+        c.totalNos++;
         pileQueue.Remove(c);
         pileNo.Add(c);
         pileYesesAndNos.Add(c);
@@ -164,8 +177,14 @@ public class StudySet
         Term prev = pileYesesAndNos[pileYesesAndNos.Count-1];
         pileQueue.Insert(0, prev);
         pileYesesAndNos.Remove(prev);
-        if (pileYes.Contains(prev)) pileYes.Remove(prev);
-        else pileNo.Remove(prev);
+        if (pileYes.Contains(prev)) {
+            pileYes.Remove(prev);
+            prev.totalYeses--;
+        }
+        else {
+            pileNo.Remove(prev);
+            prev.totalNos--;
+        }
     }
 
 

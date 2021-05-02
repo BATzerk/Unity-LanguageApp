@@ -5,9 +5,13 @@ using TMPro;
 
 public class CardView : MonoBehaviour {
     // Components
+    [SerializeField] private GameObject go_swipeBannerNo;
+    [SerializeField] private GameObject go_swipeBannerYes;
+    [SerializeField] private RectTransform myRectTransform;
     [SerializeField] private RectTransform rt_options;
     [SerializeField] private RectTransform rt_sideNative;
     [SerializeField] private RectTransform rt_sideForeign;
+    [SerializeField] MoveTermPopup moveTermPopup;
     [SerializeField] TextMeshProUGUI t_native;
     [SerializeField] TextMeshProUGUI t_foreign;
     [SerializeField] TextMeshProUGUI t_phonetic;
@@ -19,6 +23,7 @@ public class CardView : MonoBehaviour {
     public Term MyTerm { get; private set; }
     // Properties
     private bool isNativeSide; // if FALSE, we're showing the foreign side.
+    private float timeWhenSetTerm; // Time.time when we last called SetMyTerm.
 
 
     // ----------------------------------------------------------------
@@ -26,11 +31,19 @@ public class CardView : MonoBehaviour {
     // ----------------------------------------------------------------
     public void SetMyTerm(Term term) {
         this.MyTerm = term;
+        timeWhenSetTerm = Time.time;
+        //Debug.Log("Term set: " + MyTerm.mySet);
 
         // Update visuals!
         UpdateTextFieldsFromTerm();
         HideOptions();
         ShowSideNative(true);
+
+        // Reset swipiness.
+        go_swipeBannerNo.SetActive(false);
+        go_swipeBannerYes.SetActive(false);
+        myRectTransform.anchoredPosition = posNeutral;
+        myRectTransform.localEulerAngles = Vector3.zero;
     }
 
     private void UpdateTextFieldsFromTerm() {
@@ -63,7 +76,14 @@ public class CardView : MonoBehaviour {
     //  Events
     // ----------------------------------------------------------------
     public void OnClickCardFace() {
-        FlipCard();
+        // If we're ARE at neutral pos, and haven't JUST set my term, flip the card!
+        if (Vector2.Distance(myRectTransform.anchoredPosition, posNeutral) < 1
+            && Time.time>timeWhenSetTerm+0.5f) {
+            FlipCard();
+        }
+    }
+    public void OnClick_MoveTermButton() {
+        moveTermPopup.Show(MyTerm);
     }
     public void HideOptions() {
         rt_options.gameObject.SetActive(false);
@@ -80,6 +100,58 @@ public class CardView : MonoBehaviour {
         GameManagers.Instance.DataManager.SaveStudySetLibrary();
         // Refresh all my texts now.
         UpdateTextFieldsFromTerm();
+    }
+
+
+
+
+    // -------- SWIPING --------
+    private bool isSwiping;
+    private float swipeRotScale; // randomized every time we click down! For flavor.
+    private int swipeOutcomeDir; // -1 no; 0 return to center; 1 yes.
+    private Vector2 mouseDownPos;
+    private Vector2 posNeutral;
+
+    private Vector2 getMousePos() { return new Vector2(Input.mousePosition.x, Input.mousePosition.y); }
+
+    public void OnCursorDown() {
+        isSwiping = true;
+        mouseDownPos = getMousePos();// myRectTransform.anchoredPosition - getMousePos();
+        // Randomize swipeRotScale.
+        swipeRotScale = Random.Range(0.01f, 0.05f);
+        if (Random.Range(0, 1f) < 0.5f) swipeRotScale *= -1;
+    }
+    public void OnCursorUp() {
+        isSwiping = false;
+        // Far enough to consider this a swipe??
+        if (swipeOutcomeDir == -1) {
+            myPanel.OnClickNo();
+        }
+        else if (swipeOutcomeDir == 1) {
+            myPanel.OnClickYes();
+        }
+    }
+
+    private void Update() {
+        if (isSwiping) {
+            Vector2 posOffset = (getMousePos()-mouseDownPos) / MainCanvas.Canvas.scaleFactor;
+            myRectTransform.anchoredPosition = posNeutral + posOffset;
+            // Update swipeOutcomeDir!
+            if (posOffset.x < -120) swipeOutcomeDir = -1;
+            else if (posOffset.x > 120) swipeOutcomeDir = 1;
+            else swipeOutcomeDir = 0;
+        }
+        else {
+            myRectTransform.anchoredPosition += (posNeutral-myRectTransform.anchoredPosition) / 4f;
+            swipeOutcomeDir = 0;
+        }
+        float offsetX = posNeutral.x - myRectTransform.anchoredPosition.x;
+        // Rotation
+        myRectTransform.localEulerAngles = new Vector3(0, 0, offsetX * swipeRotScale);
+
+        // Swipe outcome visuals
+        go_swipeBannerNo.SetActive(swipeOutcomeDir == -1);
+        go_swipeBannerYes.SetActive(swipeOutcomeDir == 1);
     }
 
 

@@ -18,6 +18,9 @@ public class StudySetTileView : MonoBehaviour
     private PanelStudyChooseSet myPanel;
 
 
+    // ----------------------------------------------------------------
+    //  Initialize
+    // ----------------------------------------------------------------
     public void Initialize(PanelStudyChooseSet myPanel, RectTransform tf_parent, StudySet mySet) {
         this.myPanel = myPanel;
         this.mySet = mySet;
@@ -25,6 +28,11 @@ public class StudySetTileView : MonoBehaviour
 
         UpdateVisuals();
     }
+
+
+    // ----------------------------------------------------------------
+    //  Update Visuals
+    // ----------------------------------------------------------------
     public void UpdateVisuals() {
         // Update visuals
         t_name.text = mySet.name;
@@ -42,6 +50,9 @@ public class StudySetTileView : MonoBehaviour
     }
 
 
+    // ----------------------------------------------------------------
+    //  Events
+    // ----------------------------------------------------------------
     public void OnClickedStudyMe() {
         myPanel.OnClickedStudyASet(mySet);
     }

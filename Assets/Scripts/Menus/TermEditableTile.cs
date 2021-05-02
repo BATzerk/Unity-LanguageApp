@@ -9,6 +9,7 @@ public class TermEditableTile : MonoBehaviour
     [SerializeField] private RectTransform myRectTransform;
     [SerializeField] private RectTransform rt_deleteConfirmation;
     [SerializeField] private TextMeshProUGUI t_myNumber;
+    [SerializeField] private TextMeshProUGUI t_debugInfo;
     [SerializeField] private TMP_InputField if_native;
     [SerializeField] private TMP_InputField if_foreign;
     [SerializeField] private TMP_InputField if_phonetic;
@@ -17,16 +18,25 @@ public class TermEditableTile : MonoBehaviour
     private PanelEditSet myPanel;
 
 
+    // ----------------------------------------------------------------
+    //  Initialize
+    // ----------------------------------------------------------------
     public void Initialize(PanelEditSet myPanel, RectTransform tf_parent) {
         this.myPanel = myPanel;
         GameUtils.ParentAndReset(gameObject, tf_parent);
     }
+
+
+    // ----------------------------------------------------------------
+    //  Update Visuals
+    // ----------------------------------------------------------------
     public void UpdateContent(int myIndex, Term myTerm) {//, float posY) {
         this.myTerm = myTerm;
 
         // Update visuals
         //myRectTransform.anchoredPosition = new Vector2(0, posY);
         t_myNumber.text = (myIndex + 1).ToString();
+        t_debugInfo.text = "Y:" + myTerm.totalYeses + "\nN:" + myTerm.totalNos;
         if_native.text = myTerm.english;
         if_foreign.text = myTerm.danish;
         if_phonetic.text = myTerm.phonetic;
@@ -34,6 +44,9 @@ public class TermEditableTile : MonoBehaviour
     }
 
 
+    // ----------------------------------------------------------------
+    //  Events
+    // ----------------------------------------------------------------
     public void OnFinishedEditingAnyField() {
         // Update my term by my texts.
         myTerm.english = if_native.text;
@@ -42,7 +55,6 @@ public class TermEditableTile : MonoBehaviour
         // The moment we're done editing a field, save the ENTIRE library again!
         GameManagers.Instance.DataManager.SaveStudySetLibrary();
     }
-
 
     public void OnClickPreDelete() {
         rt_deleteConfirmation.gameObject.SetActive(true);

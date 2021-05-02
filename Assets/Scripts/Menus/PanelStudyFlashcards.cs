@@ -9,6 +9,7 @@ public class PanelStudyFlashcards : BasePanel {
     // Components
     [SerializeField] private Button b_undo;
     [SerializeField] private CardView currCardView;
+    [SerializeField] private MoveTermPopup moveTermPopup;
     [SerializeField] private TextMeshProUGUI t_progress;
     [SerializeField] private TextMeshProUGUI t_finishedHeader;
     [SerializeField] private RectTransform rt_setFinished;
@@ -34,6 +35,7 @@ public class PanelStudyFlashcards : BasePanel {
         }
 
         // Start us off, boi.
+        moveTermPopup.Hide();
         RefreshCardVisuals();
     }
 
@@ -44,7 +46,7 @@ public class PanelStudyFlashcards : BasePanel {
     private void UpdateUndoButtonInteractable() {
         b_undo.interactable = currStudySet.pileYesesAndNos.Count > 0;
     }
-    private void RefreshCardVisuals() {
+    public void RefreshCardVisuals() {
         // Update progress text
         t_progress.text = Mathf.Min(currStudySet.NumInCurrentRound, currStudySet.NumDone+1) + " / " + currStudySet.NumInCurrentRound;
 
@@ -72,22 +74,27 @@ public class PanelStudyFlashcards : BasePanel {
     // ================================================================
     public void OnClickYes() {
         currStudySet.OnClickCurrTermYes();
+        dm.SaveStudySetLibrary();
         RefreshCardVisuals();
     }
     public void OnClickNo() {
         currStudySet.OnClickCurrTermNo();
+        dm.SaveStudySetLibrary();
         RefreshCardVisuals();
     }
     public void OnClickUndo() {
         currStudySet.RewindOneCard();
+        dm.SaveStudySetLibrary();
         RefreshCardVisuals();
     }
     public void OnClickShuffleAndReset() {
         currStudySet.ShuffleAndRestartDeck();
+        dm.SaveStudySetLibrary();
         RefreshCardVisuals();
     }
     public void OnClickStudyAgain() {
         currStudySet.RestartNewRound();
+        dm.SaveStudySetLibrary();
         RefreshCardVisuals();
     }
 

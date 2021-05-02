@@ -7,7 +7,6 @@ using UnityEngine;
 public class DataManager {
     // Properties
     public StudySetLibrary library;
-    //public List<StudySet> studySets=new List<StudySet>();
 
 
     // ----------------------------------------------------------------
@@ -19,15 +18,67 @@ public class DataManager {
     //  Initialize
     // ----------------------------------------------------------------
     public DataManager() {
-        ReloadStudySetLibrary();
+        // Save data? Use it!
+        if (SaveStorage.HasKey(SaveKeys.StudySetLibrary)) {
+            ReloadStudySetLibrary();
+        }
+        // NO save data?! Ok, default to Quizlet hardcoded ones! :)
+        else {
+            ReplaceAllStudySetsWithPremadeHardcodedOnes();
+        }
     }
     public void ReloadStudySetLibrary() {
         string jsonString = SaveStorage.GetString(SaveKeys.StudySetLibrary);
         library = JsonUtility.FromJson<StudySetLibrary>(jsonString);
+
+        // HACK!! Go through the piles, and replace matching ones with the ones from allTerms! So the ones in the piles are REFERENCES to the ones in allTerms.
+        foreach (StudySet set in library.sets) {
+            for (int i=set.allTerms.Count-1; i>=0; i--) {
+                Term mainTerm = set.allTerms[i];
+                for (int j=set.pileNo.Count-1; j>=0; j--) {
+                    Term thisTerm = set.pileNo[j];
+                    if (thisTerm.english == mainTerm.english) {
+                        set.pileNo.Insert(j, mainTerm);
+                        set.pileNo.Remove(thisTerm);
+                    }
+                }
+
+                for (int j=set.pileQueue.Count-1; j>=0; j--) {
+                    Term thisTerm = set.pileQueue[j];
+                    if (thisTerm.english == mainTerm.english) {
+                        set.pileQueue.Insert(j, mainTerm);
+                        set.pileQueue.Remove(thisTerm);
+                    }
+                }
+                
+                for (int j=set.pileYes.Count-1; j>=0; j--) {
+                    Term thisTerm = set.pileYes[j];
+                    if (thisTerm.english == mainTerm.english) {
+                        set.pileYes.Insert(j, mainTerm);
+                        set.pileYes.Remove(thisTerm);
+                    }
+                }
+                
+                for (int j=set.pileYesesAndNos.Count-1; j>=0; j--) {
+                    Term thisTerm = set.pileYesesAndNos[j];
+                    if (thisTerm.english == mainTerm.english) {
+                        set.pileYesesAndNos.Insert(j, mainTerm);
+                        set.pileYesesAndNos.Remove(thisTerm);
+                    }
+                }
+            }
+        }
+
+
+        // Reaffiliate all terms with their sets.
+        foreach (StudySet set in library.sets) {
+            set.GiveAllMyTermsRefToMe();
+        }
+
     }
     public void SaveStudySetLibrary() {
         string jsonString = JsonUtility.ToJson(library);
-        Debug.Log(jsonString);
+        Debug.Log("SAVED SET: " + jsonString);
         SaveStorage.SetString(SaveKeys.StudySetLibrary, jsonString);
     }
 
@@ -41,6 +92,22 @@ public class DataManager {
 		//ReloadLevels ();
 		Debug.Log ("All SaveStorage CLEARED!");
 	}
+
+
+    public void MoveTermToSet(Term term, StudySet newSet) {
+        // Swap its set.
+        StudySet prevSet = term.mySet;
+        prevSet.RemoveTerm(term);
+        newSet.AddTerm(term);
+        // Save!
+        SaveStudySetLibrary();
+    }
+
+
+
+
+
+
     public void ReplaceAllStudySetsWithPremadeHardcodedOnes() {
         //// TEMP!
         //List<Term> set1 = new List<Term>();
@@ -93,7 +160,7 @@ public class DataManager {
             "Det gjorde vi allerede. [de gjóahvee aleReD] - We did that already.\nJeg havde det sjovt! [heD(-ah)] - I had fun!\nLæste du den bog, jeg sendte dig? [læste du-den bo, ja sendt(e) da?] - Did you read the book I sent you?\nHåber at du får en hyggelig aften. [as spelled] - Hope that you have a nice evening.\nBrug din fantasi. - Use your imagination.\nHan spillede også tennis. [spil-eD] - He also played tennis.\nTrist [tReest] - Sad\ni stedet for [i steDet'] - Instead of\nJeg fik mange venner. [fick] - I made many friends.\nTør [tø(r)ah] - Dry\nDet er den slags fyr, jeg er. [slahgs fY(r)ah] - That's the kind of guy I am.\nForskel [fo(w)r-ske] - Difference\nJeg kedede mig. [kiDD(th)] - I was bored.\nHvor flyttede du hertil? [flY-deD(-th) du ha-til] - Why did you move here?\nTidligere i dag sagde min ven... [tiD-lee-ah i dag sayy meen ven...] - Earier today, my friend said...\nJeg tilføjer dem senere. [tíl-føjah] - I'll add them later.\nJeg tilføjede dem til sætningerne. [til-føeD; saétning-ah-n(eh)] - I added them to the sentences.\nTidligere [tiD-lee-ah] - Earlier\nTættere på [tehdda på] - Closer to\nKan du forklare? [kádu fo(r)-klaah] - Can you explain?\nForvirret [fuh-vee-u(h)D] - Confused\nHjerne [yuær-neh] - Brain\nDe kom hertil for at opleve livet og mentaliteten i Skandinavien. [fo-a op-læwe-leewD o mentali-té-n i Skandinavien] - They came here to experience the life and mentality in Scandinavia.\nTørsdig [tørus-dee] - Thirsty\nFlyttede [flY-deD(-th)] - Moved (pronunciation)\nhelt andet end i USA [het annuhD enni USA] - completely different than the USA\nIngenting - Nothing"
         ));
         library.sets.Add(new StudySet("Danish M2 #6",
-            "[Keelomáyy-da] - Kilometer pronunciation\nSikke en sjov historie! [sig(ge) en sjov hih-stor-i-ah] - What a funny story!\nEr det det samme som...? [de sámm(e) som] - Is that the same as...?\nEr det lige som...? [er de lee sum...] - Is that similar to...?\nEr det (lidt/næsten) ligesom på engelsk? - Is that (almost) the same as in English?\nDet kan (jo) ske. - It happens. (As in, \"It's all right... it happens.\")\nØv! [Øw] - Darn!\nDet var ærgerligt. [a-ouwlidt] - What a shame / I'm sorry to hear that\nEt grimt ord [gRemd] - A bad word\nHar du tid til et spil? [tiD ti ah spil] - Do you have time for a game?\nHvad er forskellen på de to? [hve fo(r)-skellen på dee to?] - What\'s the difference between the two?\nDet lige sket. [de lee skate] - It just happened.\nFormelt [fo-melt] - Formal\nJeg har masser. [ma(e)ssa] - I have plenty.\nLivet er godt. [lee-wull, short wull] - Life is good.\nDu lever livet farligt! [du læwa-leewD fah-leet] - You live life dangerously!\noplave livet [op-le-wah lee-wiD] - experience life\nJeg finder ud af det med tiden. [úD er-day meh-tíDen] - I\'ll figure it out over time.\nJeg var helt tabt. [as spelled] - I was totally lost.\nEr du klar over, hvor sej du er? - Do you realize how cool you are?\nHvor længe skal du så være her? [voe læng skádusa væ-ah ha] - How long will you be here, then?\nIngen [inng] - Nobody\nTypisk [tYpisk] - Typical\nTørsdig [tør(u)s-dee] - Thirsty\nBlive ved. [bleeu viD] - Continue."
+            "Keelomáyy-da - Kilometer pronunciation\nSikke en sjov historie! [sig(ge) en sjov hih-stor-i-ah] - What a funny story!\nEr det det samme som...? [de sámm(e) som] - Is that the same as...?\nEr det lige som...? [er de lee sum...] - Is that similar to...?\nEr det (lidt/næsten) ligesom på engelsk? - Is that (almost) the same as in English?\nDet kan (jo) ske. - It happens. (As in, \"It's all right... it happens.\")\nØv! [Øw] - Darn!\nDet var ærgerligt. [a-ouwlidt] - What a shame / I'm sorry to hear that\nEt grimt ord [gRemd] - A bad word\nHar du tid til et spil? [tiD ti ah spil] - Do you have time for a game?\nHvad er forskellen på de to? [hve fo(r)-skellen på dee to?] - What\'s the difference between the two?\nDet lige sket. [de lee skate] - It just happened.\nFormelt [fo-melt] - Formal\nJeg har masser. [ma(e)ssa] - I have plenty.\nLivet er godt. [lee-wull, short wull] - Life is good.\nDu lever livet farligt! [du læwa-leewD fah-leet] - You live life dangerously!\noplave livet [op-le-wah lee-wiD] - experience life\nJeg finder ud af det med tiden. [úD er-day meh-tíDen] - I\'ll figure it out over time.\nJeg var helt tabt. [as spelled] - I was totally lost.\nEr du klar over, hvor sej du er? - Do you realize how cool you are?\nHvor længe skal du så være her? [voe læng skádusa væ-ah ha] - How long will you be here, then?\nIngen [inng] - Nobody\nTypisk [tYpisk] - Typical\nTørsdig [tør(u)s-dee] - Thirsty\nBlive ved. [bleeu viD] - Continue."
         ));
         library.sets.Add(new StudySet("Danish M2 #7",
             "Undrer mig over - I wonder\nJeg havde ret. Du tog fejl. [heD Rat. du to fai] - I was right. You were wrong.\nSkal vi se det? [skavi sæ de?] - Shall we watch it?\nDet har jeg glemt. - I have forgotten.\nJeg er lige blevet [bliD] færdig med at spille. - I just finished playing.\nSpeciel [Speshee-el] - Special\nOg hvad så? - So what?\nFalsk [faelsk] - False\nModig [muDee] - Brave\nLøgner [løin-a] - Liar\nJeg er enig. [æ-ni] - I agree.\nJeg er uenig. [oo-æ-ni] - I disagree.\nJeg er frisk! - I'm down! / Sign me up!\nDe fleste af dem var ret gode. [dee flæyst-e adem va Rat goeD] - Most of them were pretty good.\nKys og kram. - Kisses and hugs.\nDet er op til dig. - It's up to you.\nJeg bliver rasende. - I'm getting furious.\nHold kæft. - Shut up.\nOnde [o(e)neh] - Evil\nBare sådan [baahh súddin] - Just like that\nNyd det, mens det varer. [nYD de, mens de vaaa] - Enjoy it while it lasts.\nHvordan har du det i hjertet? [ee-ah-diD] - How do you feel in your heart?\nHar du set det? [sæy de] - Have you seen it?\nHvordan føles det? Føles det godt? [as spelled] - How does it feel? Does it feel good?\nDet er alt du skal vide. - That's all you need to know."

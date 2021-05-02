@@ -52,8 +52,12 @@ public class MenuController : MonoBehaviour
     // ================================================================
     //  Update
     // ================================================================
-    void Update()
-    {
+    void Update() {
+
+        //Debug.Log("0'th's set: " + dm.library.sets[0].allTerms[0].mySet);
+
+
+        // Key Inputs
         if (Input.GetKeyDown(KeyCode.Delete)) dm.ClearAllSaveData();
         // CTRL + ___
         if (Input.GetKey(KeyCode.LeftControl)) {
