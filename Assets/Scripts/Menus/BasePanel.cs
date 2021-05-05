@@ -5,6 +5,11 @@ using UnityEngine;
 public class BasePanel : MonoBehaviour
 {
 
+    // Getters
+    protected DataManager dm { get { return GameManagers.Instance.DataManager; } }
+    protected EventManager eventManager { get { return GameManagers.Instance.EventManager; } }
+
+
     public void SetVisibility(bool _isVisible) {
         this.gameObject.SetActive(_isVisible);
         if (_isVisible) OnOpened();

@@ -12,9 +12,20 @@ public class MoveTermPopup : MonoBehaviour
     [SerializeField] private TextMeshProUGUI t_currTermName;
     private List<MoveTermPopupSetTile> tiles=new List<MoveTermPopupSetTile>();
     // References
-    [SerializeField] PanelStudyFlashcards panelFlashcards;
     private Term currTerm;
 
+
+    // ----------------------------------------------------------------
+    //  Start / Destroy
+    // ----------------------------------------------------------------
+    private void Start() {
+        Hide(); // Start off hidden, of course.
+
+        GameManagers.Instance.EventManager.ShowMoveTermPopupEvent += Show;
+    }
+    private void OnDestroy() {
+        GameManagers.Instance.EventManager.ShowMoveTermPopupEvent -= Show;
+    }
 
     // ----------------------------------------------------------------
     //  Hide / Show
@@ -35,7 +46,17 @@ public class MoveTermPopup : MonoBehaviour
         tiles = new List<MoveTermPopupSetTile>();
 
         // Make 'em all.
-        foreach (StudySet set in GameManagers.Instance.DataManager.library.sets) {
+        StudySetLibrary library = GameManagers.Instance.DataManager.library;
+        List<StudySet> setsToShow = new List<StudySet>();
+        // Add regular set list.
+        foreach (StudySet set in library.sets) setsToShow.Add(set);
+        // Add special sets.
+        setsToShow.Add(library.setAced);
+        setsToShow.Add(library.setShelved);
+        setsToShow.Add(library.setToValidate);
+        setsToShow.Add(library.setWantRecording);
+
+        foreach (StudySet set in setsToShow) {
             MoveTermPopupSetTile newView = Instantiate(ResourcesHandler.Instance.MoveTermPopupSetTile).GetComponent<MoveTermPopupSetTile>();
             bool isSameSet = set == currTerm.mySet;
             newView.Initialize(this, rt_tilesContent, set, isSameSet);
@@ -55,8 +76,8 @@ public class MoveTermPopup : MonoBehaviour
     public void OnClickStudySet(StudySet set) {
         // Actually move it!
         GameManagers.Instance.DataManager.MoveTermToSet(currTerm, set);
-        // Now update the visuals of the previous panel.
-        panelFlashcards.RefreshCardVisuals();
+        // Dispatch event so folks can update their visuals.
+        GameManagers.Instance.EventManager.OnAnySetContentsChanged();
         // See ya!
         Hide();
     }

@@ -71,7 +71,7 @@ public class DataManager {
 
 
         // Reaffiliate all terms with their sets.
-        foreach (StudySet set in library.sets) {
+        foreach (StudySet set in library.GetRegularAndSpecialSetsList()) {
             set.GiveAllMyTermsRefToMe();
         }
 
@@ -101,6 +101,17 @@ public class DataManager {
         newSet.AddTerm(term);
         // Save!
         SaveStudySetLibrary();
+    }
+
+    public void CopyAllSetsToClipboard() {
+        string wholeStr = "";
+        List<StudySet> everySet = library.GetRegularAndSpecialSetsList();
+        foreach (StudySet set in everySet) {
+            wholeStr += set.name+"\n";
+            wholeStr += set.GetAsExportedString_ForeignBracketPhoneticNative();
+            wholeStr += "\n\n";
+        }
+        GameUtils.CopyToClipboard(wholeStr);
     }
 
 

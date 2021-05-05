@@ -11,7 +11,6 @@ public class PanelStudyFlashcards : BasePanel {
     [SerializeField] private CardView currCardView;
     [SerializeField] private Image i_progressBarBack;
     [SerializeField] private Image i_progressBarFill;
-    [SerializeField] private MoveTermPopup moveTermPopup;
     [SerializeField] private TextMeshProUGUI t_progress;
     [SerializeField] private TextMeshProUGUI t_finishedHeader;
     [SerializeField] private RectTransform rt_setFinished;
@@ -20,14 +19,17 @@ public class PanelStudyFlashcards : BasePanel {
     private StudySet currStudySet;
 
 
-    // Getters
-    private DataManager dm { get { return GameManagers.Instance.DataManager; } }
 
 
     // ================================================================
-    //  Start
+    //  Start / Destroy
     // ================================================================
-    void Start() { }
+    private void Start() {
+        eventManager.SetContentsChangedEvent += RefreshCardVisuals;
+    }
+    private void OnDestroy() {
+        eventManager.SetContentsChangedEvent -= RefreshCardVisuals;
+    }
     public void OpenSet(StudySet currStudySet) {
         this.currStudySet = currStudySet;
 
@@ -37,7 +39,6 @@ public class PanelStudyFlashcards : BasePanel {
         }
 
         // Start us off, boi.
-        moveTermPopup.Hide();
         RefreshCardVisuals();
     }
 
@@ -48,7 +49,8 @@ public class PanelStudyFlashcards : BasePanel {
     private void UpdateUndoButtonInteractable() {
         b_undo.interactable = currStudySet.pileYesesAndNos.Count > 0;
     }
-    public void RefreshCardVisuals() {
+    private void RefreshCardVisuals() {
+        if (currStudySet == null) { return; } // No current StudySet? We're not in flashcard mode! Do nothin'.
         // Update progress visuals
         int numDone = currStudySet.NumDone;
         int numInRound = currStudySet.NumInCurrentRound;

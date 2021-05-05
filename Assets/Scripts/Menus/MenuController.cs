@@ -6,6 +6,7 @@ public class MenuController : MonoBehaviour
 {
     // References
     [SerializeField] private PanelEditSet panel_editSet;
+    [SerializeField] private BasePanel panel_searchTerms;
     [SerializeField] private BasePanel panel_studyChooseSet;
     [SerializeField] private PanelStudyFlashcards panel_studyFlashcards;
 
@@ -16,8 +17,8 @@ public class MenuController : MonoBehaviour
     // ================================================================
     //  Start
     // ================================================================
-    void Start()
-    {
+    void Start() {
+        // TODO: Save which panel was open last. Open that one!
         ShowPanel(panel_studyChooseSet);
     }
 
@@ -28,6 +29,7 @@ public class MenuController : MonoBehaviour
     public void ShowPanel(BasePanel _panel)
     {
         panel_editSet.SetVisibility(false);
+        panel_searchTerms.SetVisibility(false);
         panel_studyChooseSet.SetVisibility(false);
         panel_studyFlashcards.SetVisibility(false);
 
@@ -38,6 +40,7 @@ public class MenuController : MonoBehaviour
     //  Events
     // ================================================================
     public void OpenPanel_EditSet(StudySet set) { ShowPanel(panel_editSet); panel_editSet.OpenSet(set); }
+    public void OpenPanel_SearchTerms() { ShowPanel(panel_searchTerms); }
     public void OpenPanel_StudyChooseSet() { ShowPanel(panel_studyChooseSet); }
     public void OpenPanel_StudyFlashcards(StudySet set) { ShowPanel(panel_studyFlashcards); panel_studyFlashcards.OpenSet(set); }
 

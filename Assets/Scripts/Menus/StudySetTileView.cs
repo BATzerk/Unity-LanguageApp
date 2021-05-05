@@ -8,8 +8,10 @@ public class StudySetTileView : MonoBehaviour
 {
     // Components
     [SerializeField] private RectTransform myRectTransform;
+    [SerializeField] private RectTransform rt_numTermsCardIcon;
     [SerializeField] private TextMeshProUGUI t_name;
     [SerializeField] private TextMeshProUGUI t_numTerms;
+    [SerializeField] private TextMeshProUGUI t_numRoundsStarted;
     [SerializeField] private GameObject go_progressBar;
     [SerializeField] private Image i_progressBarBack;
     [SerializeField] private Image i_progressBarFill;
@@ -21,33 +23,32 @@ public class StudySetTileView : MonoBehaviour
     // ----------------------------------------------------------------
     //  Initialize
     // ----------------------------------------------------------------
-    public void Initialize(PanelStudyChooseSet myPanel, RectTransform tf_parent, StudySet mySet) {
+    public void Initialize(PanelStudyChooseSet myPanel, RectTransform tf_parent) {
         this.myPanel = myPanel;
-        this.mySet = mySet;
         GameUtils.ParentAndReset(gameObject, tf_parent);
-
-        UpdateVisuals();
     }
+    public void SetMySet(StudySet mySet) {
+        this.mySet = mySet;
 
-
-    // ----------------------------------------------------------------
-    //  Update Visuals
-    // ----------------------------------------------------------------
-    public void UpdateVisuals() {
         // Update visuals
         t_name.text = mySet.name;
-        t_numTerms.text = mySet.NumTotal.ToString() + " terms";
-        //t_progress.text = mySet.IsInProgress ?
-        //    ("progress: " + (int)(mySet.NumDone/(float)mySet.NumInCurrentRound)*100 + "%")
-        //    : ""
-        //;
+        t_numTerms.text = mySet.NumTotal.ToString();// + " terms";
+        t_numRoundsStarted.text = mySet.numRoundsStarted.ToString();
         go_progressBar.SetActive(mySet.IsInProgress);
         if (mySet.IsInProgress) {
             float barWidth = i_progressBarBack.rectTransform.rect.width;
             float progressLoc = mySet.NumDone / (float)mySet.NumInCurrentRound;
-            i_progressBarFill.rectTransform.sizeDelta = new Vector2(barWidth*progressLoc, i_progressBarFill.rectTransform.sizeDelta.y);
+            i_progressBarFill.rectTransform.sizeDelta = new Vector2(barWidth * progressLoc, i_progressBarFill.rectTransform.sizeDelta.y);
         }
+        rt_numTermsCardIcon.localEulerAngles = new Vector3(0, 0, Random.Range(-5f, 5f));
     }
+
+
+    //// ----------------------------------------------------------------
+    ////  Update Visuals
+    //// ----------------------------------------------------------------
+    //public void UpdateVisuals() {
+    //}
 
 
     // ----------------------------------------------------------------
