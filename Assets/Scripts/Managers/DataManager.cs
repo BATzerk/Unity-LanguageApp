@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class DataManager {
     // Properties
+    public TermAudioLibrary audioLibrary;
     public StudySetLibrary library;
 
 
@@ -18,6 +19,8 @@ public class DataManager {
     //  Initialize
     // ----------------------------------------------------------------
     public DataManager() {
+        //
+        ReloadAudioLibrary();
         // Save data? Use it!
         if (SaveStorage.HasKey(SaveKeys.StudySetLibrary)) {
             ReloadStudySetLibrary();
@@ -25,6 +28,15 @@ public class DataManager {
         // NO save data?! Ok, default to Quizlet hardcoded ones! :)
         else {
             ReplaceAllStudySetsWithPremadeHardcodedOnes();
+        }
+    }
+    private void ReloadAudioLibrary() {
+        if (SaveStorage.HasKey(SaveKeys.TermAudioLibrary)) {
+            string jsonString = SaveStorage.GetString(SaveKeys.TermAudioLibrary);
+            audioLibrary = JsonUtility.FromJson<TermAudioLibrary>(jsonString);
+        }
+        else {
+            audioLibrary = new TermAudioLibrary();
         }
     }
     public void ReloadStudySetLibrary() {
@@ -112,6 +124,20 @@ public class DataManager {
             wholeStr += "\n\n";
         }
         GameUtils.CopyToClipboard(wholeStr);
+    }
+
+
+
+
+
+    // ----------------------------------------------------------------
+    //  Audio
+    // ----------------------------------------------------------------
+    public void DeleteTermAudio0(Term term) {
+        //audioLibrary.DeleteAudioClip(audio0Guid);
+        //term.audio0Guid = null;
+        //SaveAudioLibrary();
+        //SaveTermsLibrary();
     }
 
 

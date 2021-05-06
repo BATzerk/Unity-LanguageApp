@@ -22,14 +22,15 @@ public struct CustomDate
 }
 
 
+
 [Serializable]
-public class Term
-{
+public class Term {
     public int totalYeses=0; // increments whenever we swipe RIGHT to this term.
     public int totalNos=0;
     public string english;
     public string danish;
     public string phonetic;
+    public Guid audio0Guid;
     [NonSerialized] public StudySet mySet;
     public Term() {
         english = "";
