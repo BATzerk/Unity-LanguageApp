@@ -14,9 +14,11 @@ public class EventManager {
 
     // Gameplay
     public event NoParamAction SetContentsChangedEvent;
+    public event TermAction OpenRecordPopupEvent;
     public event TermAction ShowMoveTermPopupEvent;
 
     public void OnAnySetContentsChanged() { if (SetContentsChangedEvent != null) { SetContentsChangedEvent(); } }
+    public void OpenRecordPopup(Term term) { if (OpenRecordPopupEvent != null) { OpenRecordPopupEvent(term); } }
     public void ShowMoveTermPopup(Term term) { if (ShowMoveTermPopupEvent != null) { ShowMoveTermPopupEvent(term); } }
 
 

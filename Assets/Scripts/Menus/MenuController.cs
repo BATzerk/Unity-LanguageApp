@@ -19,7 +19,8 @@ public class MenuController : MonoBehaviour
     // ================================================================
     void Start() {
         // TODO: Save which panel was open last. Open that one!
-        ShowPanel(panel_studyChooseSet);
+        //ShowPanel(panel_studyChooseSet);
+        OpenPanel_EditSet(dm.library.sets[0]);
     }
 
 

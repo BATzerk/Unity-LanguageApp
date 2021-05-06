@@ -89,6 +89,9 @@ public class TermEditableTile : MonoBehaviour
     public void OnClickOptions() {
         rt_options.gameObject.SetActive(true);
     }
+    public void OnClickOpenRecordPopup() {
+        GameManagers.Instance.EventManager.OpenRecordPopup(myTerm);
+    }
     public void OnClickMoveTerm() {
         GameManagers.Instance.EventManager.ShowMoveTermPopup(myTerm);
         //HideOptions();

@@ -10,93 +10,83 @@ public class RecordAudioPopup : MonoBehaviour
 {
     // Components
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private GameObject scrim;
+    [SerializeField] private GameObject popup;
     [SerializeField] private GameObject buttonPlay;
     [SerializeField] private GameObject buttonRecord;
     [SerializeField] private GameObject buttonStop;
-    //string url = "file://C:/Users/Pajkec/Desktop/muske WAW/maroon5.wav";
-    void Start() {
-
-        string path = Path.Combine(Application.persistentDataPath, "Audio");
-        path = Path.Combine(path, "TestAudio.wav");
-        WWW audioLoader = new WWW(path);
-        while (!audioLoader.isDone) {
-            Debug.Log("uploading");
-        }
-
-        Debug.Log("1");
-
-        audioSource.clip = audioLoader.GetAudioClip(false, false, AudioType.WAV);
-        //audio.Play();
+    // References
+    private Term currTerm;
 
 
-        //Debug.Log("start");
-        //StartCoroutine(StartAudio());
-    }
-    void Update() {
-        if (!audioSource.isPlaying && audioSource.clip.isReadyToPlay) {
-            Debug.Log("playing");
-            audioSource.Play();
-        }
-    }
-
-    /*
     // ----------------------------------------------------------------
     //  Start
     // ----------------------------------------------------------------
-    //private void Start() {
-    //    StopRecord();
+    void Start() {
+        // Start closed.
+        Close();
 
-    //    string tempPath = Path.Combine(Application.persistentDataPath, "Audio");
-    //    tempPath = Path.Combine(tempPath, "TestAudio.wav");
-    //    Debug.Log("loading path: " + tempPath);
-    //    StartCoroutine(LoadAudio(tempPath));
-    //}
-
-    //IEnumerator LoadAudio(string path) {
-    //    // Load Audio
-    //    WWW audioLoader = new WWW(path);
-    //    yield return audioLoader;
-
-    //    // Convert it to AudioClip
-    //    Debug.Log("audioLoader.bytesDownloaded: " + audioLoader.bytesDownloaded);
-    //    Debug.Log("audioLoader.url: " + audioLoader.url);
-    //    AudioClip loadedClip = audioLoader.GetAudioClip(false, false, AudioType.WAV);
-    //    audioSource.clip = loadedClip;
-    //    Debug.Log("Loaded audio: " + audioSource.clip.length);
-    //}
-    async void Start() {
-        // build your absolute path
-        string path = Path.Combine(Application.persistentDataPath, "Audio");
-        path = Path.Combine(path, "TestAudio.wav");
-
-        // wait for the load and set your property
-        audioSource.clip = await LoadClip(path);
-
-        //... do something with it
+        // Add event listeners
+        GameManagers.Instance.EventManager.OpenRecordPopupEvent += OpenMe;
+    }
+    private void OnDestroy() {
+        // Remove event listeners
+        GameManagers.Instance.EventManager.OpenRecordPopupEvent -= OpenMe;
     }
 
-    async Task<AudioClip> LoadClip(string path) {
-        AudioClip clip = null;
-        using (UnityWebRequest uwr = UnityWebRequestMultimedia.GetAudioClip(path, AudioType.WAV)) {
-            uwr.SendWebRequest();
 
-            // wrap tasks in try/catch, otherwise it'll fail silently
-            try {
-                while (!uwr.isDone) await Task.Delay(5);
+    // ----------------------------------------------------------------
+    //  Open / Close
+    // ----------------------------------------------------------------
+    private void OpenMe(Term currTerm) {
+        this.currTerm = currTerm;
 
-                if (uwr.isNetworkError || uwr.isHttpError) Debug.Log($"{uwr.error}");
+        this.gameObject.SetActive(true);
+        StopRecord();
+        LoadClipForCurrTerm();
+    }
+    public void Close() {
+        this.gameObject.SetActive(false);
+    }
+
+
+
+    string testClipPath { get { return Path.Combine(Application.persistentDataPath, "Audio/TestAudio.wav"); } }
+    void LoadClipForCurrTerm() {
+        StartCoroutine(GetAudioClip(testClipPath));
+    }
+    IEnumerator GetAudioClip(string fullPath) {
+        fullPath = "file:///" + fullPath; // HACK for Mac? We can't find the audio file without this prefix, but *only* for loading, not saving.
+        using (var uwr = UnityWebRequestMultimedia.GetAudioClip(fullPath, AudioType.WAV)) {
+            ((DownloadHandlerAudioClip)uwr.downloadHandler).streamAudio = true;
+
+            yield return uwr.SendWebRequest();
+
+            if (uwr.isNetworkError || uwr.isHttpError) {
+                Debug.LogError(uwr.error);
+                yield break;
+            }
+
+            DownloadHandlerAudioClip dlHandler = (DownloadHandlerAudioClip)uwr.downloadHandler;
+
+            if (dlHandler.isDone) {
+                audioSource.clip = dlHandler.audioClip;
+
+                if (audioSource.clip != null) {
+                    audioSource.clip = DownloadHandlerAudioClip.GetContent(uwr);
+                    Debug.Log("Loaded audioClip!");
+                }
                 else {
-                    clip = DownloadHandlerAudioClip.GetContent(uwr);
+                    Debug.Log("Couldn't load a valid AudioClip.");
                 }
             }
-            catch (Exception err) {
-                Debug.Log($"{err.Message}, {err.StackTrace}");
+            else {
+                Debug.Log("The download process is not completely finished.");
             }
         }
-
-        Debug.Log("Returning audio: " + clip);
-        return clip;
     }
+
+
 
 
     // ----------------------------------------------------------------
@@ -108,10 +98,9 @@ public class RecordAudioPopup : MonoBehaviour
         audioSource.Play();
     }
 
-
     public void StartRecord() {
         audioSource.clip = Microphone.Start(null, false, 10, 44100);//"Built-in Microphone"
-        // Update visuals.
+                                                                    // Update visuals.
         buttonRecord.SetActive(false);
         buttonStop.SetActive(true);
         buttonPlay.SetActive(false);
@@ -125,12 +114,10 @@ public class RecordAudioPopup : MonoBehaviour
         if (Microphone.IsRecording(null)) {
             Microphone.End(null);
             // Save it!
-            string tempPath = Path.Combine(Application.persistentDataPath, "Audio");
-            tempPath = Path.Combine(tempPath, "TestAudio.wav");
-            SavWav.Save(tempPath, audioSource.clip);
+            SavWav.Save(testClipPath, audioSource.clip);
             Debug.Log("SAVED audio. Length: " + audioSource.clip.length);
         }
-    }*/
+    }
 
 
 
