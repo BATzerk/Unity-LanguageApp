@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class CardView : MonoBehaviour {
     // Components
+    [SerializeField] private Button b_playClip;
     [SerializeField] private GameObject go_swipeBannerNo;
     [SerializeField] private GameObject go_swipeBannerYes;
     [SerializeField] private RectTransform myRectTransform;
@@ -20,6 +22,7 @@ public class CardView : MonoBehaviour {
     [SerializeField] TMP_InputField if_phonetic;
     // References
     [SerializeField] private PanelStudyFlashcards myPanel;
+    [SerializeField] private TermAudioClipPlayer clipPlayer;
     public Term MyTerm { get; private set; }
     // Properties
     private bool isNativeSide; // if FALSE, we're showing the foreign side.
@@ -32,12 +35,12 @@ public class CardView : MonoBehaviour {
     public void SetMyTerm(Term term) {
         this.MyTerm = term;
         timeWhenSetTerm = Time.time;
-        //Debug.Log("Term set: " + MyTerm.mySet);
 
         // Update visuals!
         UpdateTextFieldsFromTerm();
         HideOptions();
         ShowSideNative(true);
+        b_playClip.gameObject.SetActive(term.HasAudio0());
 
         // Reset swipiness.
         go_swipeBannerNo.SetActive(false);
@@ -101,6 +104,10 @@ public class CardView : MonoBehaviour {
         // Refresh all my texts now.
         UpdateTextFieldsFromTerm();
     }
+    public void OnClickPlayAudioClip() {
+        clipPlayer.PlayTermClip(MyTerm);
+    }
+
 
 
 

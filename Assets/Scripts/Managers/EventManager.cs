@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class EventManager {
 	// Actions and Event Variables
 	public delegate void NoParamAction ();
+    public delegate void AudioClipAction(AudioClip clip);
+    public delegate void StringAction(string str);
     public delegate void TermAction(Term term);
     // Common
     public event NoParamAction ScreenSizeChangedEvent;
@@ -14,12 +16,18 @@ public class EventManager {
 
     // Gameplay
     public event NoParamAction SetContentsChangedEvent;
+    public event NoParamAction ClipLoadFailEvent;
+    public event AudioClipAction ClipLoadSuccessEvent;
+    //public event StringAction TellClipPlayerToLoadClipEvent;
     public event TermAction OpenRecordPopupEvent;
     public event TermAction ShowMoveTermPopupEvent;
 
     public void OnAnySetContentsChanged() { if (SetContentsChangedEvent != null) { SetContentsChangedEvent(); } }
     public void OpenRecordPopup(Term term) { if (OpenRecordPopupEvent != null) { OpenRecordPopupEvent(term); } }
     public void ShowMoveTermPopup(Term term) { if (ShowMoveTermPopupEvent != null) { ShowMoveTermPopupEvent(term); } }
+    //public void TellClipPlayerToLoadClip(string str) { if (TellClipPlayerToLoadClipEvent != null) { TellClipPlayerToLoadClip(str); } }
+    public void OnClipLoadFail() { if (ClipLoadFailEvent != null) { ClipLoadFailEvent(); } }
+    public void OnClipLoadSuccess(AudioClip clip) { if (ClipLoadSuccessEvent != null) { ClipLoadSuccessEvent(clip); } }
 
 
 

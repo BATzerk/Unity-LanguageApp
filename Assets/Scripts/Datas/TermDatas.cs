@@ -30,12 +30,17 @@ public class Term {
     public string english;
     public string danish;
     public string phonetic;
-    public Guid audio0Guid;
+    public string audio0Guid;
     [NonSerialized] public StudySet mySet;
+
+    public bool HasAudio0() { return !string.IsNullOrEmpty(audio0Guid); }
+
+
     public Term() {
         english = "";
         danish = "";
         phonetic = "";
+        audio0Guid = "";
     }
     public Term(string english,string danish,string phonetic) {
         this.english = english;
@@ -164,7 +169,6 @@ public class StudySet
     // Doers
     public void GiveAllMyTermsRefToMe() {
         foreach (Term t in allTerms) t.mySet = this; // go through the list so they all know they belong to me.
-        //// QQQ
         //foreach (Term t in pileNo) t.mySet = this; // go through the list so they all know they belong to me.
         //foreach (Term t in pileQueue) t.mySet = this; // go through the list so they all know they belong to me.
         //foreach (Term t in pileYes) t.mySet = this; // go through the list so they all know they belong to me.

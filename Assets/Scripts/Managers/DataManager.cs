@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
@@ -19,8 +20,14 @@ public class DataManager {
     //  Initialize
     // ----------------------------------------------------------------
     public DataManager() {
-        //
-        ReloadAudioLibrary();
+        // Reload audioLibrary.
+        if (SaveStorage.HasKey(SaveKeys.TermAudioLibrary)) {
+            ReloadAudioLibrary();
+        }
+        else {
+            audioLibrary = new TermAudioLibrary();
+        }
+
         // Save data? Use it!
         if (SaveStorage.HasKey(SaveKeys.StudySetLibrary)) {
             ReloadStudySetLibrary();
@@ -31,13 +38,8 @@ public class DataManager {
         }
     }
     private void ReloadAudioLibrary() {
-        if (SaveStorage.HasKey(SaveKeys.TermAudioLibrary)) {
-            string jsonString = SaveStorage.GetString(SaveKeys.TermAudioLibrary);
-            audioLibrary = JsonUtility.FromJson<TermAudioLibrary>(jsonString);
-        }
-        else {
-            audioLibrary = new TermAudioLibrary();
-        }
+        string jsonString = SaveStorage.GetString(SaveKeys.TermAudioLibrary);
+        audioLibrary = JsonUtility.FromJson<TermAudioLibrary>(jsonString);
     }
     public void ReloadStudySetLibrary() {
         string jsonString = SaveStorage.GetString(SaveKeys.StudySetLibrary);
@@ -90,8 +92,13 @@ public class DataManager {
     }
     public void SaveStudySetLibrary() {
         string jsonString = JsonUtility.ToJson(library);
-        Debug.Log("SAVED SET: " + jsonString);
+        Debug.Log("SAVED STUDYSET LIBRARY: " + jsonString);
         SaveStorage.SetString(SaveKeys.StudySetLibrary, jsonString);
+    }
+    public void SaveAudioLibrary() {
+        string jsonString = JsonUtility.ToJson(audioLibrary);
+        Debug.Log("SAVED AUDIO LIBRARY: " + jsonString);
+        SaveStorage.SetString(SaveKeys.TermAudioLibrary, jsonString);
     }
 
 
@@ -134,10 +141,19 @@ public class DataManager {
     //  Audio
     // ----------------------------------------------------------------
     public void DeleteTermAudio0(Term term) {
+        // No guid? Get outta here.
+        if (string.IsNullOrEmpty(term.audio0Guid)) {
+            return;
+        }
+        // Delete the actual file!
+        string clipPath = SaveKeys.TermAudioClip0(term.audio0Guid);
+        File.Delete(clipPath);
+        // Null out the Term's guid, and save our library!
+        term.audio0Guid = "";
+        SaveStudySetLibrary();
+
         //audioLibrary.DeleteAudioClip(audio0Guid);
-        //term.audio0Guid = null;
         //SaveAudioLibrary();
-        //SaveTermsLibrary();
     }
 
 

@@ -11,7 +11,6 @@ using TMPro;
 public class RecordAudioPopup : MonoBehaviour
 {
     // Components
-    [SerializeField] private AudioSource audioSource;
     [SerializeField] private Button b_play;
     [SerializeField] private Button b_record;
     [SerializeField] private Button b_stopPlay;
@@ -27,13 +26,14 @@ public class RecordAudioPopup : MonoBehaviour
     private bool isPlayingClip; // so we know when the clip has finished playing naturally.
     private bool isRecordingClip; // so we know when the clip has finished recording naturally.
     // References
+    [SerializeField] TermAudioClipPlayer clipPlayer;
     private Term currTerm;
 
     private DataManager dm { get { return GameManagers.Instance.DataManager; } }
 
 
     // ----------------------------------------------------------------
-    //  Start
+    //  Start / Destroy
     // ----------------------------------------------------------------
     void Start() {
         // Start closed.
@@ -77,45 +77,26 @@ public class RecordAudioPopup : MonoBehaviour
     // ----------------------------------------------------------------
     //  Audio Save/Load
     // ----------------------------------------------------------------
-    //string testClipPath { get { return Path.Combine(Application.persistentDataPath, "Audio/TestAudio.wav"); } }
     void LoadClipForCurrTerm() {
         string clipPath = SaveKeys.TermAudioClip0(currTerm.audio0Guid);
-        StartCoroutine(LoadAudioClip(clipPath));
-    }
-    IEnumerator LoadAudioClip(string fullPath) {
-        fullPath = "file:///" + fullPath; // HACK for Mac? We can't find the audio file without this prefix, but *only* for loading, not saving.
-        using (var uwr = UnityWebRequestMultimedia.GetAudioClip(fullPath, AudioType.WAV)) {
-            ((DownloadHandlerAudioClip)uwr.downloadHandler).streamAudio = true;
+        bool isClipFile = File.Exists(clipPath);
 
-            yield return uwr.SendWebRequest();
-
-            if (uwr.isNetworkError || uwr.isHttpError) {
-                Debug.LogError(uwr.error);
-                yield break;
-            }
-
-            DownloadHandlerAudioClip dlHandler = (DownloadHandlerAudioClip)uwr.downloadHandler;
-
-            if (dlHandler.isDone) {
-                audioSource.clip = dlHandler.audioClip;
-
-                if (audioSource.clip != null) {
-                    OnClipSuccessfullyLoaded(DownloadHandlerAudioClip.GetContent(uwr));
-                    Debug.Log("Loaded audioClip!");
-                }
-                else {
-                    Debug.Log("Couldn't load a valid AudioClip.");
-                }
-            }
-            else {
-                Debug.Log("The download process is not completely finished.");
-            }
+        if (isClipFile) {
+            clipPlayer.LoadClipFromPath(clipPath, false);
+        }
+        else {
+            UpdateVisualsForNoClip();
         }
     }
     private void OnClipSuccessfullyLoaded(AudioClip clip) {
-        audioSource.clip = clip;
-        b_preDelete.interactable = clip != null;
-        t_audioDuration.text = clip == null ? "" : clip.length.ToString();
+        b_play.interactable = true;
+        b_preDelete.interactable = true;
+        t_audioDuration.text = clip.length.ToString();
+    }
+    private void UpdateVisualsForNoClip() {
+        b_play.interactable = false;
+        b_preDelete.interactable = false;
+        t_audioDuration.text = "";
     }
 
 
@@ -125,7 +106,7 @@ public class RecordAudioPopup : MonoBehaviour
     // ----------------------------------------------------------------
     private void Update() {
         // Done playing? Stop automatically.
-        if (isPlayingClip && !audioSource.isPlaying) {// && audioSource.time >= audioSource.clip.length) {
+        if (isPlayingClip && !clipPlayer.IsPlaying()) {// && audioSource.time >= audioSource.clip.length) {
             StopPlay();
         }
 
@@ -145,6 +126,7 @@ public class RecordAudioPopup : MonoBehaviour
     public void OnClick_ShowPreDelete() { go_preDelete.SetActive(true); }
     public void OnClick_Delete() {
         dm.DeleteTermAudio0(currTerm);
+        UpdateVisualsForNoClip();
         OnClick_HidePreDelete();
     }
 
@@ -156,7 +138,7 @@ public class RecordAudioPopup : MonoBehaviour
     private void StartPlay() {
         isPlayingClip = true;
         isRecordingClip = false;
-        audioSource.Play();
+        clipPlayer.Play();
         b_play.gameObject.SetActive(false);
         b_record.gameObject.SetActive(false);
         b_stopPlay.gameObject.SetActive(true);
@@ -165,7 +147,7 @@ public class RecordAudioPopup : MonoBehaviour
     private void StopPlay() {
         isPlayingClip = false;
         isRecordingClip = false;
-        audioSource.Stop();
+        clipPlayer.Stop();
         b_play.gameObject.SetActive(true);
         b_record.gameObject.SetActive(true);
         b_stopPlay.gameObject.SetActive(false);
@@ -174,7 +156,7 @@ public class RecordAudioPopup : MonoBehaviour
     public void StartRecord() {
         isPlayingClip = false;
         isRecordingClip = true;
-        audioSource.clip = Microphone.Start(null, false, MaxAudioFileDuration, 44100);//"Built-in Microphone"
+        clipPlayer.SetClip(Microphone.Start(null, false, MaxAudioFileDuration, 44100));//"Built-in Microphone"
         b_play.gameObject.SetActive(false);
         b_record.gameObject.SetActive(false);
         b_stopPlay.gameObject.SetActive(false);
@@ -184,21 +166,39 @@ public class RecordAudioPopup : MonoBehaviour
         // If we're actually recording, stop, and save!
         if (isRecordingClip) {
             Microphone.End(null);
-            // Save it!
             if (doSaveFile) {
-                string filePath = SaveKeys.TermAudioClip0(currTerm.audio0Guid);
-                SavWav.Save(filePath, audioSource.clip);
-                Debug.Log("SAVED audio. Length: " + audioSource.clip.length);
+                SaveAndAffiliateAudioFile();
             }
         }
 
         isPlayingClip = false;
         isRecordingClip = false;
-        audioSource.Stop();
+        clipPlayer.Stop();
         b_play.gameObject.SetActive(true);
         b_record.gameObject.SetActive(true);
         b_stopPlay.gameObject.SetActive(false);
         b_stopRecord.gameObject.SetActive(false);
+    }
+
+    private void SaveAndAffiliateAudioFile() {
+        // First, delete the old clip.
+        dm.DeleteTermAudio0(currTerm);
+
+        AudioClip clip = clipPlayer.GetClip();
+        Guid newGuid = Guid.NewGuid();
+        Debug.Log("newGuid: " + newGuid);
+
+        // Assign it to the Term!
+        currTerm.audio0Guid = newGuid.ToString();
+        //dm.audioLibrary.AddClip(clip, newGuid);
+        dm.SaveStudySetLibrary();
+        // Save audio file.
+        string filePath = SaveKeys.TermAudioClip0(currTerm.audio0Guid);
+        SavWav.Save(filePath, clip);
+        Debug.Log("SAVED audio. Length: " + clip.length);
+
+        // Set this as the current clip!
+        OnClipSuccessfullyLoaded(clip);
     }
 
 
