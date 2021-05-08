@@ -62,8 +62,8 @@ public class TermEditableTile : MonoBehaviour
         // Update visuals
         t_myNumber.text = (myIndex + 1).ToString();
         t_debugInfo.text = "Y:" + myTerm.totalYeses;// + "\nN:" + myTerm.totalNos;
-        if_native.text = myTerm.english;
-        if_foreign.text = myTerm.danish;
+        if_native.text = myTerm.native;
+        if_foreign.text = myTerm.foreign;
         if_phonetic.text = myTerm.phonetic;
         t_setName.text = myTerm.mySet.name;
         HideOptions();
@@ -79,8 +79,8 @@ public class TermEditableTile : MonoBehaviour
     // ----------------------------------------------------------------
     public void OnFinishedEditingAnyField() {
         // Update my term by my texts.
-        myTerm.english = if_native.text;
-        myTerm.danish = if_foreign.text;
+        myTerm.native = if_native.text;
+        myTerm.foreign = if_foreign.text;
         myTerm.phonetic = if_phonetic.text;
         // The moment we're done editing a field, save the ENTIRE library again!
         GameManagers.Instance.DataManager.SaveStudySetLibrary();

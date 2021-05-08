@@ -51,7 +51,7 @@ public class DataManager {
                 Term mainTerm = set.allTerms[i];
                 for (int j=set.pileNo.Count-1; j>=0; j--) {
                     Term thisTerm = set.pileNo[j];
-                    if (thisTerm.english == mainTerm.english) {
+                    if (thisTerm.native == mainTerm.native) {
                         set.pileNo.Insert(j, mainTerm);
                         set.pileNo.Remove(thisTerm);
                     }
@@ -59,7 +59,7 @@ public class DataManager {
 
                 for (int j=set.pileQueue.Count-1; j>=0; j--) {
                     Term thisTerm = set.pileQueue[j];
-                    if (thisTerm.english == mainTerm.english) {
+                    if (thisTerm.native == mainTerm.native) {
                         set.pileQueue.Insert(j, mainTerm);
                         set.pileQueue.Remove(thisTerm);
                     }
@@ -67,7 +67,7 @@ public class DataManager {
                 
                 for (int j=set.pileYes.Count-1; j>=0; j--) {
                     Term thisTerm = set.pileYes[j];
-                    if (thisTerm.english == mainTerm.english) {
+                    if (thisTerm.native == mainTerm.native) {
                         set.pileYes.Insert(j, mainTerm);
                         set.pileYes.Remove(thisTerm);
                     }
@@ -75,7 +75,7 @@ public class DataManager {
                 
                 for (int j=set.pileYesesAndNos.Count-1; j>=0; j--) {
                     Term thisTerm = set.pileYesesAndNos[j];
-                    if (thisTerm.english == mainTerm.english) {
+                    if (thisTerm.native == mainTerm.native) {
                         set.pileYesesAndNos.Insert(j, mainTerm);
                         set.pileYesesAndNos.Remove(thisTerm);
                     }

@@ -35,6 +35,7 @@ public class PanelEditSet : BasePanel
     // ================================================================
     public void OpenSet(StudySet currStudySet) {
         this.currStudySet = currStudySet;
+        SaveStorage.SetString(SaveKeys.LastStudySetOpenName, currStudySet.name);
 
         if_setName.text = currStudySet.name;
 
@@ -129,10 +130,9 @@ public class PanelEditSet : BasePanel
         List<Term> newTerms = new List<Term>();
         foreach (string str in termStrings) {
             try {
-                //if (str.Contains(" - ")) {
-                //    errorStr += "Oops! We don't parse hyphens; only dash characters.\n";
-                //}
-                int splitIndex = str.IndexOf(" - ");//—
+                int splitIndex;
+                if (str.Contains(" — ")) splitIndex = str.IndexOf(" — "); // use double-sized hyphen, if that's how it's (optionally) formatted.
+                else splitIndex = str.IndexOf(" - "); // otherwise, split by the regular hyphen.
                 string native = str.Substring(splitIndex + 3);
                 string foreign = str.Substring(0, splitIndex);
                 string phonetic = "";

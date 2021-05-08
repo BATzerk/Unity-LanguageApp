@@ -8,16 +8,30 @@ using UnityEngine.UI;
 public class PanelStudyFlashcards : BasePanel {
     // Components
     [SerializeField] private Button b_undo;
+    [SerializeField] private Button b_studyAgain;
     [SerializeField] private CardView currCardView;
     [SerializeField] private Image i_progressBarBack;
     [SerializeField] private Image i_progressBarFill;
     [SerializeField] private TextMeshProUGUI t_progress;
-    [SerializeField] private TextMeshProUGUI t_finishedHeader;
+    [SerializeField] private TextMeshProUGUI t_finishedInformation;
     [SerializeField] private RectTransform rt_setFinished;
     [SerializeField] private RectTransform rt_setInProgress;
     // References
     private StudySet currStudySet;
 
+
+
+    // Getters
+    private static string GetRoundCompleteText(StudySet set) {
+        //int numUnderstood = set.NumTotal - currStudySet.pileNo.Count;
+        int numNewYeses = set.pileYes.Count;
+        int numRemaining = set.pileNo.Count;
+        string returnStr = "";
+        if (numRemaining>0 && numNewYeses > 0) returnStr += "learned " + numNewYeses + " new ones!\n";
+        if (numRemaining > 0) returnStr += numRemaining + " remaining\n";
+        else returnStr += "\n\nYou got 'em all, woot!";
+        return returnStr;
+    }
 
 
 
@@ -32,6 +46,7 @@ public class PanelStudyFlashcards : BasePanel {
     }
     public void OpenSet(StudySet currStudySet) {
         this.currStudySet = currStudySet;
+        SaveStorage.SetString(SaveKeys.LastStudySetOpenName, currStudySet.name);
 
         // Not in progress? Go ahead and reset the deck.
         if (!currStudySet.IsInProgress) {
@@ -61,10 +76,8 @@ public class PanelStudyFlashcards : BasePanel {
 
         // We've finished the set??
         if (currStudySet.NumDone >= currStudySet.NumInCurrentRound) {
-            //int numUnderstood = currStudySet.NumTotal - currStudySet.pileNo.Count;
-            int numNewYeses = currStudySet.pileYes.Count;
-            int numRemaining = currStudySet.pileNo.Count;
-            t_finishedHeader.text = "Round complete!\n\n" + "learned " + numNewYeses + " new ones!\n" + numRemaining + " remaining";
+            t_finishedInformation.text = GetRoundCompleteText(currStudySet);
+            b_studyAgain.gameObject.SetActive(currStudySet.pileNo.Count > 0); // only show "next round" button if there are cards to HAVE a next round with.
             rt_setFinished.gameObject.SetActive(true);
             rt_setInProgress.gameObject.SetActive(false);
         }

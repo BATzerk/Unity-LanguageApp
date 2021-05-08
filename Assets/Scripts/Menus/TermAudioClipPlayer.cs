@@ -10,6 +10,10 @@ public class TermAudioClipPlayer : MonoBehaviour {
     private string currClipGuid; // so we know if we need to load a new clip
 
 
+    // Getters
+    //public bool IsClip() { return audioSource.clip != null; }
+
+
 
     // ----------------------------------------------------------------
     //  Start / Destroy
@@ -55,6 +59,8 @@ public class TermAudioClipPlayer : MonoBehaviour {
         using (var uwr = UnityWebRequestMultimedia.GetAudioClip(fullPath, AudioType.WAV)) {
             ((DownloadHandlerAudioClip)uwr.downloadHandler).streamAudio = true;
 
+            audioSource.clip = null; // default this to null, in case we fail.
+
             yield return uwr.SendWebRequest();
 
             if (uwr.isNetworkError || uwr.isHttpError) {
@@ -71,7 +77,7 @@ public class TermAudioClipPlayer : MonoBehaviour {
                     AudioClip clip = DownloadHandlerAudioClip.GetContent(uwr);
                     audioSource.clip = clip;
                     GameManagers.Instance.EventManager.OnClipLoadSuccess(clip);
-                    Debug.Log("Loaded audioClip!");
+                    //Debug.Log("Loaded audioClip!");
                     if (doPlayImmediately) {
                         Play();
                     }

@@ -37,7 +37,7 @@ public class MoveTermPopup : MonoBehaviour
         this.currTerm = currTerm;
         this.gameObject.SetActive(true);
 
-        t_currTermName.text = currTerm.english;
+        t_currTermName.text = currTerm.native;
 
         // Destroy 'em all.
         for (int i = tiles.Count-1; i>=0; i--) {

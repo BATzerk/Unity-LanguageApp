@@ -33,7 +33,7 @@ public class StudySetTileView : MonoBehaviour
         // Update visuals
         t_name.text = mySet.name;
         t_numTerms.text = mySet.NumTotal.ToString();// + " terms";
-        t_numRoundsStarted.text = mySet.numRoundsStarted.ToString();
+        t_numRoundsStarted.text = mySet.numRoundsFinished.ToString();
         go_progressBar.SetActive(mySet.IsInProgress);
         if (mySet.IsInProgress) {
             float barWidth = i_progressBarBack.rectTransform.rect.width;

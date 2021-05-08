@@ -8,8 +8,7 @@ using UnityEngine.Networking;
 using System;
 using TMPro;
 
-public class RecordAudioPopup : MonoBehaviour
-{
+public class RecordAudioPopup : MonoBehaviour {
     // Components
     [SerializeField] private Button b_play;
     [SerializeField] private Button b_record;
@@ -29,6 +28,8 @@ public class RecordAudioPopup : MonoBehaviour
     [SerializeField] TermAudioClipPlayer clipPlayer;
     private Term currTerm;
 
+
+    // Getters
     private DataManager dm { get { return GameManagers.Instance.DataManager; } }
 
 
@@ -41,10 +42,14 @@ public class RecordAudioPopup : MonoBehaviour
 
         // Add event listeners
         GameManagers.Instance.EventManager.OpenRecordPopupEvent += OpenMe;
+        GameManagers.Instance.EventManager.ClipLoadFailEvent += OnClipLoadFail;
+        GameManagers.Instance.EventManager.ClipLoadSuccessEvent += OnClipLoadSuccess;
     }
     private void OnDestroy() {
         // Remove event listeners
         GameManagers.Instance.EventManager.OpenRecordPopupEvent -= OpenMe;
+        GameManagers.Instance.EventManager.ClipLoadFailEvent -= OnClipLoadFail;
+        GameManagers.Instance.EventManager.ClipLoadSuccessEvent -= OnClipLoadSuccess;
     }
 
 
@@ -57,7 +62,7 @@ public class RecordAudioPopup : MonoBehaviour
     }
     private void SetCurrTerm(Term currTerm) {
         this.currTerm = currTerm;
-        t_termName.text = currTerm.danish;
+        t_termName.text = currTerm.foreign;
 
         StopPlay();
         StopRecord();
@@ -88,7 +93,11 @@ public class RecordAudioPopup : MonoBehaviour
             UpdateVisualsForNoClip();
         }
     }
-    private void OnClipSuccessfullyLoaded(AudioClip clip) {
+
+    private void OnClipLoadFail() { UpdateVisualsForNoClip(); }
+    private void OnClipLoadSuccess(AudioClip clip) { UpdateVisualsForClip(clip); }
+
+    private void UpdateVisualsForClip(AudioClip clip) {
         b_play.interactable = true;
         b_preDelete.interactable = true;
         t_audioDuration.text = clip.length.ToString();
@@ -97,6 +106,7 @@ public class RecordAudioPopup : MonoBehaviour
         b_play.interactable = false;
         b_preDelete.interactable = false;
         t_audioDuration.text = "";
+        b_record.gameObject.SetActive(true);
     }
 
 
@@ -126,6 +136,7 @@ public class RecordAudioPopup : MonoBehaviour
     public void OnClick_ShowPreDelete() { go_preDelete.SetActive(true); }
     public void OnClick_Delete() {
         dm.DeleteTermAudio0(currTerm);
+        clipPlayer.SetClip(null);
         UpdateVisualsForNoClip();
         OnClick_HidePreDelete();
     }
@@ -149,7 +160,7 @@ public class RecordAudioPopup : MonoBehaviour
         isRecordingClip = false;
         clipPlayer.Stop();
         b_play.gameObject.SetActive(true);
-        b_record.gameObject.SetActive(true);
+        b_record.gameObject.SetActive(currTerm!=null && !currTerm.HasAudio0());
         b_stopPlay.gameObject.SetActive(false);
         b_stopRecord.gameObject.SetActive(false);
     }
@@ -175,7 +186,8 @@ public class RecordAudioPopup : MonoBehaviour
         isRecordingClip = false;
         clipPlayer.Stop();
         b_play.gameObject.SetActive(true);
-        b_record.gameObject.SetActive(true);
+        //Debug.Log("is Clip: " + clipPlayer.IsClip() + "   "+ clipPlayer.GetClip());
+        b_record.gameObject.SetActive(currTerm != null && !currTerm.HasAudio0());
         b_stopPlay.gameObject.SetActive(false);
         b_stopRecord.gameObject.SetActive(false);
     }
@@ -186,19 +198,19 @@ public class RecordAudioPopup : MonoBehaviour
 
         AudioClip clip = clipPlayer.GetClip();
         Guid newGuid = Guid.NewGuid();
-        Debug.Log("newGuid: " + newGuid);
 
         // Assign it to the Term!
         currTerm.audio0Guid = newGuid.ToString();
-        //dm.audioLibrary.AddClip(clip, newGuid);
         dm.SaveStudySetLibrary();
+
         // Save audio file.
         string filePath = SaveKeys.TermAudioClip0(currTerm.audio0Guid);
         SavWav.Save(filePath, clip);
+        //EncodeMP3.ConvertAndWrite(clip, filePath, 128);
         Debug.Log("SAVED audio. Length: " + clip.length);
 
         // Set this as the current clip!
-        OnClipSuccessfullyLoaded(clip);
+        UpdateVisualsForClip(clip);
     }
 
 

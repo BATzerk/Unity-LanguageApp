@@ -42,8 +42,8 @@ public class PanelSearchTerms : BasePanel
         resultTerms = new List<Term>();
         if (searchStr.Length > 0) {
             foreach (Term term in allTerms) {
-                if (term.english.ToUpperInvariant().Contains(searchStr)
-                 || term.danish.ToUpperInvariant().Contains(searchStr)
+                if (term.native.ToUpperInvariant().Contains(searchStr)
+                 || term.foreign.ToUpperInvariant().Contains(searchStr)
                  || term.phonetic.ToUpperInvariant().Contains(searchStr)) {
                         resultTerms.Add(term);
                 }

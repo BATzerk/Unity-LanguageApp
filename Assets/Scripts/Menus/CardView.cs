@@ -50,11 +50,11 @@ public class CardView : MonoBehaviour {
     }
 
     private void UpdateTextFieldsFromTerm() {
-        t_native.text = MyTerm.english;
-        t_foreign.text = MyTerm.danish;
+        t_native.text = MyTerm.native;
+        t_foreign.text = MyTerm.foreign;
         t_phonetic.text = MyTerm.phonetic;
-        if_native.text = MyTerm.english;
-        if_foreign.text = MyTerm.danish;
+        if_native.text = MyTerm.native;
+        if_foreign.text = MyTerm.foreign;
         if_phonetic.text = MyTerm.phonetic;
     }
 
@@ -96,8 +96,8 @@ public class CardView : MonoBehaviour {
     }
     public void OnEndEditAnyTextField() {
         // Update my actual term now!
-        MyTerm.english = if_native.text;
-        MyTerm.danish = if_foreign.text;
+        MyTerm.native = if_native.text;
+        MyTerm.foreign = if_foreign.text;
         MyTerm.phonetic = if_phonetic.text;
         // Save 'em, Joe. :)
         GameManagers.Instance.DataManager.SaveStudySetLibrary();

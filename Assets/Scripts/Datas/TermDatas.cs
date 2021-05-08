@@ -4,19 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+
 [Serializable]
-public struct CustomDate
-{
+public struct CustomDate {
     public int Year, Month, Day;
-    public CustomDate(int year, int month, int day)
-    {
+    public CustomDate(int year, int month, int day) {
         this.Year = year;
         this.Month = month;
         this.Day = day;
     }
 
-    static public CustomDate FromDateTime(DateTime date)
-    {
+    static public CustomDate FromDateTime(DateTime date) {
         return new CustomDate(date.Year, date.Month, date.Day);
     }
 }
@@ -27,8 +25,8 @@ public struct CustomDate
 public class Term {
     public int totalYeses=0; // increments whenever we swipe RIGHT to this term.
     public int totalNos=0;
-    public string english;
-    public string danish;
+    public string native;
+    public string foreign;
     public string phonetic;
     public string audio0Guid;
     [NonSerialized] public StudySet mySet;
@@ -37,14 +35,14 @@ public class Term {
 
 
     public Term() {
-        english = "";
-        danish = "";
+        native = "";
+        foreign = "";
         phonetic = "";
         audio0Guid = "";
     }
-    public Term(string english,string danish,string phonetic) {
-        this.english = english;
-        this.danish = danish;
+    public Term(string native,string foreign,string phonetic) {
+        this.native = native;
+        this.foreign = foreign;
         this.phonetic = phonetic;
     }
 
@@ -70,12 +68,20 @@ public class StudySetLibrary {
         list.Add(setWantRecording);
         return list;
     }
+
+    public StudySet GetSetByName(string name) {
+        foreach (StudySet set in GetRegularAndSpecialSetsList()) {
+            if (set.name == name) return set;
+        }
+        return null;
+    }
 }
 [Serializable]
 public class StudySet
 {
     public List<Term> allTerms;
     public string name;
+    public int numRoundsFinished;
     public int numRoundsStarted;
     public List<Term> pileYes = new List<Term>();
     public List<Term> pileNo = new List<Term>();
@@ -96,7 +102,7 @@ public class StudySet
     public string GetAsExportedString_NativeForeignPhonetic() {
         string str = "";
         foreach (Term term in allTerms) {
-            str += term.english + " - " + term.danish + " - " + term.phonetic;
+            str += term.native + " - " + term.foreign + " - " + term.phonetic;
             str += "\n";
         }
         return str;
@@ -105,11 +111,11 @@ public class StudySet
     public string GetAsExportedString_ForeignBracketPhoneticNative() {
         string str = "";
         foreach (Term term in allTerms) {
-            str += term.danish;
+            str += term.foreign;
             if (term.phonetic.Length > 0) {
                 str += " [" + term.phonetic + "]";
             }
-            str += " - " + term.danish;
+            str += " - " + term.foreign;
             str += "\n";
         }
         return str;
@@ -132,7 +138,9 @@ public class StudySet
         this.allTerms = new List<Term>();
         foreach (string str in termStrings) {
             try {
-                int splitIndex = str.IndexOf(" - ");
+                int splitIndex;
+                if (str.Contains(" — ")) splitIndex = str.IndexOf(" — "); // use double-sized hyphen, if that's how it's (optionally) formatted.
+                else splitIndex = str.IndexOf(" - "); // otherwise, split by the regular hyphen.
                 string native = str.Substring(splitIndex + 3);
                 string foreign = str.Substring(0, splitIndex);
                 string phonetic = "";
@@ -181,6 +189,11 @@ public class StudySet
     public void AddTerm(Term newTerm) {
         newTerm.mySet = this;
         allTerms.Add(newTerm);
+        // Are we in a round? Great, insert it randomly into the queue!
+        if (pileQueue.Count > 0) {
+            int randIndex = UnityEngine.Random.Range(0, pileQueue.Count - 1);
+            pileQueue.Insert(randIndex, newTerm);
+        }
     }
     public void RemoveTerm(Term term) {
         allTerms.Remove(term);
@@ -197,8 +210,7 @@ public class StudySet
         pileYesesAndNos = new List<Term>();
         // Shuffle 'em!
         GameUtils.Shuffle(pileQueue);
-        // Increment numRoundsStarted.
-        numRoundsStarted++;
+        numRoundsStarted++; // Increment numRoundsStarted.
     }
     /// Makes a new round, but made up of the "no" pile terms.
     public void RestartNewRound() {
@@ -208,8 +220,7 @@ public class StudySet
         pileYesesAndNos = new List<Term>();
         // Shuffle 'em!
         GameUtils.Shuffle(pileQueue);
-        // Increment numRoundsStarted.
-        numRoundsStarted++;
+        numRoundsStarted++; // Increment numRoundsStarted.
     }
 
     // Events
@@ -219,6 +230,7 @@ public class StudySet
         pileQueue.Remove(c);
         pileYes.Add(c);
         pileYesesAndNos.Add(c);
+        if (pileQueue.Count == 0) numRoundsFinished++; // Queue empty? We finished the round! :)
     }
     public void OnClickCurrTermNo() {
         Term c = GetCurrTerm();
@@ -226,6 +238,7 @@ public class StudySet
         pileQueue.Remove(c);
         pileNo.Add(c);
         pileYesesAndNos.Add(c);
+        if (pileQueue.Count == 0) numRoundsFinished++; // Queue empty? We finished the round! :)
     }
     public void RewindOneCard() {
         if (pileYesesAndNos.Count == 0) { Debug.LogError("Oops, trying to rewind, but we have nothing in pileYesesAndNos list."); return; }

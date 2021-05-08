@@ -18,23 +18,36 @@ public class MenuController : MonoBehaviour
     //  Start
     // ================================================================
     void Start() {
-        // TODO: Save which panel was open last. Open that one!
-        //ShowPanel(panel_studyChooseSet);
-        OpenPanel_EditSet(dm.library.sets[0]);
+        // Open the last panel that was open!
+        string lastPanelOpenType = SaveStorage.GetString(SaveKeys.LastPanelOpen);
+        string lastSetName = SaveStorage.GetString(SaveKeys.LastStudySetOpenName);
+        StudySet lastSet = dm.library.GetSetByName(lastSetName);
+        if (lastSet != null && lastPanelOpenType == "PanelEditSet") {
+            OpenPanel_EditSet(lastSet);
+        }
+        else if (lastSet != null && lastPanelOpenType == "PanelStudyFlashcards") {
+            OpenPanel_StudyFlashcards(lastSet);
+        }
+        else {
+            OpenPanel_StudyChooseSet();
+        }
     }
 
 
     // ================================================================
     //  Doers
     // ================================================================
-    public void ShowPanel(BasePanel _panel)
-    {
+    public void ShowPanel(BasePanel _panel) {
         panel_editSet.SetVisibility(false);
         panel_searchTerms.SetVisibility(false);
         panel_studyChooseSet.SetVisibility(false);
         panel_studyFlashcards.SetVisibility(false);
 
         _panel.SetVisibility(true);
+
+        // Save this was the last panel opened!
+        Debug.Log(_panel.GetType().ToString());
+        SaveStorage.SetString(SaveKeys.LastPanelOpen, _panel.GetType().ToString());
     }
 
     // ================================================================
