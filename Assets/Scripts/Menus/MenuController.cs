@@ -15,7 +15,7 @@ public class MenuController : MonoBehaviour
 
 
     // ================================================================
-    //  Start
+    //  Start / Destroy
     // ================================================================
     void Start() {
         // Open the last panel that was open!
@@ -31,6 +31,13 @@ public class MenuController : MonoBehaviour
         else {
             OpenPanel_StudyChooseSet();
         }
+
+        // Add event listeners.
+        GameManagers.Instance.EventManager.OpenPanelEditSetEvent += OpenPanel_EditSet;
+    }
+    private void OnDestroy() {
+        // Remove event listeners.
+        GameManagers.Instance.EventManager.OpenPanelEditSetEvent -= OpenPanel_EditSet;
     }
 
 
@@ -46,9 +53,9 @@ public class MenuController : MonoBehaviour
         _panel.SetVisibility(true);
 
         // Save this was the last panel opened!
-        Debug.Log(_panel.GetType().ToString());
         SaveStorage.SetString(SaveKeys.LastPanelOpen, _panel.GetType().ToString());
     }
+
 
     // ================================================================
     //  Events
@@ -72,9 +79,6 @@ public class MenuController : MonoBehaviour
     //  Update
     // ================================================================
     void Update() {
-
-        //Debug.Log("0'th's set: " + dm.library.sets[0].allTerms[0].mySet);
-
 
         // Key Inputs
         if (Input.GetKeyDown(KeyCode.Delete)) dm.ClearAllSaveData();

@@ -14,7 +14,8 @@ public class StudySetTileView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI t_numRoundsStarted;
     [SerializeField] private GameObject go_progressBar;
     [SerializeField] private Image i_progressBarBack;
-    [SerializeField] private Image i_progressBarFill;
+    [SerializeField] private Image i_progressBarFillRecent;
+    [SerializeField] private Image i_progressBarFillYeses;
     // References
     private StudySet mySet;
     private PanelStudyChooseSet myPanel;
@@ -37,8 +38,12 @@ public class StudySetTileView : MonoBehaviour
         go_progressBar.SetActive(mySet.IsInProgress);
         if (mySet.IsInProgress) {
             float barWidth = i_progressBarBack.rectTransform.rect.width;
-            float progressLoc = mySet.NumDone / (float)mySet.NumInCurrentRound;
-            i_progressBarFill.rectTransform.sizeDelta = new Vector2(barWidth * progressLoc, i_progressBarFill.rectTransform.sizeDelta.y);
+            float progLocYeses = (mySet.NumTotal-(mySet.pileYesesAndNos.Count+mySet.pileQueue.Count)) / (float)mySet.NumTotal;
+            float progLocRecent = mySet.NumDone / (float)mySet.NumTotal;
+            float yesWidth = barWidth * progLocYeses;
+            i_progressBarFillYeses.rectTransform.sizeDelta = new Vector2(yesWidth, i_progressBarFillYeses.rectTransform.sizeDelta.y);
+            i_progressBarFillRecent.rectTransform.anchoredPosition = new Vector2(yesWidth, 0);
+            i_progressBarFillRecent.rectTransform.sizeDelta = new Vector2(barWidth * progLocRecent, i_progressBarFillRecent.rectTransform.sizeDelta.y);
         }
         rt_numTermsCardIcon.localEulerAngles = new Vector3(0, 0, Random.Range(-5f, 5f));
     }

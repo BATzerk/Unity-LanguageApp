@@ -73,7 +73,7 @@ public class PanelSearchTerms : BasePanel
         count = 0;
         while (termTiles.Count<resultTerms.Count && termTiles.Count<MaxResultsToShow) {
             TermEditableTile newTile = Instantiate(ResourcesHandler.Instance.TermEditableTile).GetComponent<TermEditableTile>();
-            newTile.Initialize(null, rt_tilesContent);
+            newTile.Initialize(false, rt_tilesContent);
             termTiles.Add(newTile);
             if (count++ > 9999) { Debug.LogError("Oops, count got too big in while loop in UpdateTileList."); break; }
         }
@@ -81,7 +81,7 @@ public class PanelSearchTerms : BasePanel
         // Now update all the tiles!
         for (int i=0; i<resultTerms.Count&&i<MaxResultsToShow; i++) {
             TermEditableTile tile = termTiles[i];
-            tile.UpdateContent(i, resultTerms[i]);
+            tile.SetMyTerm(i, resultTerms[i]);
         }
 
         // Update the parent content RT height!
@@ -89,6 +89,11 @@ public class PanelSearchTerms : BasePanel
         float tileSpacing = rt_tilesContent.GetComponent<VerticalLayoutGroup>().spacing;
         float contentHeight = termTiles.Count * (tileHeight + tileSpacing) + 450;
         rt_scrollContent.sizeDelta = new Vector2(rt_scrollContent.sizeDelta.x, contentHeight);
-
     }
+
+
+
+
+
+
 }

@@ -211,6 +211,7 @@ public class RecordAudioPopup : MonoBehaviour {
 
         // Set this as the current clip!
         UpdateVisualsForClip(clip);
+        GameManagers.Instance.EventManager.OnAnySetContentsChanged();
     }
 
 

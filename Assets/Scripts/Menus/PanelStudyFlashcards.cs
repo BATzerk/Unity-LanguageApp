@@ -10,13 +10,17 @@ public class PanelStudyFlashcards : BasePanel {
     [SerializeField] private Button b_undo;
     [SerializeField] private Button b_studyAgain;
     [SerializeField] private CardView currCardView;
+    //[SerializeField] private CardView cardView1;
+    //[SerializeField] private CardView cardView2;
     [SerializeField] private Image i_progressBarBack;
     [SerializeField] private Image i_progressBarFill;
     [SerializeField] private TextMeshProUGUI t_progress;
     [SerializeField] private TextMeshProUGUI t_finishedInformation;
     [SerializeField] private RectTransform rt_setFinished;
     [SerializeField] private RectTransform rt_setInProgress;
+    //private List<CardView> cardViews;
     // References
+    //private CardView currCardView;
     private StudySet currStudySet;
 
 
@@ -32,6 +36,11 @@ public class PanelStudyFlashcards : BasePanel {
         else returnStr += "\n\nYou got 'em all, woot!";
         return returnStr;
     }
+    //private CardView GetNextIdleCardView() {
+    //    if (currCardView == cardView0) return cardView1;
+    //    if (currCardView == cardView1) return cardView2;
+    //    return cardView0;
+    //}
 
 
 

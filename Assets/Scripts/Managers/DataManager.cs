@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class DataManager {
     // Properties
-    public TermAudioLibrary audioLibrary;
     public StudySetLibrary library;
 
 
@@ -20,13 +19,13 @@ public class DataManager {
     //  Initialize
     // ----------------------------------------------------------------
     public DataManager() {
-        // Reload audioLibrary.
-        if (SaveStorage.HasKey(SaveKeys.TermAudioLibrary)) {
-            ReloadAudioLibrary();
-        }
-        else {
-            audioLibrary = new TermAudioLibrary();
-        }
+        //// Reload audioLibrary.
+        //if (SaveStorage.HasKey(SaveKeys.TermAudioLibrary)) {
+        //    ReloadAudioLibrary();
+        //}
+        //else {
+        //    audioLibrary = new TermAudioLibrary();
+        //}
 
         // Save data? Use it!
         if (SaveStorage.HasKey(SaveKeys.StudySetLibrary)) {
@@ -37,10 +36,10 @@ public class DataManager {
             ReplaceAllStudySetsWithPremadeHardcodedOnes();
         }
     }
-    private void ReloadAudioLibrary() {
-        string jsonString = SaveStorage.GetString(SaveKeys.TermAudioLibrary);
-        audioLibrary = JsonUtility.FromJson<TermAudioLibrary>(jsonString);
-    }
+    //private void ReloadAudioLibrary() {
+    //    string jsonString = SaveStorage.GetString(SaveKeys.TermAudioLibrary);
+    //    audioLibrary = JsonUtility.FromJson<TermAudioLibrary>(jsonString);
+    //}
     public void ReloadStudySetLibrary() {
         string jsonString = SaveStorage.GetString(SaveKeys.StudySetLibrary);
         library = JsonUtility.FromJson<StudySetLibrary>(jsonString);
@@ -94,11 +93,6 @@ public class DataManager {
         string jsonString = JsonUtility.ToJson(library);
         Debug.Log("SAVED STUDYSET LIBRARY: " + jsonString);
         SaveStorage.SetString(SaveKeys.StudySetLibrary, jsonString);
-    }
-    public void SaveAudioLibrary() {
-        string jsonString = JsonUtility.ToJson(audioLibrary);
-        Debug.Log("SAVED AUDIO LIBRARY: " + jsonString);
-        SaveStorage.SetString(SaveKeys.TermAudioLibrary, jsonString);
     }
 
 

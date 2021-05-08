@@ -18,14 +18,14 @@ public class TermAudioClipPlayer : MonoBehaviour {
     // ----------------------------------------------------------------
     //  Start / Destroy
     // ----------------------------------------------------------------
-    //void Start() {
-    //    // Add event listeners
-    //    GameManagers.Instance.EventManager.TellClipPlayerToLoadClipEvent += LoadClipRequest;
-    //}
-    //private void OnDestroy() {
-    //    // Remove event listeners
-    //    GameManagers.Instance.EventManager.TellClipPlayerToLoadClipEvent -= LoadClipRequest;
-    //}
+    void Start() {
+        // Add event listeners
+        GameManagers.Instance.EventManager.PlayTermClipEvent += PlayTermClip;
+    }
+    private void OnDestroy() {
+        // Remove event listeners
+        GameManagers.Instance.EventManager.PlayTermClipEvent -= PlayTermClip;
+    }
 
 
 

@@ -21,17 +21,25 @@ public class CardView : MonoBehaviour {
     [SerializeField] TMP_InputField if_foreign;
     [SerializeField] TMP_InputField if_phonetic;
     // References
+    //private PanelStudyFlashcards myPanel;
+    //private TermAudioClipPlayer clipPlayer;
     [SerializeField] private PanelStudyFlashcards myPanel;
     [SerializeField] private TermAudioClipPlayer clipPlayer;
     public Term MyTerm { get; private set; }
     // Properties
     private bool isNativeSide; // if FALSE, we're showing the foreign side.
     private float timeWhenSetTerm; // Time.time when we last called SetMyTerm.
+    //private Vector2 targetPos;
 
 
     // ----------------------------------------------------------------
     //  Setting Visuals
     // ----------------------------------------------------------------
+    //public void Initialize(PanelStudyFlashcards myPanel, Transform tf_parent, TermAudioClipPlayer clipPlayer) {
+    //    this.myPanel = myPanel;
+    //    this.clipPlayer = clipPlayer;
+    //    GameUtils.ParentAndReset(this.gameObject, tf_parent);
+    //}
     public void SetMyTerm(Term term) {
         this.MyTerm = term;
         timeWhenSetTerm = Time.time;

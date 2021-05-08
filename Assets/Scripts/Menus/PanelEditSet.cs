@@ -56,7 +56,7 @@ public class PanelEditSet : BasePanel
         count = 0;
         while (termTiles.Count < terms.Count) {
             TermEditableTile newTile = Instantiate(ResourcesHandler.Instance.TermEditableTile).GetComponent<TermEditableTile>();
-            newTile.Initialize(this, rt_tilesContent);
+            newTile.Initialize(true, rt_tilesContent);
             termTiles.Add(newTile);
             if (count++ > 9999) { Debug.LogError("Oops, count got too big in while loop in UpdateTileList."); break; }
         }
@@ -66,14 +66,8 @@ public class PanelEditSet : BasePanel
             Term term = currStudySet.allTerms[i];
             TermEditableTile tile = termTiles[i];
 
-            tile.UpdateContent(i, term);
+            tile.SetMyTerm(i, term);
         }
-
-        // Update the parent content RT height!
-        const float tileHeight = 130;
-        float tileSpacing = rt_tilesContent.GetComponent<VerticalLayoutGroup>().spacing;
-        float contentHeight = termTiles.Count * (tileHeight + tileSpacing) + 450;
-        rt_scrollContent.sizeDelta = new Vector2(rt_scrollContent.sizeDelta.x, contentHeight);
 
         HideOptions();
         HidePreDelete();
@@ -95,6 +89,18 @@ public class PanelEditSet : BasePanel
 
 
 
+    private void Update() {
+        // Update the parent content RT height!
+        if (termTiles.Count > 0) {
+            float contentHeight = Mathf.Abs(termTiles[termTiles.Count-1].gameObject.transform.localPosition.y);
+            if (contentHeight > 0) { // IF the layout groups aren't just updating (and everything's 0 height for a frame)...
+                rt_scrollContent.sizeDelta = new Vector2(rt_scrollContent.sizeDelta.x, contentHeight + 400);
+            }
+        }
+    }
+
+
+
 
     // ================================================================
     //  Events
@@ -102,11 +108,6 @@ public class PanelEditSet : BasePanel
     public void OnClick_CopyToClipboard() {
         GameUtils.CopyToClipboard(currStudySet.GetAsExportedString_ForeignBracketPhoneticNative());
         HideOptions();
-    }
-    public void OnClick_ConfirmDeleteSet() {
-        GameManagers.Instance.DataManager.library.sets.Remove(currStudySet);
-        GameManagers.Instance.DataManager.SaveStudySetLibrary();
-        SceneHelper.ReloadScene(); // TODO: Boot me back to the previous panel instead.
     }
 
 
@@ -117,8 +118,11 @@ public class PanelEditSet : BasePanel
     public void AddNewTerm() {
         currStudySet.AddTerm();
         UpdateTileList();
+
         // Scroll down to the bottom now.
-        rt_scrollContent.anchoredPosition = new Vector2(rt_scrollContent.anchoredPosition.x, rt_scrollContent.sizeDelta.y-800);// note: -800 is a hack.
+        rt_scrollContent.anchoredPosition = new Vector2(rt_scrollContent.anchoredPosition.x, rt_scrollContent.rect.height-500);// note: -500 is a hack.
+        // Auto-focus on the English input field!
+        termTiles[termTiles.Count-1].OpenKeyboardForNativeField();
     }
     public void OnEndEditPastedNewTerms() {
         string pastedTerms = if_pastedTerms.text;
