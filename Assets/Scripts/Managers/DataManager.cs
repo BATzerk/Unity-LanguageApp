@@ -50,13 +50,13 @@ public class DataManager {
     // ----------------------------------------------------------------
     public DataManager() {
         // Save data? Use it!
-        //if (SaveStorage.HasKey(SaveKeys.StudySetLibrary)) {
-        //    ReloadStudySetLibrary();
-        //}
-        //// NO save data?! Ok, default to Quizlet hardcoded ones! :)
-        //else {QQQ
+        if (SaveStorage.HasKey(SaveKeys.StudySetLibrary)) {
+            ReloadStudySetLibrary();
+        }
+        // NO save data?! Ok, default to Quizlet hardcoded ones! :)
+        else {
             ReplaceAllStudySetsWithPremadeHardcodedOnes();
-        //}
+        }
     }
     public void ReloadStudySetLibrary() {
         string jsonString = SaveStorage.GetString(SaveKeys.StudySetLibrary);
@@ -149,7 +149,7 @@ public class DataManager {
 
     public void CopyAllSetsToClipboard() {
         //QQQ!!
-        RefillSourdoughSet();
+        //RefillSourdoughSet();
 
 
         string wholeStr = "";
@@ -160,6 +160,18 @@ public class DataManager {
             wholeStr += "\n\n";
         }
         GameUtils.CopyToClipboard(wholeStr);
+    }
+
+    public void DeleteSet(StudySet set) {
+        // First, delete all audio from any terms.
+        foreach (string termG in set.allTermGs) {
+            Term term = library.GetTerm(termG);
+            if (term.HasAudio0()) {
+                DeleteTermAudio0(term);
+            }
+        }
+        // Now, remove the set from the library!
+        library.sets.Remove(set);
     }
 
     public void RefillSourdoughSet() {

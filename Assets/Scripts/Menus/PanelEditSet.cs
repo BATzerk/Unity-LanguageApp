@@ -16,6 +16,7 @@ public class PanelEditSet : BasePanel
     [SerializeField] public RectTransform rt_tilesContent; // all the TileViews go on here.
     private List<TermEditableTile> termTiles = new List<TermEditableTile>();
     // References
+    [SerializeField] private MenuController menuController;
     private StudySet currStudySet;
 
 
@@ -108,6 +109,11 @@ public class PanelEditSet : BasePanel
     public void OnClick_CopyToClipboard() {
         GameUtils.CopyToClipboard(dm.GetStudySetExportedString_ForeignBracketPhoneticNative(currStudySet));
         HideOptions();
+    }
+    public void OnClick_ConfirmDeleteSet() {
+        dm.DeleteSet(currStudySet);
+        dm.SaveStudySetLibrary();
+        menuController.OpenPanel_StudyChooseSet();
     }
 
 
