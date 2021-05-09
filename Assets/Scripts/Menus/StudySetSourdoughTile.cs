@@ -43,7 +43,7 @@ public class StudySetSourdoughTile : MonoBehaviour {
         rt_numTermsCardIcon.localEulerAngles = new Vector3(0, 0, Random.Range(-5f, 5f));
 
         // Update countdown!
-        float hoursLeft = GameManagers.Instance.DataManager.GetHoursUntilNextSourdoughLoaf();
+        float hoursLeft = GameManagers.Instance.DataManager.GetHoursUntilNextSourdoughRefill();
         hoursLeft = Mathf.Ceil(hoursLeft*10f) / 10f; // cap me at only 1 decimal place.
         t_countdownValue.text = hoursLeft + "h";
     }

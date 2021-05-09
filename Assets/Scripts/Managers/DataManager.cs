@@ -2,12 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 using UnityEngine;
 
 public class DataManager {
     // Properties
-    private static float SourdoughHoursBetweenLoaves = 6;
+    private static float SourdoughHoursBetweenRefill = 6;
     private static int SourdoughMaxTerms = 20;
     public StudySetLibrary library;
 
@@ -15,8 +16,14 @@ public class DataManager {
     // ----------------------------------------------------------------
     //  Getters
     // ----------------------------------------------------------------
-    public float GetHoursUntilNextSourdoughLoaf() {
-        return 9.90184f; // TODO: This.
+    public float GetHoursUntilNextSourdoughRefill() {
+        DateTime timeLastRefilled = SaveStorage.GetDateTime(SaveKeys.SourdoughTimeLastRefilled);
+        DateTime timeToNextRefill = timeLastRefilled.AddHours(SourdoughHoursBetweenRefill);
+        TimeSpan timeSpan = timeToNextRefill - DateTime.Now;
+        return (float)timeSpan.TotalHours;
+    }
+    public bool IsTimeToRefillSourdoughSet() {
+        return GetHoursUntilNextSourdoughRefill() <= 0;
     }
 
     /// <summary>e.g. "I can. - Jeg kan. - ja kan"</summary>
@@ -63,19 +70,6 @@ public class DataManager {
         library = JsonUtility.FromJson<StudySetLibrary>(jsonString);
         // Convert the unpacked term list to our efficient dictionary.
         library.RemakeTermsDictionaryFromList();
-
-        //// HACK make Sourdough terms references!
-        //StudySet setSD = library.setSourdough;
-        //List<Term> replacements = new List<Term>();
-        //foreach (Term sdTerm in setSD.allTerms) {
-        //    foreach (Term sourceTerm in sdTerm.mySet.allTerms) {
-        //        if (sdTerm.native == sourceTerm.native) { // if this one matches the other one in the source set...!
-        //            replacements.Add(sourceTerm); // add the SOURCE set Term to the list!
-        //        }
-        //    }
-        //}
-        //Debug.Log("size: " + replacements.Count);
-        //setSD.allTerms = replacements;
 
         //// HACK!! Go through the piles, and replace matching ones with the ones from allTerms! So the ones in the piles are REFERENCES to the ones in allTerms.
         //foreach (StudySet set in library.GetMainAndSourdoughSets()) { // for every main set...
@@ -148,10 +142,6 @@ public class DataManager {
     }
 
     public void CopyAllSetsToClipboard() {
-        //QQQ!!
-        //RefillSourdoughSet();
-
-
         string wholeStr = "";
         List<StudySet> everySet = library.GetMainAndSpecialSetsList();
         foreach (StudySet set in everySet) {
@@ -175,19 +165,18 @@ public class DataManager {
     }
 
     public void RefillSourdoughSet() {
-        /*
         // FIRST, update the terms in the sourdough set!
         StudySet setSD = library.setSourdough;
-        List<Term> termsLeave = new List<Term>();
-        List<Term> termsStay = new List<Term>();
-        Debug.Log("------pileYesesAndNos: "+ setSD.pileYesesAndNosG.Count + "   queue: " + setSD.pileQueueG.Count);
-        foreach (Term term in setSD.allTermGs) {
-            Debug.Log("pileYes contains: " + setSD.gpileYesG.Contains(term));
-            if (setSD.gpileYesG.Contains(term)) termsStay.Add(term);
-            else termsLeave.Add(term);
+        List<string> termsLeave = new List<string>();
+        List<string> termsStay = new List<string>();
+        //Debug.Log("------pileYesesAndNos: " + setSD.pileYesesAndNosG.Count + "   queue: " + setSD.pileQueueG.Count);
+        foreach (string termG in setSD.allTermGs) {
+            //Debug.Log("pileYes contains: " + setSD.pileYesG.Contains(termG));
+            if (setSD.pileYesG.Contains(termG)) termsLeave.Add(termG);
+            else termsStay.Add(termG);
         }
-        foreach (Term term in termsLeave) term.nSDLeaves++;
-        foreach (Term term in termsStay) term.nSDStays++;
+        foreach (string termG in termsLeave) library.GetTerm(termG).nSDLeaves++;
+        foreach (string termG in termsStay) library.GetTerm(termG).nSDStays++;
         // Remove the yes-ed terms entirely from the set!
         for (int i=termsLeave.Count-1; i>=0; --i) {
             setSD.RemoveTerm(termsLeave[i]);
@@ -195,25 +184,29 @@ public class DataManager {
 
         // Refill the holes!
         int numToAdd = SourdoughMaxTerms - setSD.allTermGs.Count;
-        // Get ALL main terms!
+        // Make a safe copy-list of all terms!
         List<Term> allTerms = new List<Term>();
-        foreach (StudySet set in library.sets) {
-            foreach (Term term in set.allTermGs) {
-                allTerms.Add(term);
-            }
+        foreach (Term term in library.allTermsL) {
+            allTerms.Add(term);
         }
-        // Sort them by sourdough usages.
-        //TODO: This.
+        // Shuffle them all, then sort them by sourdough wins.
+        GameUtils.Shuffle(allTerms);
+        allTerms = allTerms.OrderBy(c => c.nSDLeaves).ToList();
+        //foreach (Term term in allTerms) {
+        //    Debug.Log("nSDLeaves: " + term.nSDLeaves + "   native: " + term.native);
+        //}
 
         // Add the right amount to the set.
         for (int i=0; i<numToAdd && i<allTerms.Count; i++) {
-            setSD.AddTerm(allTerms[i]);
+            setSD.AddTerm(allTerms[i].myGuid);
         }
         setSD.ShuffleAndRestartDeck();
 
-        // Save!
+        // Save library
         SaveStudySetLibrary();
-        */
+
+        // Finally, save WHEN we last refilled (now)!
+        SaveStorage.SetDateTime(SaveKeys.SourdoughTimeLastRefilled, DateTime.Now);
     }
 
 

@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PanelStudyChooseSet : BasePanel
 {
     // Components
+    [SerializeField] private Button b_refillSourdoughSet;
     [SerializeField] private StudySetSpecialTile setTile_aced;
     [SerializeField] private StudySetSpecialTile setTile_shelved;
     [SerializeField] private StudySetSpecialTile setTile_toValidate;
@@ -29,6 +31,9 @@ public class PanelStudyChooseSet : BasePanel
     }
 
     private void UpdateAllTiles() {
+        // Show/hide b_acceptSourdoughLoaf
+        b_refillSourdoughSet.gameObject.SetActive(dm.IsTimeToRefillSourdoughSet());
+
         // First, let's update JUST the special ones.
         setTile_aced.UpdateVisuals(this, dm.library.setAced);
         setTile_shelved.UpdateVisuals(this, dm.library.setShelved);
@@ -95,6 +100,10 @@ public class PanelStudyChooseSet : BasePanel
     }
     public void OnClick_EditSet_WantRecording() {
         menuController.OpenPanel_EditSet(dm.library.setWantRecording);
+    }
+    public void OnClick_RefillSourdoughSet() {
+        dm.RefillSourdoughSet();
+        UpdateAllTiles();
     }
 
     public void OnClickAddSet() {

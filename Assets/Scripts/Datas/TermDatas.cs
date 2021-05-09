@@ -36,7 +36,7 @@ public class StudySetLibrary {
         setShelved = new StudySet(this, "SHELVED");
         setToValidate = new StudySet(this, "TO VALIDATE");
         setWantRecording = new StudySet(this, "WANT RECORDING");
-        setSourdough = new StudySet(this, "SOURDOUGH SET");
+        setSourdough = new StudySet(this, "SOURDOUGH SET", true);
     }
 
     public void RemakeTermsDictionaryFromList() {
@@ -161,11 +161,6 @@ public class StudySet {
         this.isSourdoughSet = isSourdough;
         this.allTermGs = new List<string>();
     }
-    //public StudySet(string name, List<string> terms) {
-    //    this.name = name;
-    //    this.allTerms = terms;
-    //    GiveAllMyTermsRefToMe();
-    //}
     public StudySet(StudySetLibrary myLibrary, string name, string allTermsStr) {
         this.myLibrary = myLibrary;
         this.name = name;
@@ -215,12 +210,9 @@ public class StudySet {
         this.myLibrary = library;
         foreach (string g in allTermGs) myLibrary.GetTerm(g).mySet = this; // go through the list so they all know they belong to me.
     }
-    //public void AddTerm() {
-        //AddTerm(new Term());
-    //}
     public void AddTerm(string termGuid) {
-        myLibrary.GetTerm(termGuid).mySet = this; // I own it now!
-        //if (!isSourdoughSet) newTerm.mySet = this; // ONLY set mySet if I'm NOT the SourdoughSet ('cause SD set doesn't actually own any terms).
+        Term term = myLibrary.GetTerm(termGuid);
+        if (!isSourdoughSet) term.mySet = this; // ONLY set mySet if I'm NOT the SourdoughSet ('cause SD set doesn't actually own any terms).
         allTermGs.Add(termGuid);
         // Are we in a round? Great, insert it randomly into the queue!
         if (pileQueueG.Count > 0) {
