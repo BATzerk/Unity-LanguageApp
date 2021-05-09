@@ -26,8 +26,8 @@ public class PanelSearchTerms : BasePanel
         allTerms = new List<Term>();
         List<StudySet> everySet = GameManagers.Instance.DataManager.library.GetMainAndSpecialSetsList();
         foreach (StudySet set in everySet) {
-            foreach (Term term in set.allTerms) {
-                allTerms.Add(term);
+            foreach (string termG in set.allTermGs) {
+                allTerms.Add(dm.library.GetTerm(termG));
             }
         }
 

@@ -33,7 +33,7 @@ public class StudySetSourdoughTile : MonoBehaviour {
         go_progressBar.SetActive(mySet.IsInProgress);
         if (mySet.IsInProgress) {
             float barWidth = i_progressBarBack.rectTransform.rect.width;
-            float progLocYeses = (mySet.NumTotal - (mySet.pileYesesAndNos.Count + mySet.pileQueue.Count)) / (float)mySet.NumTotal;
+            float progLocYeses = (mySet.NumTotal - (mySet.pileYesesAndNosG.Count + mySet.pileQueueG.Count)) / (float)mySet.NumTotal;
             float progLocRecent = mySet.NumDone / (float)mySet.NumTotal;
             float yesWidth = barWidth * progLocYeses;
             i_progressBarFillYeses.rectTransform.sizeDelta = new Vector2(yesWidth, i_progressBarFillYeses.rectTransform.sizeDelta.y);

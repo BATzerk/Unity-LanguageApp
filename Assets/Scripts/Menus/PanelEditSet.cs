@@ -43,10 +43,10 @@ public class PanelEditSet : BasePanel
     }
 
     private void UpdateTileList() {
-        List<Term> terms = currStudySet.allTerms;
+        List<string> termGs = currStudySet.allTermGs;
         // Destroy any extras.
         int count=0;
-        while (termTiles.Count > terms.Count) {
+        while (termTiles.Count > termGs.Count) {
             TermEditableTile tile = termTiles[termTiles.Count-1];
             termTiles.Remove(tile);
             Destroy(tile.gameObject);
@@ -54,7 +54,7 @@ public class PanelEditSet : BasePanel
         }
         // Add any missing.
         count = 0;
-        while (termTiles.Count < terms.Count) {
+        while (termTiles.Count < termGs.Count) {
             TermEditableTile newTile = Instantiate(ResourcesHandler.Instance.TermEditableTile).GetComponent<TermEditableTile>();
             newTile.Initialize(true, rt_tilesContent);
             termTiles.Add(newTile);
@@ -62,8 +62,8 @@ public class PanelEditSet : BasePanel
         }
 
         // Now update all the existing tiles!
-        for (int i=0; i<currStudySet.allTerms.Count; i++) {
-            Term term = currStudySet.allTerms[i];
+        for (int i=0; i<termGs.Count; i++) {
+            Term term = dm.library.GetTerm(termGs[i]);
             TermEditableTile tile = termTiles[i];
 
             tile.SetMyTerm(i, term);
@@ -106,7 +106,7 @@ public class PanelEditSet : BasePanel
     //  Events
     // ================================================================
     public void OnClick_CopyToClipboard() {
-        GameUtils.CopyToClipboard(currStudySet.GetAsExportedString_ForeignBracketPhoneticNative());
+        GameUtils.CopyToClipboard(dm.GetStudySetExportedString_ForeignBracketPhoneticNative(currStudySet));
         HideOptions();
     }
 
@@ -116,7 +116,7 @@ public class PanelEditSet : BasePanel
         GameManagers.Instance.DataManager.SaveStudySetLibrary();
     }
     public void AddNewTerm() {
-        currStudySet.AddTerm();
+        dm.library.AddNewTerm(new Term(), currStudySet);
         UpdateTileList();
 
         // Scroll down to the bottom now.
@@ -162,7 +162,7 @@ public class PanelEditSet : BasePanel
 
         // Okay, NOW let's go ahead and add all the new terms to the StudySet!
         foreach (Term term in newTerms) {
-            currStudySet.AddTerm(term);
+            dm.library.AddNewTerm(term, currStudySet);
         }
         GameManagers.Instance.DataManager.SaveStudySetLibrary();
 

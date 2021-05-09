@@ -98,9 +98,9 @@ public class PanelStudyChooseSet : BasePanel
     }
 
     public void OnClickAddSet() {
-        List<Term> startingTerms = new List<Term>();
-        startingTerms.Add(new Term());
-        dm.library.sets.Add(new StudySet("Untitled", startingTerms));
+        //List<Term> startingTerms = new List<Term>();
+        //startingTerms.Add(new Term());
+        dm.library.sets.Add(new StudySet(dm.library, "Untitled"));
         UpdateAllTiles();
         GameManagers.Instance.DataManager.SaveStudySetLibrary();
     }

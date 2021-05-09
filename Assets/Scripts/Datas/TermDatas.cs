@@ -22,7 +22,78 @@ public struct CustomDate {
 
 
 [Serializable]
+public class StudySetLibrary {
+    private Dictionary<string, Term> allTermsD = new Dictionary<string, Term>(); // this is NOT serialized in C#!
+    public List<Term> allTermsL = new List<Term>(); // this IS serialized
+    public List<StudySet> sets = new List<StudySet>(); // the main sets.
+    public StudySet setAced;// = new StudySet(this, "ACED");
+    public StudySet setShelved;// = new StudySet(this, "SHELVED");
+    public StudySet setToValidate;// = new StudySet("TO VALIDATE");
+    public StudySet setWantRecording;// = new StudySet("WANT RECORDING");
+    public StudySet setSourdough;// = new StudySet("SOURDOUGH SET", true);
+    public StudySetLibrary() {
+        setAced = new StudySet(this, "ACED");
+        setShelved = new StudySet(this, "SHELVED");
+        setToValidate = new StudySet(this, "TO VALIDATE");
+        setWantRecording = new StudySet(this, "WANT RECORDING");
+        setSourdough = new StudySet(this, "SOURDOUGH SET");
+    }
+
+    public void RemakeTermsDictionaryFromList() {
+        allTermsD = new Dictionary<string, Term>();
+        foreach (Term term in allTermsL) {
+            allTermsD.Add(term.myGuid, term);
+        }
+    }
+
+
+    public Term GetTerm(string guid) { return allTermsD[guid]; }
+    public List<StudySet> GetMainAndSpecialSetsList() {
+        List<StudySet> list = new List<StudySet>();
+        foreach (StudySet set in sets) list.Add(set);
+        list.Add(setAced);
+        list.Add(setShelved);
+        list.Add(setToValidate);
+        list.Add(setWantRecording);
+        return list;
+    }
+    public List<StudySet> GetMainAndSourdoughSets() {
+        List<StudySet> list = new List<StudySet>();
+        foreach (StudySet set in sets) list.Add(set);
+        list.Add(setSourdough);
+        return list;
+    }
+
+
+    public StudySet GetSetByName(string name) {
+        foreach (StudySet set in GetMainAndSpecialSetsList()) {
+            if (set.name == name) return set;
+        }
+        return null;
+    }
+
+
+    /// Adds a term to the main list, and to the provided set.
+    public void AddNewTerm(Term term, StudySet set) {
+        allTermsD.Add(term.myGuid, term);
+        allTermsL.Add(term);
+        term.mySet = set; // set ref to set.
+        set.AddTerm(term.myGuid);
+    }
+    /// Removes a term from the main list, and all references to its set.
+    public void RemoveTerm(Term term) {
+        allTermsD.Remove(term.myGuid);
+        allTermsL.Remove(term);
+        term.mySet.RemoveTerm(term.myGuid);
+        // TODO: Remove from sourdough set
+    }
+}
+
+
+
+[Serializable]
 public class Term {
+    public string myGuid;
     public int totalYeses=0; // increments whenever we swipe RIGHT to this term.
     public int totalNos=0;
     public int nSDLeaves = 0; // numSourdoughLeaves (how many times we left the SourdoughSet)
@@ -46,6 +117,7 @@ public class Term {
         this.native = native;
         this.foreign = foreign;
         this.phonetic = phonetic;
+        myGuid = Guid.NewGuid().ToString();
     }
 
 
@@ -56,102 +128,50 @@ public class Term {
 
 
 
-
-[Serializable]
-public class StudySetLibrary {
-    public List<StudySet> sets = new List<StudySet>(); // the main sets.
-    public StudySet setAced = new StudySet("ACED");
-    public StudySet setShelved = new StudySet("SHELVED");
-    public StudySet setToValidate = new StudySet("TO VALIDATE");
-    public StudySet setWantRecording = new StudySet("WANT RECORDING");
-    public StudySet setSourdough = new StudySet("SOURDOUGH SET", true);
-
-    public List<StudySet> GetMainAndSpecialSetsList() {
-        List<StudySet> list = new List<StudySet>();
-        foreach (StudySet set in sets) list.Add(set);
-        list.Add(setAced);
-        list.Add(setShelved);
-        list.Add(setToValidate);
-        list.Add(setWantRecording);
-        return list;
-    }
-    public List<StudySet> GetMainAndSourdoughSets() {
-        List<StudySet> list = new List<StudySet>();
-        foreach (StudySet set in sets) list.Add(set);
-        list.Add(setSourdough);
-        return list;
-    }
-    
-
-    public StudySet GetSetByName(string name) {
-        foreach (StudySet set in GetMainAndSpecialSetsList()) {
-            if (set.name == name) return set;
-        }
-        return null;
-    }
-}
 [Serializable]
 public class StudySet {
     // Properties and Components
     public bool isSourdoughSet;
-    public List<Term> allTerms;
+    public List<string> allTermGs; // guids.
     public string name;
     public int numRoundsFinished;
     public int numRoundsStarted;
-    public List<Term> pileYes = new List<Term>();
-    public List<Term> pileNo = new List<Term>();
-    public List<Term> pileQueue = new List<Term>();
-    public List<Term> pileYesesAndNos = new List<Term>(); // the yesses and nos, in order. So we can rewind.
+    public List<string> pileYesG = new List<string>();
+    public List<string> pileNoG = new List<string>();
+    public List<string> pileQueueG = new List<string>();
+    public List<string> pileYesesAndNosG = new List<string>(); // the yesses and nos, in order. So we can rewind.
+    // References
+    [NonSerialized] private StudySetLibrary myLibrary;
 
     // Getters
-    public int NumDone { get { return pileYesesAndNos.Count; } }
-    public int NumTotal { get { return allTerms.Count; } }
-    public int NumInCurrentRound { get { return pileQueue.Count + pileYesesAndNos.Count; } }
-    public bool IsInProgress { get { return pileQueue.Count>0 || pileYesesAndNos.Count>0; } }
+    public int NumDone { get { return pileYesesAndNosG.Count; } }
+    public int NumTotal { get { return allTermGs.Count; } }
+    public int NumInCurrentRound { get { return pileQueueG.Count + pileYesesAndNosG.Count; } }
+    public bool IsInProgress { get { return pileQueueG.Count>0 || pileYesesAndNosG.Count>0; } }
     public Term GetCurrTerm() {
         // Safety check.
-        if (pileQueue==null || pileQueue.Count<=0) { Debug.LogError("Oops! Trying to GetCurrTerm, but there's nothing in this StudySet's pileQueue."); return null; }
-        return pileQueue[0];
-    }
-    /// <summary>e.g. "I can. - Jeg kan. - ja kan"</summary>
-    public string GetAsExportedString_NativeForeignPhonetic() {
-        string str = "";
-        foreach (Term term in allTerms) {
-            str += term.native + " - " + term.foreign + " - " + term.phonetic;
-            str += "\n";
-        }
-        return str;
-    }
-    /// <summary>e.g. "Jeg kan. [ja kan] - I can."</summary>
-    public string GetAsExportedString_ForeignBracketPhoneticNative() {
-        string str = "";
-        foreach (Term term in allTerms) {
-            str += term.foreign;
-            if (term.phonetic.Length > 0) {
-                str += " [" + term.phonetic + "]";
-            }
-            str += " - " + term.foreign;
-            str += "\n";
-        }
-        return str;
+        if (pileQueueG==null || pileQueueG.Count<=0) { Debug.LogError("Oops! Trying to GetCurrTerm, but there's nothing in this StudySet's pileQueue."); return null; }
+        return myLibrary.GetTerm(pileQueueG[0]);
     }
 
     // Initialize
-    public StudySet(string name, bool isSourdough=false) {
+    public StudySet(StudySetLibrary myLibrary, string name, bool isSourdough=false) {
+        this.myLibrary = myLibrary;
         this.name = name;
         this.isSourdoughSet = isSourdough;
-        this.allTerms = new List<Term>();
+        this.allTermGs = new List<string>();
     }
-    public StudySet(string name, List<Term> terms) {
-        this.name = name;
-        this.allTerms = terms;
-        GiveAllMyTermsRefToMe();
-    }
-    public StudySet(string name, string allTermsStr) {
+    //public StudySet(string name, List<string> terms) {
+    //    this.name = name;
+    //    this.allTerms = terms;
+    //    GiveAllMyTermsRefToMe();
+    //}
+    public StudySet(StudySetLibrary myLibrary, string name, string allTermsStr) {
+        this.myLibrary = myLibrary;
         this.name = name;
         string[] termStrings = allTermsStr.Split('\n');
 
-        this.allTerms = new List<Term>();
+        this.allTermGs = new List<string>();
         foreach (string str in termStrings) {
             try {
                 int splitIndex;
@@ -181,61 +201,58 @@ public class StudySet {
                 //    phonetic = phonetic.Substring(0, phonetic.Length - 1); // get rid of that last ] char.
                 //    foreign = foreign.Substring(0, lbIndex - 1);
                 //}
-                allTerms.Add(new Term(native, foreign, phonetic));
+                myLibrary.AddNewTerm(new Term(native, foreign, phonetic), this);
             }
             catch {
                 Debug.LogError("Issue with imported term string: " + str);
             }
         }
-        GiveAllMyTermsRefToMe();
+        SetMyLibraryAndGiveMyTermsRefToMe(myLibrary);
     }
 
     // Doers
-    public void GiveAllMyTermsRefToMe() {
-        foreach (Term t in allTerms) t.mySet = this; // go through the list so they all know they belong to me.
-        //foreach (Term t in pileNo) t.mySet = this; // go through the list so they all know they belong to me.
-        //foreach (Term t in pileQueue) t.mySet = this; // go through the list so they all know they belong to me.
-        //foreach (Term t in pileYes) t.mySet = this; // go through the list so they all know they belong to me.
-        //foreach (Term t in pileYesesAndNos) t.mySet = this; // go through the list so they all know they belong to me.
-
+    public void SetMyLibraryAndGiveMyTermsRefToMe(StudySetLibrary library) {
+        this.myLibrary = library;
+        foreach (string g in allTermGs) myLibrary.GetTerm(g).mySet = this; // go through the list so they all know they belong to me.
     }
-    public void AddTerm() {
-        AddTerm(new Term());
-    }
-    public void AddTerm(Term newTerm) {
-        if (!isSourdoughSet) newTerm.mySet = this; // ONLY set mySet if I'm NOT the SourdoughSet ('cause SD set doesn't actually own any terms).
-        allTerms.Add(newTerm);
+    //public void AddTerm() {
+        //AddTerm(new Term());
+    //}
+    public void AddTerm(string termGuid) {
+        myLibrary.GetTerm(termGuid).mySet = this; // I own it now!
+        //if (!isSourdoughSet) newTerm.mySet = this; // ONLY set mySet if I'm NOT the SourdoughSet ('cause SD set doesn't actually own any terms).
+        allTermGs.Add(termGuid);
         // Are we in a round? Great, insert it randomly into the queue!
-        if (pileQueue.Count > 0) {
-            int randIndex = UnityEngine.Random.Range(0, pileQueue.Count - 1);
-            pileQueue.Insert(randIndex, newTerm);
+        if (pileQueueG.Count > 0) {
+            int randIndex = UnityEngine.Random.Range(0, pileQueueG.Count - 1);
+            pileQueueG.Insert(randIndex, termGuid);
         }
     }
-    public void RemoveTerm(Term term) {
-        allTerms.Remove(term);
+    public void RemoveTerm(string termGuid) {
+        allTermGs.Remove(termGuid);
         // Remove from all possible lists.
-        pileYes.Remove(term);
-        pileNo.Remove(term);
-        pileQueue.Remove(term);
-        pileYesesAndNos.Remove(term);
+        pileYesG.Remove(termGuid);
+        pileNoG.Remove(termGuid);
+        pileQueueG.Remove(termGuid);
+        pileYesesAndNosG.Remove(termGuid);
     }
     public void ShuffleAndRestartDeck() {
-        pileQueue = new List<Term>(allTerms);
-        pileYes = new List<Term>();
-        pileNo = new List<Term>();
-        pileYesesAndNos = new List<Term>();
+        pileQueueG = new List<string>(allTermGs);
+        pileYesG = new List<string>();
+        pileNoG = new List<string>();
+        pileYesesAndNosG = new List<string>();
         // Shuffle 'em!
-        GameUtils.Shuffle(pileQueue);
+        GameUtils.Shuffle(pileQueueG);
         numRoundsStarted++; // Increment numRoundsStarted.
     }
     /// Makes a new round, but made up of the "no" pile terms.
     public void RestartNewRound() {
-        pileQueue = new List<Term>(pileNo);
-        pileYes = new List<Term>();
-        pileNo = new List<Term>();
-        pileYesesAndNos = new List<Term>();
+        pileQueueG = new List<string>(pileNoG);
+        pileYesG = new List<string>();
+        pileNoG = new List<string>();
+        pileYesesAndNosG = new List<string>();
         // Shuffle 'em!
-        GameUtils.Shuffle(pileQueue);
+        GameUtils.Shuffle(pileQueueG);
         numRoundsStarted++; // Increment numRoundsStarted.
     }
 
@@ -243,31 +260,32 @@ public class StudySet {
     public void OnClickCurrTermYes() {
         Term c = GetCurrTerm();
         c.totalYeses++;
-        pileQueue.Remove(c);
-        pileYes.Add(c);
-        pileYesesAndNos.Add(c);
-        if (pileQueue.Count == 0) numRoundsFinished++; // Queue empty? We finished the round! :)
+        pileQueueG.Remove(c.myGuid);
+        pileYesG.Add(c.myGuid);
+        pileYesesAndNosG.Add(c.myGuid);
+        if (pileQueueG.Count == 0) numRoundsFinished++; // Queue empty? We finished the round! :)
     }
     public void OnClickCurrTermNo() {
         Term c = GetCurrTerm();
         c.totalNos++;
-        pileQueue.Remove(c);
-        pileNo.Add(c);
-        pileYesesAndNos.Add(c);
-        if (pileQueue.Count == 0) numRoundsFinished++; // Queue empty? We finished the round! :)
+        pileQueueG.Remove(c.myGuid);
+        pileNoG.Add(c.myGuid);
+        pileYesesAndNosG.Add(c.myGuid);
+        if (pileQueueG.Count == 0) numRoundsFinished++; // Queue empty? We finished the round! :)
     }
     public void RewindOneCard() {
-        if (pileYesesAndNos.Count == 0) { Debug.LogError("Oops, trying to rewind, but we have nothing in pileYesesAndNos list."); return; }
-        Term prev = pileYesesAndNos[pileYesesAndNos.Count-1];
-        pileQueue.Insert(0, prev);
-        pileYesesAndNos.Remove(prev);
-        if (pileYes.Contains(prev)) {
-            pileYes.Remove(prev);
-            prev.totalYeses--;
+        if (pileYesesAndNosG.Count == 0) { Debug.LogError("Oops, trying to rewind, but we have nothing in pileYesesAndNos list."); return; }
+        string prevG = pileYesesAndNosG[pileYesesAndNosG.Count-1];
+        Term prevT = myLibrary.GetTerm(prevG);
+        pileQueueG.Insert(0, prevG);
+        pileYesesAndNosG.Remove(prevG);
+        if (pileYesG.Contains(prevG)) {
+            pileYesG.Remove(prevG);
+            prevT.totalYeses--;
         }
         else {
-            pileNo.Remove(prev);
-            prev.totalNos--;
+            pileNoG.Remove(prevG);
+            prevT.totalNos--;
         }
     }
 

@@ -135,7 +135,7 @@ public class TermEditableTile : MonoBehaviour
         rt_deleteConfirmation.gameObject.SetActive(true);
     }
     public void OnClickDeleteConfirmed() {
-        myTerm.mySet.RemoveTerm(myTerm);
+        GameManagers.Instance.DataManager.library.RemoveTerm(myTerm);
         GameManagers.Instance.DataManager.SaveStudySetLibrary();
         GameManagers.Instance.EventManager.OnAnySetContentsChanged();
     }

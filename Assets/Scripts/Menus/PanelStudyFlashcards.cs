@@ -34,8 +34,8 @@ public class PanelStudyFlashcards : BasePanel {
     // Getters
     private static string GetRoundCompleteText(StudySet set) {
         //int numUnderstood = set.NumTotal - currStudySet.pileNo.Count;
-        int numNewYeses = set.pileYes.Count;
-        int numRemaining = set.pileNo.Count;
+        int numNewYeses = set.pileYesG.Count;
+        int numRemaining = set.pileNoG.Count;
         string returnStr = "";
         if (numRemaining>0 && numNewYeses > 0) returnStr += "learned " + numNewYeses + " new ones!\n";
         if (numRemaining > 0) returnStr += numRemaining + " remaining\n";
@@ -79,7 +79,7 @@ public class PanelStudyFlashcards : BasePanel {
     //  Update Visuals
     // ================================================================
     private void UpdateUndoButtonInteractable() {
-        b_undo.interactable = currStudySet.pileYesesAndNos.Count > 0;
+        b_undo.interactable = currStudySet.pileYesesAndNosG.Count > 0;
     }
     private void RefreshCardVisuals() {
         if (currStudySet == null) { return; } // No current StudySet? We're not in flashcard mode! Do nothin'.
@@ -94,7 +94,7 @@ public class PanelStudyFlashcards : BasePanel {
         // We've finished the set??
         if (currStudySet.NumDone >= currStudySet.NumInCurrentRound) {
             t_finishedInformation.text = GetRoundCompleteText(currStudySet);
-            b_studyAgain.gameObject.SetActive(currStudySet.pileNo.Count > 0); // only show "next round" button if there are cards to HAVE a next round with.
+            b_studyAgain.gameObject.SetActive(currStudySet.pileNoG.Count > 0); // only show "next round" button if there are cards to HAVE a next round with.
             rt_setFinished.gameObject.SetActive(true);
             rt_setInProgress.gameObject.SetActive(false);
         }
