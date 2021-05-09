@@ -4,24 +4,30 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using GoodEnough.TextToSpeech;
 
 public class PanelStudyFlashcards : BasePanel {
     // Components
     [SerializeField] private Button b_undo;
     [SerializeField] private Button b_studyAgain;
+    [SerializeField] private Button b_toggleTTS;
     [SerializeField] private CardView currCardView;
-    //[SerializeField] private CardView cardView1;
-    //[SerializeField] private CardView cardView2;
     [SerializeField] private Image i_progressBarBack;
     [SerializeField] private Image i_progressBarFill;
     [SerializeField] private TextMeshProUGUI t_progress;
+    [SerializeField] private TextMeshProUGUI t_ttsSpeed;
     [SerializeField] private TextMeshProUGUI t_finishedInformation;
     [SerializeField] private RectTransform rt_setFinished;
     [SerializeField] private RectTransform rt_setInProgress;
     //private List<CardView> cardViews;
     // References
-    //private CardView currCardView;
+    [SerializeField] private Sprite s_ttsButtonOn;
+    //[SerializeField] private Sprite s_ttsButtonOnSlow;
+    [SerializeField] private Sprite s_ttsButtonOff;
     private StudySet currStudySet;
+    // Properties
+    private bool isTTSOn;
+    private float ttsSpeechRate;
 
 
 
@@ -36,11 +42,6 @@ public class PanelStudyFlashcards : BasePanel {
         else returnStr += "\n\nYou got 'em all, woot!";
         return returnStr;
     }
-    //private CardView GetNextIdleCardView() {
-    //    if (currCardView == cardView0) return cardView1;
-    //    if (currCardView == cardView1) return cardView2;
-    //    return cardView0;
-    //}
 
 
 
@@ -48,9 +49,16 @@ public class PanelStudyFlashcards : BasePanel {
     //  Start / Destroy
     // ================================================================
     private void Start() {
+        // Load TTS properties!
+        isTTSOn = SaveStorage.GetBool(SaveKeys.IsTTSOn);
+        ttsSpeechRate = SaveStorage.GetFloat(SaveKeys.TTSSpeechRate);
+        UpdateTTSButtons();
+
+        // Add event listeners.
         eventManager.SetContentsChangedEvent += RefreshCardVisuals;
     }
     private void OnDestroy() {
+        // Remove event listeners.
         eventManager.SetContentsChangedEvent -= RefreshCardVisuals;
     }
     public void OpenSet(StudySet currStudySet) {
@@ -149,6 +157,62 @@ public class PanelStudyFlashcards : BasePanel {
 
 
 
+    public void OnShowSideNative() {
+        //Debug.Log("GetAllAvailableLanguages: ");
+        //foreach (string str in TTS.GetAllAvailableLanguages()) {
+        //    Debug.Log(str);
+        //}
+        ////SpeechUtteranceParameters parameters = new SpeechUtteranceParameters();
+        //ISpeechSynthesisVoice voice = TTS.GetVoiceForLanguage("en");
+        //Debug.Log("English voice: " + voice);
+        //TTS.Speak(MyTerm.native, voice);
+    }
+    public void OnShowSideForeign() {
+        if (isTTSOn) {
+            SpeakTTSForeign();
+        }
+    }
+    public void SpeakTTSForeign() {
+        SpeechUtteranceParameters parameters = new SpeechUtteranceParameters();
+        parameters.SpeechRate = ttsSpeechRate;
+        ISpeechSynthesisVoice voice = TTS.GetVoiceForLanguage("da");
+        TTS.Speak(currCardView.MyTerm.foreign, voice);
+    }
+
+    public void OnClickToggleTTS() {
+        isTTSOn = !isTTSOn;
+        UpdateTTSButtons();
+        // Save the values!
+        SaveStorage.SetBool(SaveKeys.IsTTSOn, isTTSOn);
+    }
+    public void OnClickCycleTTSSpeed() {
+        if (ttsSpeechRate >= 1) {
+            ttsSpeechRate = 0.75f;
+        }
+        else if (ttsSpeechRate >= 0.75f) {
+            ttsSpeechRate = 0.5f;
+        }
+        else {
+            ttsSpeechRate = 1;
+        }
+        UpdateTTSButtons();
+        SaveStorage.SetFloat(SaveKeys.TTSSpeechRate, ttsSpeechRate);
+    }
+    private void UpdateTTSButtons() {
+        t_ttsSpeed.text = ttsSpeechRate + "x";
+        b_toggleTTS.image.sprite = isTTSOn ? s_ttsButtonOn : s_ttsButtonOff;
+        //if (!isTTSOn) {
+        //    b_toggleTTS.image.sprite = s_ttsButtonOff;
+        //}
+        //else if (ttsSpeechRate == 1) {
+        //    b_toggleTTS.image.sprite = s_ttsButtonOn;
+        //}
+        //else {
+        //    b_toggleTTS.image.sprite = s_ttsButtonOnSlow;
+        //}
+    }
 
 
-}
+
+
+ }

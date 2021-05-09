@@ -70,11 +70,13 @@ public class CardView : MonoBehaviour {
         isNativeSide = true;
         rt_sideNative.gameObject.SetActive(isNativeSide);
         rt_sideForeign.gameObject.SetActive(!isNativeSide);
+        myPanel.OnShowSideNative();
     }
     void ShowSideForeign(bool doAnimate=true) {
         isNativeSide = false;
         rt_sideNative.gameObject.SetActive(isNativeSide);
         rt_sideForeign.gameObject.SetActive(!isNativeSide);
+        myPanel.OnShowSideForeign();
     }
     public void FlipCard() {
         if (isNativeSide) ShowSideForeign();
@@ -114,6 +116,9 @@ public class CardView : MonoBehaviour {
     }
     public void OnClickPlayAudioClip() {
         clipPlayer.PlayTermClip(MyTerm);
+    }
+    public void OnClickSpeakTTSForeign() {
+        myPanel.SpeakTTSForeign();
     }
 
 

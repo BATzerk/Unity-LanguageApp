@@ -22,6 +22,7 @@ public class TermEditableTile : MonoBehaviour
     [SerializeField] private TMP_InputField if_native;
     [SerializeField] private TMP_InputField if_foreign;
     [SerializeField] private TMP_InputField if_phonetic;
+    [SerializeField] private VerticalLayoutGroup vertLayoutGroup;
     // References
     private Term myTerm;
 
@@ -67,6 +68,7 @@ public class TermEditableTile : MonoBehaviour
     public void SetMyTerm(int myIndex, Term myTerm) {
         this.myTerm = myTerm;
         t_myNumber.text = (myIndex + 1).ToString();
+        t_setName.text = myTerm.mySet.name;
 
         RefreshVisuals();
     }
@@ -76,20 +78,26 @@ public class TermEditableTile : MonoBehaviour
         if_native.text = myTerm.native;
         if_foreign.text = myTerm.foreign;
         if_phonetic.text = myTerm.phonetic;
-        Hack_RefreshSize();
+        //Hack_RefreshSize();
+        //Invoke("Hack_RefreshSize", 1.1f);
         b_playClip.gameObject.SetActive(myTerm.HasAudio0());
         HideOptions();
         HideDeleteConfirmation();
+        StartCoroutine(RefreshLayoutCoroutine());
     }
-    private void Hack_RefreshSize() {
-        VerticalLayoutGroup test = if_phonetic.GetComponentInParent<VerticalLayoutGroup>();
-        float groupHeight = test.preferredHeight;
-        if (groupHeight == 0) { // Don't have a preferred height yet? No worries; invoke this again until we do!
-            Invoke("Hack_RefreshSize", 0.1f);
-        }
-        else { // We've got a proper height. Apply it!
+    private IEnumerator RefreshLayoutCoroutine() {
+        yield return null; // skip a frame. Wait until canvases are done updating.
+        //Canvas.ForceUpdateCanvases();// HACK Temp here.
+        vertLayoutGroup.CalculateLayoutInputVertical();
+        vertLayoutGroup.SetLayoutVertical();
+        //LayoutRebuilder.ForceRebuildLayoutImmediate(myRectTransform);
+        float groupHeight = vertLayoutGroup.preferredHeight;
+        //if (groupHeight == 0) { // Don't have a preferred height yet? No worries; invoke this again until we do!
+        //    Invoke("Hack_RefreshSize", 0.1f);
+        //}
+        //else { // We've got a proper height. Apply it!
             myRectTransform.sizeDelta = new Vector2(myRectTransform.sizeDelta.x, groupHeight + 20);// Mathf.Abs(rt_if_phonetic.anchoredPosition.y)+rt_if_phonetic.rect.size.y);
-        }
+        //}
     }
 
 

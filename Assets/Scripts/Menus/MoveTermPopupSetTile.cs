@@ -9,6 +9,7 @@ public class MoveTermPopupSetTile : MonoBehaviour {
     [SerializeField] private Image i_currSetBorder; // shows if I'm the current term's set.
     [SerializeField] private RectTransform myRectTransform;
     [SerializeField] private TextMeshProUGUI t_name;
+    [SerializeField] private TextMeshProUGUI t_numTerms;
     // References
     private StudySet mySet;
     private MoveTermPopup myPopup;
@@ -24,16 +25,10 @@ public class MoveTermPopupSetTile : MonoBehaviour {
 
         i_currSetBorder.gameObject.SetActive(isSameSet);
         t_name.text = mySet.name;
-
-        //UpdateVisuals();
+        t_numTerms.text = mySet.NumTotal.ToString();
     }
 
 
-    //// ----------------------------------------------------------------
-    ////  Update Visuals
-    //// ----------------------------------------------------------------
-    //private void UpdateVisuals() {
-    //}
 
 
     // ----------------------------------------------------------------

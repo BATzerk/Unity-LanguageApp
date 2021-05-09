@@ -3835,6 +3835,7 @@ MonoBehaviour:
   if_native: {fileID: 1965683629314513244}
   if_foreign: {fileID: 6974059828706053824}
   if_phonetic: {fileID: 5246290473313957856}
+  vertLayoutGroup: {fileID: 595731787478637930}
 --- !u!114 &2449897339843174180
 MonoBehaviour:
   m_ObjectHideFlags: 0
