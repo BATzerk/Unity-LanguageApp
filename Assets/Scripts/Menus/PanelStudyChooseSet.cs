@@ -11,6 +11,7 @@ public class PanelStudyChooseSet : BasePanel
     [SerializeField] private StudySetSpecialTile setTile_shelved;
     [SerializeField] private StudySetSpecialTile setTile_toValidate;
     [SerializeField] private StudySetSpecialTile setTile_wantRecording;
+    [SerializeField] private StudySetSourdoughTile setTile_sourdough;
     [SerializeField] public RectTransform rt_scrollContent; // we just control the size of this. rt_tilesContent is parented to this.
     [SerializeField] public RectTransform rt_tilesContent; // all the TileViews go on here.
     private List<StudySetTileView> tileViews=new List<StudySetTileView>();
@@ -33,6 +34,7 @@ public class PanelStudyChooseSet : BasePanel
         setTile_shelved.UpdateVisuals(this, dm.library.setShelved);
         setTile_toValidate.UpdateVisuals(this, dm.library.setToValidate);
         setTile_wantRecording.UpdateVisuals(this, dm.library.setWantRecording);
+        setTile_sourdough.UpdateVisuals(this, dm.library.setSourdough);
 
         List<StudySet> sets = dm.library.sets;
 

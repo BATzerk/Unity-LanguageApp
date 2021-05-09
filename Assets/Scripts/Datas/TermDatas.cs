@@ -25,6 +25,8 @@ public struct CustomDate {
 public class Term {
     public int totalYeses=0; // increments whenever we swipe RIGHT to this term.
     public int totalNos=0;
+    public int nSDLeaves = 0; // numSourdoughLeaves (how many times we left the SourdoughSet)
+    public int nSDStays = 0; // numSourdoughStays (how many times we stayed in the SourdoughSet, for the next loaf)
     public string native;
     public string foreign;
     public string phonetic;
@@ -51,15 +53,20 @@ public class Term {
     //public bool IsEmpty() { return String.IsNullOrWhiteSpace(belief) && String.IsNullOrWhiteSpace(debate); }
 }
 
+
+
+
+
 [Serializable]
 public class StudySetLibrary {
-    public List<StudySet> sets = new List<StudySet>();
+    public List<StudySet> sets = new List<StudySet>(); // the main sets.
     public StudySet setAced = new StudySet("ACED");
     public StudySet setShelved = new StudySet("SHELVED");
     public StudySet setToValidate = new StudySet("TO VALIDATE");
     public StudySet setWantRecording = new StudySet("WANT RECORDING");
+    public StudySet setSourdough = new StudySet("SOURDOUGH SET", true);
 
-    public List<StudySet> GetRegularAndSpecialSetsList() {
+    public List<StudySet> GetMainAndSpecialSetsList() {
         List<StudySet> list = new List<StudySet>();
         foreach (StudySet set in sets) list.Add(set);
         list.Add(setAced);
@@ -68,17 +75,25 @@ public class StudySetLibrary {
         list.Add(setWantRecording);
         return list;
     }
+    public List<StudySet> GetMainAndSourdoughSets() {
+        List<StudySet> list = new List<StudySet>();
+        foreach (StudySet set in sets) list.Add(set);
+        list.Add(setSourdough);
+        return list;
+    }
+    
 
     public StudySet GetSetByName(string name) {
-        foreach (StudySet set in GetRegularAndSpecialSetsList()) {
+        foreach (StudySet set in GetMainAndSpecialSetsList()) {
             if (set.name == name) return set;
         }
         return null;
     }
 }
 [Serializable]
-public class StudySet
-{
+public class StudySet {
+    // Properties and Components
+    public bool isSourdoughSet;
     public List<Term> allTerms;
     public string name;
     public int numRoundsFinished;
@@ -122,8 +137,9 @@ public class StudySet
     }
 
     // Initialize
-    public StudySet(string name) {
+    public StudySet(string name, bool isSourdough=false) {
         this.name = name;
+        this.isSourdoughSet = isSourdough;
         this.allTerms = new List<Term>();
     }
     public StudySet(string name, List<Term> terms) {
@@ -187,7 +203,7 @@ public class StudySet
         AddTerm(new Term());
     }
     public void AddTerm(Term newTerm) {
-        newTerm.mySet = this;
+        if (!isSourdoughSet) newTerm.mySet = this; // ONLY set mySet if I'm NOT the SourdoughSet ('cause SD set doesn't actually own any terms).
         allTerms.Add(newTerm);
         // Are we in a round? Great, insert it randomly into the queue!
         if (pileQueue.Count > 0) {

@@ -7,26 +7,23 @@ using UnityEngine;
 
 public class DataManager {
     // Properties
+    private static float SourdoughHoursBetweenLoaves = 6;
+    private static int SourdoughMaxTerms = 20;
     public StudySetLibrary library;
 
 
     // ----------------------------------------------------------------
     //  Getters
     // ----------------------------------------------------------------
+    public float GetHoursUntilNextSourdoughLoaf() {
+        return 9.90184f; // TODO: This.
+    }
 
 
     // ----------------------------------------------------------------
     //  Initialize
     // ----------------------------------------------------------------
     public DataManager() {
-        //// Reload audioLibrary.
-        //if (SaveStorage.HasKey(SaveKeys.TermAudioLibrary)) {
-        //    ReloadAudioLibrary();
-        //}
-        //else {
-        //    audioLibrary = new TermAudioLibrary();
-        //}
-
         // Save data? Use it!
         if (SaveStorage.HasKey(SaveKeys.StudySetLibrary)) {
             ReloadStudySetLibrary();
@@ -36,17 +33,26 @@ public class DataManager {
             ReplaceAllStudySetsWithPremadeHardcodedOnes();
         }
     }
-    //private void ReloadAudioLibrary() {
-    //    string jsonString = SaveStorage.GetString(SaveKeys.TermAudioLibrary);
-    //    audioLibrary = JsonUtility.FromJson<TermAudioLibrary>(jsonString);
-    //}
     public void ReloadStudySetLibrary() {
         string jsonString = SaveStorage.GetString(SaveKeys.StudySetLibrary);
         library = JsonUtility.FromJson<StudySetLibrary>(jsonString);
 
+        //// HACK make Sourdough terms references!
+        //StudySet setSD = library.setSourdough;
+        //List<Term> replacements = new List<Term>();
+        //foreach (Term sdTerm in setSD.allTerms) {
+        //    foreach (Term sourceTerm in sdTerm.mySet.allTerms) {
+        //        if (sdTerm.native == sourceTerm.native) { // if this one matches the other one in the source set...!
+        //            replacements.Add(sourceTerm); // add the SOURCE set Term to the list!
+        //        }
+        //    }
+        //}
+        //Debug.Log("size: " + replacements.Count);
+        //setSD.allTerms = replacements;
+
         // HACK!! Go through the piles, and replace matching ones with the ones from allTerms! So the ones in the piles are REFERENCES to the ones in allTerms.
-        foreach (StudySet set in library.sets) {
-            for (int i=set.allTerms.Count-1; i>=0; i--) {
+        foreach (StudySet set in library.GetMainAndSourdoughSets()) { // for every main set...
+            for (int i=set.allTerms.Count-1; i>=0; i--) { // for every term in allTerms...
                 Term mainTerm = set.allTerms[i];
                 for (int j=set.pileNo.Count-1; j>=0; j--) {
                     Term thisTerm = set.pileNo[j];
@@ -82,18 +88,18 @@ public class DataManager {
             }
         }
 
-
         // Reaffiliate all terms with their sets.
-        foreach (StudySet set in library.GetRegularAndSpecialSetsList()) {
+        foreach (StudySet set in library.GetMainAndSpecialSetsList()) {
             set.GiveAllMyTermsRefToMe();
         }
-
     }
     public void SaveStudySetLibrary() {
         string jsonString = JsonUtility.ToJson(library);
-        Debug.Log("SAVED STUDYSET LIBRARY: " + jsonString);
         SaveStorage.SetString(SaveKeys.StudySetLibrary, jsonString);
+        Debug.Log("SAVED STUDYSET LIBRARY: " + jsonString);
     }
+
+
 
 
     // ----------------------------------------------------------------
@@ -101,11 +107,9 @@ public class DataManager {
     // ----------------------------------------------------------------
     public void ClearAllSaveData() {
 		// NOOK IT
-		SaveStorage.DeleteAll ();
-		//ReloadLevels ();
+		SaveStorage.DeleteAll();
 		Debug.Log ("All SaveStorage CLEARED!");
 	}
-
 
     public void MoveTermToSet(Term term, StudySet newSet) {
         // Swap its set.
@@ -117,14 +121,58 @@ public class DataManager {
     }
 
     public void CopyAllSetsToClipboard() {
+        //QQQ!!
+        RefillSourdoughSet();
+
+
         string wholeStr = "";
-        List<StudySet> everySet = library.GetRegularAndSpecialSetsList();
+        List<StudySet> everySet = library.GetMainAndSpecialSetsList();
         foreach (StudySet set in everySet) {
             wholeStr += set.name+"\n";
             wholeStr += set.GetAsExportedString_ForeignBracketPhoneticNative();
             wholeStr += "\n\n";
         }
         GameUtils.CopyToClipboard(wholeStr);
+    }
+
+    public void RefillSourdoughSet() {
+        // FIRST, update the terms in the sourdough set!
+        StudySet setSD = library.setSourdough;
+        List<Term> termsLeave = new List<Term>();
+        List<Term> termsStay = new List<Term>();
+        Debug.Log("------pileYesesAndNos: "+ setSD.pileYesesAndNos.Count + "   queue: " + setSD.pileQueue.Count);
+        foreach (Term term in setSD.allTerms) {
+            Debug.Log("pileYes contains: " + setSD.pileYes.Contains(term));
+            if (setSD.pileYes.Contains(term)) termsStay.Add(term);
+            else termsLeave.Add(term);
+        }
+        foreach (Term term in termsLeave) term.nSDLeaves++;
+        foreach (Term term in termsStay) term.nSDStays++;
+        // Remove the yes-ed terms entirely from the set!
+        for (int i=termsLeave.Count-1; i>=0; --i) {
+            setSD.RemoveTerm(termsLeave[i]);
+        }
+
+        // Refill the holes!
+        int numToAdd = SourdoughMaxTerms - setSD.allTerms.Count;
+        // Get ALL main terms!
+        List<Term> allTerms = new List<Term>();
+        foreach (StudySet set in library.sets) {
+            foreach (Term term in set.allTerms) {
+                allTerms.Add(term);
+            }
+        }
+        // Sort them by sourdough usages.
+        //TODO: This.
+
+        // Add the right amount to the set.
+        for (int i=0; i<numToAdd && i<allTerms.Count; i++) {
+            setSD.AddTerm(allTerms[i]);
+        }
+        setSD.ShuffleAndRestartDeck();
+
+        // Save!
+        SaveStudySetLibrary();
     }
 
 
@@ -145,9 +193,6 @@ public class DataManager {
         // Null out the Term's guid, and save our library!
         term.audio0Guid = "";
         SaveStudySetLibrary();
-
-        //audioLibrary.DeleteAudioClip(audio0Guid);
-        //SaveAudioLibrary();
     }
 
 
@@ -155,40 +200,10 @@ public class DataManager {
 
 
 
+    // ----------------------------------------------------------------
+    //  DEBUG
+    // ----------------------------------------------------------------
     public void ReplaceAllStudySetsWithPremadeHardcodedOnes() {
-        //// TEMP!
-        //List<Term> set1 = new List<Term>();
-        //List<Term> set2 = new List<Term>();
-        //List<Term> set3 = new List<Term>();
-        //List<Term> set4 = new List<Term>();
-        //List<Term> set5 = new List<Term>();
-        //List<Term> set6 = new List<Term>();
-        //List<Term> set7 = new List<Term>();
-        //List<Term> set8 = new List<Term>();
-        //List<Term> set9 = new List<Term>();
-        //List<Term> set10 = new List<Term>();
-        //List<Term> set11 = new List<Term>();
-        //List<Term> set12 = new List<Term>();
-        //List<Term> set13 = new List<Term>();
-        //set1.Add
-        //cards0.Add(new Term("House", "Hus", "hoos"));
-        //cards0.Add(new Term("Car", "Bil", "beel"));
-        //cards1.Add(new Term("Green", "Grøn", "grøn"));
-        //cards1.Add(new Term("Blue", "Blå", "blå"));
-        //cardsNumbers.Add(new Term("Zero", "Nul", "nul"));
-        //cardsNumbers.Add(new Term("One", "En", "en"));
-        //cardsNumbers.Add(new Term("Two", "To", "to"));
-        //cardsNumbers.Add(new Term("Three", "Tre", "tRe"));
-        //cardsNumbers.Add(new Term("Four", "Fire", "feeah"));
-        //cardsNumbers.Add(new Term("Five", "Fem", "fem"));
-        //cardsNumbers.Add(new Term("Six", "Seks", "seks"));
-        //cardsNumbers.Add(new Term("Seven", "Syv", "sYv"));
-        //cardsNumbers.Add(new Term("Eight", "Otte", "otte"));
-        //cardsNumbers.Add(new Term("Nine", "Ni", "nee"));
-        //cardsNumbers.Add(new Term("Ten", "Ti", "tee"));
-        //library.sets.Add(new StudySet("Colors", cards1));
-        //library.sets.Add(new StudySet("Numbers", cardsNumbers));
-
         library = new StudySetLibrary();
         library.sets = new List<StudySet>();
         library.sets.Add(new StudySet("Danish M2 #1",

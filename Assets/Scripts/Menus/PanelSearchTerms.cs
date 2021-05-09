@@ -24,7 +24,7 @@ public class PanelSearchTerms : BasePanel
 
         // Remake allTerms.
         allTerms = new List<Term>();
-        List<StudySet> everySet = GameManagers.Instance.DataManager.library.GetRegularAndSpecialSetsList();
+        List<StudySet> everySet = GameManagers.Instance.DataManager.library.GetMainAndSpecialSetsList();
         foreach (StudySet set in everySet) {
             foreach (Term term in set.allTerms) {
                 allTerms.Add(term);
