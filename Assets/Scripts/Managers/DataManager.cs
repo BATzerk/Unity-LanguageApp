@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class DataManager {
     // Properties
-    private static float SourdoughHoursBetweenRefill = 6;
+    private static float SourdoughHoursBetweenRefill = 4;
     private static int SourdoughMaxTerms = 20;
     public StudySetLibrary library;
 
@@ -185,16 +185,10 @@ public class DataManager {
         // Refill the holes!
         int numToAdd = SourdoughMaxTerms - setSD.allTermGs.Count;
         // Make a safe copy-list of all terms!
-        List<Term> allTerms = new List<Term>();
-        foreach (Term term in library.allTermsL) {
-            allTerms.Add(term);
-        }
+        List<Term> allTerms = library.GetOnlyMainTerms();
         // Shuffle them all, then sort them by sourdough wins.
         GameUtils.Shuffle(allTerms);
         allTerms = allTerms.OrderBy(c => c.nSDLeaves).ToList();
-        //foreach (Term term in allTerms) {
-        //    Debug.Log("nSDLeaves: " + term.nSDLeaves + "   native: " + term.native);
-        //}
 
         // Add the right amount to the set.
         for (int i=0; i<numToAdd && i<allTerms.Count; i++) {

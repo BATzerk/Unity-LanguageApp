@@ -48,6 +48,15 @@ public class StudySetLibrary {
 
 
     public Term GetTerm(string guid) { return allTermsD[guid]; }
+    public List<Term> GetOnlyMainTerms() {
+        List<Term> mainTerms = new List<Term>();
+        foreach (StudySet set in sets) {
+            foreach (string termG in set.allTermGs) {
+                mainTerms.Add(GetTerm(termG));
+            }
+        }
+        return mainTerms;
+    }
     public List<StudySet> GetMainAndSpecialSetsList() {
         List<StudySet> list = new List<StudySet>();
         foreach (StudySet set in sets) list.Add(set);
@@ -112,6 +121,7 @@ public class Term {
         foreign = "";
         phonetic = "";
         audio0Guid = "";
+        myGuid = Guid.NewGuid().ToString();
     }
     public Term(string native,string foreign,string phonetic) {
         this.native = native;
