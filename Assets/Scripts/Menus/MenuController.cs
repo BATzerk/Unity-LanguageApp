@@ -7,7 +7,7 @@ public class MenuController : MonoBehaviour
     // References
     [SerializeField] private PanelEditSet panel_editSet;
     [SerializeField] private BasePanel panel_searchTerms;
-    [SerializeField] private BasePanel panel_studyChooseSet;
+    [SerializeField] private BasePanel panel_chooseSet;
     [SerializeField] private PanelStudyFlashcards panel_studyFlashcards;
 
     // Getters
@@ -29,15 +29,17 @@ public class MenuController : MonoBehaviour
             OpenPanel_StudyFlashcards(lastSet);
         }
         else {
-            OpenPanel_StudyChooseSet();
+            OpenPanel_ChooseSet();
         }
 
         // Add event listeners.
         GameManagers.Instance.EventManager.OpenPanelEditSetEvent += OpenPanel_EditSet;
+        GameManagers.Instance.EventManager.OpenPanelStudyFlashcardsEvent += OpenPanel_StudyFlashcards;
     }
     private void OnDestroy() {
         // Remove event listeners.
         GameManagers.Instance.EventManager.OpenPanelEditSetEvent -= OpenPanel_EditSet;
+        GameManagers.Instance.EventManager.OpenPanelStudyFlashcardsEvent -= OpenPanel_StudyFlashcards;
     }
 
 
@@ -47,7 +49,7 @@ public class MenuController : MonoBehaviour
     public void ShowPanel(BasePanel _panel) {
         panel_editSet.SetVisibility(false);
         panel_searchTerms.SetVisibility(false);
-        panel_studyChooseSet.SetVisibility(false);
+        panel_chooseSet.SetVisibility(false);
         panel_studyFlashcards.SetVisibility(false);
 
         _panel.SetVisibility(true);
@@ -62,7 +64,7 @@ public class MenuController : MonoBehaviour
     // ================================================================
     public void OpenPanel_EditSet(StudySet set) { ShowPanel(panel_editSet); panel_editSet.OpenSet(set); }
     public void OpenPanel_SearchTerms() { ShowPanel(panel_searchTerms); }
-    public void OpenPanel_StudyChooseSet() { ShowPanel(panel_studyChooseSet); }
+    public void OpenPanel_ChooseSet() { ShowPanel(panel_chooseSet); }
     public void OpenPanel_StudyFlashcards(StudySet set) { ShowPanel(panel_studyFlashcards); panel_studyFlashcards.OpenSet(set); }
 
 #if UNITY_EDITOR

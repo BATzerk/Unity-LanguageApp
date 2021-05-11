@@ -331,7 +331,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2888483205691621665}
         m_TargetAssemblyTypeName: CardView, Assembly-CSharp
-        m_MethodName: ShowOptions
+        m_MethodName: OnClickOptions
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1340,7 +1340,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2888483205691621671}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1374,16 +1374,11 @@ MonoBehaviour:
   go_swipeBannerNo: {fileID: 2888483204530189643}
   go_swipeBannerYes: {fileID: 2888483204944850984}
   myRectTransform: {fileID: 2888483205691621670}
-  rt_options: {fileID: 0}
   rt_sideNative: {fileID: 2888483204510147740}
   rt_sideForeign: {fileID: 2888483205549597478}
-  moveTermPopup: {fileID: 0}
   t_native: {fileID: 2888483205222219552}
   t_foreign: {fileID: 2888483205327998761}
   t_phonetic: {fileID: 2888483205498925537}
-  if_native: {fileID: 0}
-  if_foreign: {fileID: 0}
-  if_phonetic: {fileID: 0}
   myPanel: {fileID: 0}
   clipPlayer: {fileID: 0}
 --- !u!114 &2888483205691621664

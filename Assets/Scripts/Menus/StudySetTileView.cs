@@ -18,13 +18,13 @@ public class StudySetTileView : MonoBehaviour
     [SerializeField] private Image i_progressBarFillYeses;
     // References
     private StudySet mySet;
-    private PanelStudyChooseSet myPanel;
+    private PanelChooseSet myPanel;
 
 
     // ----------------------------------------------------------------
     //  Initialize
     // ----------------------------------------------------------------
-    public void Initialize(PanelStudyChooseSet myPanel, RectTransform tf_parent) {
+    public void Initialize(PanelChooseSet myPanel, RectTransform tf_parent) {
         this.myPanel = myPanel;
         GameUtils.ParentAndReset(gameObject, tf_parent);
     }
@@ -64,5 +64,10 @@ public class StudySetTileView : MonoBehaviour
     }
     public void OnClickedEditMe() {
         myPanel.OnClickedEditASet(mySet);
+    }
+    public void OnClickedMoveMeUp() {
+        GameManagers.Instance.DataManager.library.ChangeSetIndexInList(mySet, 1);
+        GameManagers.Instance.DataManager.SaveStudySetLibrary();
+        myPanel.UpdateAllTiles();
     }
 }

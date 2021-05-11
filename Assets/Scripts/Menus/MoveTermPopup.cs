@@ -21,10 +21,10 @@ public class MoveTermPopup : MonoBehaviour
     private void Start() {
         Hide(); // Start off hidden, of course.
 
-        GameManagers.Instance.EventManager.ShowMoveTermPopupEvent += Show;
+        GameManagers.Instance.EventManager.ShowPopup_MoveTermEvent += Show;
     }
     private void OnDestroy() {
-        GameManagers.Instance.EventManager.ShowMoveTermPopupEvent -= Show;
+        GameManagers.Instance.EventManager.ShowPopup_MoveTermEvent -= Show;
     }
 
     // ----------------------------------------------------------------

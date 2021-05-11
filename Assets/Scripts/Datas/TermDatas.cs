@@ -96,6 +96,15 @@ public class StudySetLibrary {
         term.mySet.RemoveTerm(term.myGuid);
         // TODO: Remove from sourdough set
     }
+
+    public void ChangeSetIndexInList(StudySet set, int indexDelta) {
+        if (!sets.Contains(set)) { return; } // Safety check.
+
+        int newIndex = sets.IndexOf(set) + indexDelta;
+        newIndex = Mathf.Clamp(newIndex, 0, sets.Count-1);
+        sets.Remove(set);
+        sets.Insert(newIndex, set);
+    }
 }
 
 

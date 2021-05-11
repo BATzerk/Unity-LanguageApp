@@ -11,10 +11,7 @@ public class TermEditableTile : MonoBehaviour
     [SerializeField] private Button b_playClip;
     [SerializeField] private Button b_editMySet;
     [SerializeField] private RectTransform myRectTransform;
-    [SerializeField] private RectTransform rt_deleteConfirmation;
-    [SerializeField] private RectTransform rt_options;
     [SerializeField] private TextMeshProUGUI t_myNumber;
-    [SerializeField] private TextMeshProUGUI t_debugInfo;
     [SerializeField] private TextMeshProUGUI t_setName;
     //[SerializeField] private TextMeshProUGUI t_native;
     //[SerializeField] private TextMeshProUGUI t_foreign;
@@ -50,7 +47,6 @@ public class TermEditableTile : MonoBehaviour
         // Ah! I'm a search editable! Change my visuals slightly.
         else {
             t_myNumber.gameObject.SetActive(false);
-            t_debugInfo.gameObject.SetActive(false);
 
             b_editMySet.gameObject.SetActive(true);
         }
@@ -74,15 +70,14 @@ public class TermEditableTile : MonoBehaviour
     }
     private void RefreshVisuals() {
         // Update visuals
-        t_debugInfo.text = "Y:" + myTerm.totalYeses;// + "\nN:" + myTerm.totalNos;
         if_native.text = myTerm.native;
         if_foreign.text = myTerm.foreign;
         if_phonetic.text = myTerm.phonetic;
         //Hack_RefreshSize();
         //Invoke("Hack_RefreshSize", 1.1f);
         b_playClip.gameObject.SetActive(myTerm.HasAudio0());
-        HideOptions();
-        HideDeleteConfirmation();
+        //HideOptions();
+        //HideDeleteConfirmation();
         StartCoroutine(RefreshLayoutCoroutine());
     }
     private IEnumerator RefreshLayoutCoroutine() {
@@ -116,14 +111,11 @@ public class TermEditableTile : MonoBehaviour
     }
 
     public void OnClickOptions() {
-        rt_options.gameObject.SetActive(true);
+        GameManagers.Instance.EventManager.ShowPopup_TermOptions(myTerm);
+        //rt_options.gameObject.SetActive(true);
     }
     public void OnClickOpenRecordPopup() {
         GameManagers.Instance.EventManager.OpenRecordPopup(myTerm);
-    }
-    public void OnClickMoveTerm() {
-        GameManagers.Instance.EventManager.ShowMoveTermPopup(myTerm);
-        //HideOptions();
     }
     public void OnClickEditMySet() {
         GameManagers.Instance.EventManager.OpenPanelEditSet(myTerm.mySet);
@@ -131,20 +123,12 @@ public class TermEditableTile : MonoBehaviour
     public void OnClickPlayClip() {
         GameManagers.Instance.EventManager.PlayTermClip(myTerm);
     }
-    public void OnClickPreDelete() {
-        rt_deleteConfirmation.gameObject.SetActive(true);
-    }
-    public void OnClickDeleteConfirmed() {
-        GameManagers.Instance.DataManager.library.RemoveTerm(myTerm);
-        GameManagers.Instance.DataManager.SaveStudySetLibrary();
-        GameManagers.Instance.EventManager.OnAnySetContentsChanged();
-    }
-    public void HideOptions() {
-        rt_options.gameObject.SetActive(false);
-        rt_deleteConfirmation.gameObject.SetActive(false); // hide this one too, just in case.
-        //RefreshVisuals();
-    }
-    public void HideDeleteConfirmation() {
-        rt_deleteConfirmation.gameObject.SetActive(false);
-    }
+    //public void HideOptions() {
+    //    rt_options.gameObject.SetActive(false);
+    //    rt_deleteConfirmation.gameObject.SetActive(false); // hide this one too, just in case.
+    //    //RefreshVisuals();
+    //}
+    //public void HideDeleteConfirmation() {
+    //    rt_deleteConfirmation.gameObject.SetActive(false);
+    //}
 }

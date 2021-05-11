@@ -56,58 +56,20 @@ public class DataManager {
     //  Initialize
     // ----------------------------------------------------------------
     public DataManager() {
-        // Save data? Use it!
-        if (SaveStorage.HasKey(SaveKeys.StudySetLibrary)) {
-            ReloadStudySetLibrary();
-        }
-        // NO save data?! Ok, default to Quizlet hardcoded ones! :)
-        else {
-            ReplaceAllStudySetsWithPremadeHardcodedOnes();
-        }
+        ReloadStudySetLibrary();
     }
     public void ReloadStudySetLibrary() {
+        // NO save data?! Ok, default to Quizlet hardcoded ones! :)
+        if (!SaveStorage.HasKey(SaveKeys.StudySetLibrary)) {
+            ReplaceAllStudySetsWithPremadeHardcodedOnes();
+            return;
+        }
+
+        // Otherwise, YES load what's been saved!
         string jsonString = SaveStorage.GetString(SaveKeys.StudySetLibrary);
         library = JsonUtility.FromJson<StudySetLibrary>(jsonString);
         // Convert the unpacked term list to our efficient dictionary.
         library.RemakeTermsDictionaryFromList();
-
-        //// HACK!! Go through the piles, and replace matching ones with the ones from allTerms! So the ones in the piles are REFERENCES to the ones in allTerms.
-        //foreach (StudySet set in library.GetMainAndSourdoughSets()) { // for every main set...
-        //    for (int i=set.allTermGs.Count-1; i>=0; i--) { // for every term in allTerms...
-        //        Term mainTerm = set.allTermGs[i];
-        //        for (int j=set.pileNoG.Count-1; j>=0; j--) {
-        //            Term thisTerm = set.pileNoG[j];
-        //            if (thisTerm.native == mainTerm.native) {
-        //                set.pileNoG.Insert(j, mainTerm);
-        //                set.pileNoG.Remove(thisTerm);
-        //            }
-        //        }
-
-        //        for (int j=set.pileQueueG.Count-1; j>=0; j--) {
-        //            Term thisTerm = set.pileQueueG[j];
-        //            if (thisTerm.native == mainTerm.native) {
-        //                set.pileQueueG.Insert(j, mainTerm);
-        //                set.pileQueueG.Remove(thisTerm);
-        //            }
-        //        }
-                
-        //        for (int j=set.gpileYesG.Count-1; j>=0; j--) {
-        //            Term thisTerm = set.gpileYesG[j];
-        //            if (thisTerm.native == mainTerm.native) {
-        //                set.gpileYesG.Insert(j, mainTerm);
-        //                set.gpileYesG.Remove(thisTerm);
-        //            }
-        //        }
-                
-        //        for (int j=set.pileYesesAndNosG.Count-1; j>=0; j--) {
-        //            Term thisTerm = set.pileYesesAndNosG[j];
-        //            if (thisTerm.native == mainTerm.native) {
-        //                set.pileYesesAndNosG.Insert(j, mainTerm);
-        //                set.pileYesesAndNosG.Remove(thisTerm);
-        //            }
-        //        }
-        //    }
-        //}
 
         // Reaffiliate all terms with their sets.
         foreach (StudySet set in library.GetMainAndSpecialSetsList()) {
@@ -130,6 +92,8 @@ public class DataManager {
 		// NOOK IT
 		SaveStorage.DeleteAll();
 		Debug.Log ("All SaveStorage CLEARED!");
+        ReloadStudySetLibrary();
+        SceneHelper.ReloadScene();
 	}
 
     public void MoveTermToSet(Term term, StudySet newSet) {
@@ -169,16 +133,15 @@ public class DataManager {
         StudySet setSD = library.setSourdough;
         List<string> termsLeave = new List<string>();
         List<string> termsStay = new List<string>();
-        //Debug.Log("------pileYesesAndNos: " + setSD.pileYesesAndNosG.Count + "   queue: " + setSD.pileQueueG.Count);
         foreach (string termG in setSD.allTermGs) {
-            //Debug.Log("pileYes contains: " + setSD.pileYesG.Contains(termG));
-            if (setSD.pileYesG.Contains(termG)) termsLeave.Add(termG);
-            else termsStay.Add(termG);
+            if (setSD.pileNoG.Contains(termG)
+             || setSD.pileQueueG.Contains(termG)) termsStay.Add(termG);
+            else termsLeave.Add(termG);
         }
         foreach (string termG in termsLeave) library.GetTerm(termG).nSDLeaves++;
         foreach (string termG in termsStay) library.GetTerm(termG).nSDStays++;
         // Remove the yes-ed terms entirely from the set!
-        for (int i=termsLeave.Count-1; i>=0; --i) {
+        for (int i=0; i<termsLeave.Count; i++) {
             setSD.RemoveTerm(termsLeave[i]);
         }
 

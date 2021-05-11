@@ -31,7 +31,8 @@ public class PanelSearchTerms : BasePanel
             }
         }
 
-        if_search.text = "";
+        // Auto-focus on the search text field!
+        UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(if_search.gameObject, null);
         RefreshTermTiles();
     }
 

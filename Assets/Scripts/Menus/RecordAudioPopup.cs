@@ -138,6 +138,7 @@ public class RecordAudioPopup : MonoBehaviour {
         dm.DeleteTermAudio0(currTerm);
         clipPlayer.SetClip(null);
         UpdateVisualsForNoClip();
+        GameManagers.Instance.EventManager.OnAnySetContentsChanged();
         OnClick_HidePreDelete();
     }
 

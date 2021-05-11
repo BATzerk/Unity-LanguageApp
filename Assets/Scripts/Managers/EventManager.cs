@@ -20,15 +20,19 @@ public class EventManager {
     public event NoParamAction ClipLoadFailEvent;
     public event AudioClipAction ClipLoadSuccessEvent;
     public event StudySetAction OpenPanelEditSetEvent;
+    public event StudySetAction OpenPanelStudyFlashcardsEvent;
     public event TermAction PlayTermClipEvent;
     public event TermAction OpenRecordPopupEvent;
-    public event TermAction ShowMoveTermPopupEvent;
+    public event TermAction ShowPopup_MoveTermEvent;
+    public event TermAction ShowPopup_TermOptionsEvent;
 
     public void PlayTermClip(Term term) { if (PlayTermClipEvent != null) { PlayTermClipEvent(term); } }
     public void OnAnySetContentsChanged() { if (SetContentsChangedEvent != null) { SetContentsChangedEvent(); } }
     public void OpenPanelEditSet(StudySet set) { if (OpenPanelEditSetEvent != null) { OpenPanelEditSetEvent(set); } }
     public void OpenRecordPopup(Term term) { if (OpenRecordPopupEvent != null) { OpenRecordPopupEvent(term); } }
-    public void ShowMoveTermPopup(Term term) { if (ShowMoveTermPopupEvent != null) { ShowMoveTermPopupEvent(term); } }
+    public void OpenPanel_StudyFlashcards(StudySet set) { if (OpenPanelStudyFlashcardsEvent != null) { OpenPanelStudyFlashcardsEvent(set); } }
+    public void ShowPopup_MoveTerm(Term term) { if (ShowPopup_MoveTermEvent != null) { ShowPopup_MoveTermEvent(term); } }
+    public void ShowPopup_TermOptions(Term term) { if (ShowPopup_TermOptionsEvent != null) { ShowPopup_TermOptionsEvent(term); } }
     public void OnClipLoadFail() { if (ClipLoadFailEvent != null) { ClipLoadFailEvent(); } }
     public void OnClipLoadSuccess(AudioClip clip) { if (ClipLoadSuccessEvent != null) { ClipLoadSuccessEvent(clip); } }
 

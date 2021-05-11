@@ -5,15 +5,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PanelStudyChooseSet : BasePanel
+public class PanelChooseSet : BasePanel
 {
     // Components
-    [SerializeField] private Button b_refillSourdoughSet;
     [SerializeField] private StudySetSpecialTile setTile_aced;
     [SerializeField] private StudySetSpecialTile setTile_shelved;
     [SerializeField] private StudySetSpecialTile setTile_toValidate;
     [SerializeField] private StudySetSpecialTile setTile_wantRecording;
-    [SerializeField] private StudySetSourdoughTile setTile_sourdough;
+    //[SerializeField] private StudySetSourdoughTile setTile_sourdough;
     [SerializeField] public RectTransform rt_scrollContent; // we just control the size of this. rt_tilesContent is parented to this.
     [SerializeField] public RectTransform rt_tilesContent; // all the TileViews go on here.
     private List<StudySetTileView> tileViews=new List<StudySetTileView>();
@@ -30,16 +29,13 @@ public class PanelStudyChooseSet : BasePanel
         UpdateAllTiles();
     }
 
-    private void UpdateAllTiles() {
-        // Show/hide b_acceptSourdoughLoaf
-        b_refillSourdoughSet.gameObject.SetActive(dm.IsTimeToRefillSourdoughSet());
-
+    public void UpdateAllTiles() {
         // First, let's update JUST the special ones.
         setTile_aced.UpdateVisuals(this, dm.library.setAced);
         setTile_shelved.UpdateVisuals(this, dm.library.setShelved);
         setTile_toValidate.UpdateVisuals(this, dm.library.setToValidate);
         setTile_wantRecording.UpdateVisuals(this, dm.library.setWantRecording);
-        setTile_sourdough.UpdateVisuals(this, dm.library.setSourdough);
+        //setTile_sourdough.UpdateVisuals(this, dm.library.setSourdough);
 
         List<StudySet> sets = dm.library.sets;
 
@@ -101,10 +97,6 @@ public class PanelStudyChooseSet : BasePanel
     public void OnClick_EditSet_WantRecording() {
         menuController.OpenPanel_EditSet(dm.library.setWantRecording);
     }
-    public void OnClick_RefillSourdoughSet() {
-        dm.RefillSourdoughSet();
-        UpdateAllTiles();
-    }
 
     public void OnClickAddSet() {
         //List<Term> startingTerms = new List<Term>();
@@ -114,9 +106,6 @@ public class PanelStudyChooseSet : BasePanel
         GameManagers.Instance.DataManager.SaveStudySetLibrary();
     }
 
-    public void OnClick_CopyAllSetsToClipboard() {
-        dm.CopyAllSetsToClipboard();
-    }
 
 
 

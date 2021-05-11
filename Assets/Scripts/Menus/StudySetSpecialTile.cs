@@ -13,13 +13,13 @@ public class StudySetSpecialTile : MonoBehaviour
     [SerializeField] private TextMeshProUGUI t_numTerms;
     // References
     private StudySet mySet;
-    private PanelStudyChooseSet myPanel;
+    private PanelChooseSet myPanel;
 
 
     // ----------------------------------------------------------------
     //  Update Visuals
     // ----------------------------------------------------------------
-    public void UpdateVisuals(PanelStudyChooseSet myPanel, StudySet mySet) {
+    public void UpdateVisuals(PanelChooseSet myPanel, StudySet mySet) {
         this.myPanel = myPanel;
         this.mySet = mySet;
 

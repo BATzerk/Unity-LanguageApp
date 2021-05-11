@@ -95,7 +95,7 @@ public class PanelEditSet : BasePanel
         if (termTiles.Count > 0) {
             float contentHeight = Mathf.Abs(termTiles[termTiles.Count-1].gameObject.transform.localPosition.y);
             if (contentHeight > 0) { // IF the layout groups aren't just updating (and everything's 0 height for a frame)...
-                rt_scrollContent.sizeDelta = new Vector2(rt_scrollContent.sizeDelta.x, contentHeight + 400);
+                rt_scrollContent.sizeDelta = new Vector2(rt_scrollContent.sizeDelta.x, contentHeight + 700);
             }
         }
     }
@@ -113,7 +113,7 @@ public class PanelEditSet : BasePanel
     public void OnClick_ConfirmDeleteSet() {
         dm.DeleteSet(currStudySet);
         dm.SaveStudySetLibrary();
-        menuController.OpenPanel_StudyChooseSet();
+        menuController.OpenPanel_ChooseSet();
     }
 
 

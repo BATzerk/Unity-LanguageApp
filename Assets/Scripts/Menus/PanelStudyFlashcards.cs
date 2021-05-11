@@ -14,6 +14,7 @@ public class PanelStudyFlashcards : BasePanel {
     [SerializeField] private CardView currCardView;
     [SerializeField] private Image i_progressBarBack;
     [SerializeField] private Image i_progressBarFill;
+    [SerializeField] private TextMeshProUGUI t_setName;
     [SerializeField] private TextMeshProUGUI t_progress;
     [SerializeField] private TextMeshProUGUI t_ttsSpeed;
     [SerializeField] private TextMeshProUGUI t_finishedInformation;
@@ -64,6 +65,8 @@ public class PanelStudyFlashcards : BasePanel {
     public void OpenSet(StudySet currStudySet) {
         this.currStudySet = currStudySet;
         SaveStorage.SetString(SaveKeys.LastStudySetOpenName, currStudySet.name);
+
+        t_setName.text = currStudySet.name;
 
         // Not in progress? Go ahead and reset the deck.
         if (!currStudySet.IsInProgress) {

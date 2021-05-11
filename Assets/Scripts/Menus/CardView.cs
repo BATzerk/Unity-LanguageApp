@@ -10,16 +10,11 @@ public class CardView : MonoBehaviour {
     [SerializeField] private GameObject go_swipeBannerNo;
     [SerializeField] private GameObject go_swipeBannerYes;
     [SerializeField] private RectTransform myRectTransform;
-    [SerializeField] private RectTransform rt_options;
     [SerializeField] private RectTransform rt_sideNative;
     [SerializeField] private RectTransform rt_sideForeign;
-    [SerializeField] MoveTermPopup moveTermPopup;
     [SerializeField] TextMeshProUGUI t_native;
     [SerializeField] TextMeshProUGUI t_foreign;
     [SerializeField] TextMeshProUGUI t_phonetic;
-    [SerializeField] TMP_InputField if_native;
-    [SerializeField] TMP_InputField if_foreign;
-    [SerializeField] TMP_InputField if_phonetic;
     // References
     //private PanelStudyFlashcards myPanel;
     //private TermAudioClipPlayer clipPlayer;
@@ -30,6 +25,20 @@ public class CardView : MonoBehaviour {
     private bool isNativeSide; // if FALSE, we're showing the foreign side.
     private float timeWhenSetTerm; // Time.time when we last called SetMyTerm.
     //private Vector2 targetPos;
+
+
+
+    // ----------------------------------------------------------------
+    //  Start / Destroy
+    // ----------------------------------------------------------------
+    void Start() {
+        // Add event listeners
+        GameManagers.Instance.EventManager.SetContentsChangedEvent += UpdateTextFieldsFromTerm;
+    }
+    private void OnDestroy() {
+        // Remove event listeners
+        GameManagers.Instance.EventManager.SetContentsChangedEvent -= UpdateTextFieldsFromTerm;
+    }
 
 
     // ----------------------------------------------------------------
@@ -46,7 +55,6 @@ public class CardView : MonoBehaviour {
 
         // Update visuals!
         UpdateTextFieldsFromTerm();
-        HideOptions();
         ShowSideNative(true);
         b_playClip.gameObject.SetActive(term.HasAudio0());
 
@@ -58,12 +66,11 @@ public class CardView : MonoBehaviour {
     }
 
     private void UpdateTextFieldsFromTerm() {
-        t_native.text = MyTerm.native;
-        t_foreign.text = MyTerm.foreign;
-        t_phonetic.text = MyTerm.phonetic;
-        if_native.text = MyTerm.native;
-        if_foreign.text = MyTerm.foreign;
-        if_phonetic.text = MyTerm.phonetic;
+        if (MyTerm != null) {
+            t_native.text = MyTerm.native;
+            t_foreign.text = MyTerm.foreign;
+            t_phonetic.text = MyTerm.phonetic;
+        }
     }
 
     void ShowSideNative(bool doAnimate=true) {
@@ -95,24 +102,8 @@ public class CardView : MonoBehaviour {
             FlipCard();
         }
     }
-    public void OnClick_MoveTermButton() {
-        moveTermPopup.Show(MyTerm);
-    }
-    public void HideOptions() {
-        rt_options.gameObject.SetActive(false);
-    }
-    public void ShowOptions() {
-        rt_options.gameObject.SetActive(true);
-    }
-    public void OnEndEditAnyTextField() {
-        // Update my actual term now!
-        MyTerm.native = if_native.text;
-        MyTerm.foreign = if_foreign.text;
-        MyTerm.phonetic = if_phonetic.text;
-        // Save 'em, Joe. :)
-        GameManagers.Instance.DataManager.SaveStudySetLibrary();
-        // Refresh all my texts now.
-        UpdateTextFieldsFromTerm();
+    public void OnClickOptions() {
+        GameManagers.Instance.EventManager.ShowPopup_TermOptions(MyTerm);
     }
     public void OnClickPlayAudioClip() {
         clipPlayer.PlayTermClip(MyTerm);
