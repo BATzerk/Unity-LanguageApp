@@ -24,10 +24,10 @@ public class PanelEditSet : BasePanel
     //  Start / Destroy
     // ================================================================
     private void Start() {
-        GameManagers.Instance.EventManager.SetContentsChangedEvent += UpdateTileList;
+        GameManagers.Instance.EventManager.SetContentsChangedEvent += OnSetContentsChanged;
     }
     private void OnDestroy() {
-        GameManagers.Instance.EventManager.SetContentsChangedEvent -= UpdateTileList;
+        GameManagers.Instance.EventManager.SetContentsChangedEvent -= OnSetContentsChanged;
     }
 
 
@@ -43,6 +43,11 @@ public class PanelEditSet : BasePanel
         UpdateTileList();
     }
 
+    private void OnSetContentsChanged() {
+        if (gameObject.activeInHierarchy) { // If I'm open, update my tiles!
+            UpdateTileList();
+        }
+    }
     private void UpdateTileList() {
         List<string> termGs = currStudySet.allTermGs;
         // Destroy any extras.
@@ -51,7 +56,7 @@ public class PanelEditSet : BasePanel
             TermEditableTile tile = termTiles[termTiles.Count-1];
             termTiles.Remove(tile);
             Destroy(tile.gameObject);
-            if (count++ > 9999) { Debug.LogError("Oops, count got too big in while loop in UpdateTileList."); break; }
+            if (count++ > 9999) { AppDebugLog.LogError("Oops, count got too big in while loop in UpdateTileList."); break; }
         }
         // Add any missing.
         count = 0;
@@ -59,7 +64,7 @@ public class PanelEditSet : BasePanel
             TermEditableTile newTile = Instantiate(ResourcesHandler.Instance.TermEditableTile).GetComponent<TermEditableTile>();
             newTile.Initialize(true, rt_tilesContent);
             termTiles.Add(newTile);
-            if (count++ > 9999) { Debug.LogError("Oops, count got too big in while loop in UpdateTileList."); break; }
+            if (count++ > 9999) { AppDebugLog.LogError("Oops, count got too big in while loop in UpdateTileList."); break; }
         }
 
         // Now update all the existing tiles!
@@ -157,13 +162,13 @@ public class PanelEditSet : BasePanel
                 newTerms.Add(new Term(native, foreign, phonetic));
             }
             catch {
-                Debug.LogError("Some issue with an imported term string: \"" + str + "\"");
+                AppDebugLog.LogError("Some issue with an imported term string: \"" + str + "\"");
             }
         }
 
         // Print any issues.
         if (!string.IsNullOrWhiteSpace(errorStr)) {
-            Debug.LogError(errorStr);
+            AppDebugLog.LogError(errorStr);
         }
 
         // Okay, NOW let's go ahead and add all the new terms to the StudySet!

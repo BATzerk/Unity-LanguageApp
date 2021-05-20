@@ -36,7 +36,7 @@ public class StudySetLibrary {
         setShelved = new StudySet(this, "SHELVED");
         setToValidate = new StudySet(this, "TO VALIDATE");
         setWantRecording = new StudySet(this, "WANT RECORDING");
-        setSourdough = new StudySet(this, "SOURDOUGH SET", true);
+        setSourdough = new StudySet(this, "SOURDOUGH SET", false);
     }
 
     public void RemakeTermsDictionaryFromList() {
@@ -72,6 +72,16 @@ public class StudySetLibrary {
         list.Add(setSourdough);
         return list;
     }
+    public List<StudySet> GetEverySingleSet() {
+        List<StudySet> list = new List<StudySet>();
+        foreach (StudySet set in sets) list.Add(set);
+        list.Add(setAced);
+        list.Add(setShelved);
+        list.Add(setToValidate);
+        list.Add(setWantRecording);
+        list.Add(setSourdough);
+        return list;
+    }
 
 
     public StudySet GetSetByName(string name) {
@@ -94,7 +104,8 @@ public class StudySetLibrary {
         allTermsD.Remove(term.myGuid);
         allTermsL.Remove(term);
         term.mySet.RemoveTerm(term.myGuid);
-        // TODO: Remove from sourdough set
+        setSourdough.RemoveTerm(term.myGuid);
+        // TODO: Delete the audio file, right?
     }
 
     public void ChangeSetIndexInList(StudySet set, int indexDelta) {
@@ -104,6 +115,13 @@ public class StudySetLibrary {
         newIndex = Mathf.Clamp(newIndex, 0, sets.Count-1);
         sets.Remove(set);
         sets.Insert(newIndex, set);
+    }
+
+    public void Debug_ReshuffleAllSets() {
+        List<StudySet> allSets = GetEverySingleSet();
+        foreach (StudySet set in allSets) {
+            set.ShuffleAndRestartDeck();
+        }
     }
 }
 
@@ -150,7 +168,8 @@ public class Term {
 [Serializable]
 public class StudySet {
     // Properties and Components
-    public bool isSourdoughSet;
+    [NonSerialized] public bool doOwnMyTerms; // if TRUE (usually true), I'm the set my terms belong to. False for Sourdough set.
+    [NonSerialized] public bool canIncludeMeInSourdough=true; // true for all main sets; false for Aced, To Validate, etc.
     public List<string> allTermGs; // guids.
     public string name;
     public int numRoundsFinished;
@@ -169,15 +188,15 @@ public class StudySet {
     public bool IsInProgress { get { return pileQueueG.Count>0 || pileYesesAndNosG.Count>0; } }
     public Term GetCurrTerm() {
         // Safety check.
-        if (pileQueueG==null || pileQueueG.Count<=0) { Debug.LogError("Oops! Trying to GetCurrTerm, but there's nothing in this StudySet's pileQueue."); return null; }
+        if (pileQueueG==null || pileQueueG.Count<=0) { AppDebugLog.LogError("Oops! Trying to GetCurrTerm, but there's nothing in this StudySet's pileQueue."); return null; }
         return myLibrary.GetTerm(pileQueueG[0]);
     }
 
     // Initialize
-    public StudySet(StudySetLibrary myLibrary, string name, bool isSourdough=false) {
+    public StudySet(StudySetLibrary myLibrary, string name, bool doOwnMyTerms=true) {
         this.myLibrary = myLibrary;
         this.name = name;
-        this.isSourdoughSet = isSourdough;
+        this.doOwnMyTerms = doOwnMyTerms;
         this.allTermGs = new List<string>();
     }
     public StudySet(StudySetLibrary myLibrary, string name, string allTermsStr) {
@@ -218,7 +237,7 @@ public class StudySet {
                 myLibrary.AddNewTerm(new Term(native, foreign, phonetic), this);
             }
             catch {
-                Debug.LogError("Issue with imported term string: " + str);
+                AppDebugLog.LogError("Issue with imported term string: " + str);
             }
         }
         SetMyLibraryAndGiveMyTermsRefToMe(myLibrary);
@@ -231,7 +250,8 @@ public class StudySet {
     }
     public void AddTerm(string termGuid) {
         Term term = myLibrary.GetTerm(termGuid);
-        if (!isSourdoughSet) term.mySet = this; // ONLY set mySet if I'm NOT the SourdoughSet ('cause SD set doesn't actually own any terms).
+        if (allTermGs.Contains(termGuid)) { AppDebugLog.LogError("Oops! Attempting to add a Term to a list it's already in. Add aborted. Term: " + term.native); return; } // Safety check! ONLY add if it's not already in our list. No dupes.
+        if (doOwnMyTerms) term.mySet = this; // ONLY set mySet if I own my terms! (So, don't do it for the Sourdough set.)
         allTermGs.Add(termGuid);
         // Are we in a round? Great, insert it randomly into the queue!
         if (pileQueueG.Count > 0) {
@@ -285,7 +305,7 @@ public class StudySet {
         if (pileQueueG.Count == 0) numRoundsFinished++; // Queue empty? We finished the round! :)
     }
     public void RewindOneCard() {
-        if (pileYesesAndNosG.Count == 0) { Debug.LogError("Oops, trying to rewind, but we have nothing in pileYesesAndNos list."); return; }
+        if (pileYesesAndNosG.Count == 0) { AppDebugLog.LogError("Oops, trying to rewind, but we have nothing in pileYesesAndNos list."); return; }
         string prevG = pileYesesAndNosG[pileYesesAndNosG.Count-1];
         Term prevT = myLibrary.GetTerm(prevG);
         pileQueueG.Insert(0, prevG);

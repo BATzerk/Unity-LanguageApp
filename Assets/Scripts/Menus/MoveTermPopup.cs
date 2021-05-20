@@ -80,6 +80,7 @@ public class MoveTermPopup : MonoBehaviour
         GameManagers.Instance.DataManager.MoveTermToSet(currTerm, set);
         // Dispatch event so folks can update their visuals.
         GameManagers.Instance.EventManager.OnAnySetContentsChanged();
+        GameManagers.Instance.EventManager.CloseTermOptionsPopup(); // make sure we directly close the TermOptions popup, too.
     }
 
 

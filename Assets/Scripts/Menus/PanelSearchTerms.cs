@@ -68,7 +68,7 @@ public class PanelSearchTerms : BasePanel
             TermEditableTile tile = termTiles[termTiles.Count - 1];
             termTiles.Remove(tile);
             Destroy(tile.gameObject);
-            if (count++ > 9999) { Debug.LogError("Oops, count got too big in while loop in UpdateTileList."); break; }
+            if (count++ > 9999) { AppDebugLog.LogError("Oops, count got too big in while loop in UpdateTileList."); break; }
         }
         // Add any missing.
         count = 0;
@@ -76,7 +76,7 @@ public class PanelSearchTerms : BasePanel
             TermEditableTile newTile = Instantiate(ResourcesHandler.Instance.TermEditableTile).GetComponent<TermEditableTile>();
             newTile.Initialize(false, rt_tilesContent);
             termTiles.Add(newTile);
-            if (count++ > 9999) { Debug.LogError("Oops, count got too big in while loop in UpdateTileList."); break; }
+            if (count++ > 9999) { AppDebugLog.LogError("Oops, count got too big in while loop in UpdateTileList."); break; }
         }
 
         // Now update all the tiles!

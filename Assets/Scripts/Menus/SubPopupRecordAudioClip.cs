@@ -8,21 +8,13 @@ using UnityEngine.Networking;
 using System;
 using TMPro;
 
-/// <summary>
-/// DNU! Old.
-/// </summary>
-/*
-public class RecordAudioPopup : MonoBehaviour {
+public class SubPopupRecordAudioClip : MonoBehaviour {
     // Components
     [SerializeField] private Button b_play;
+    [SerializeField] private Button b_stop;
     [SerializeField] private Button b_record;
-    [SerializeField] private Button b_stopPlay;
-    [SerializeField] private Button b_stopRecord; 
     [SerializeField] private Button b_preDelete;
-    [SerializeField] private GameObject scrim;
-    [SerializeField] private GameObject popup;
-    [SerializeField] private GameObject go_preDelete;
-    [SerializeField] private TextMeshProUGUI t_termName;
+    [SerializeField] private GameObject go_deleteConfirmation;
     [SerializeField] private TextMeshProUGUI t_audioDuration;
     // Properties
     private const int MaxAudioFileDuration = 5; // in SECONDS.
@@ -41,17 +33,15 @@ public class RecordAudioPopup : MonoBehaviour {
     //  Start / Destroy
     // ----------------------------------------------------------------
     void Start() {
-        // Start closed.
-        Close();
+        //// Start closed.
+        //Close();
 
         // Add event listeners
-        //GameManagers.Instance.EventManager.OpenRecordPopupEvent += OpenMe;
         GameManagers.Instance.EventManager.ClipLoadFailEvent += OnClipLoadFail;
         GameManagers.Instance.EventManager.ClipLoadSuccessEvent += OnClipLoadSuccess;
     }
     private void OnDestroy() {
         // Remove event listeners
-        //GameManagers.Instance.EventManager.OpenRecordPopupEvent -= OpenMe;
         GameManagers.Instance.EventManager.ClipLoadFailEvent -= OnClipLoadFail;
         GameManagers.Instance.EventManager.ClipLoadSuccessEvent -= OnClipLoadSuccess;
     }
@@ -60,25 +50,19 @@ public class RecordAudioPopup : MonoBehaviour {
     // ----------------------------------------------------------------
     //  Open / Close
     // ----------------------------------------------------------------
-    private void OpenMe(Term currTerm) {
-        this.gameObject.SetActive(true);
-        SetCurrTerm(currTerm);
+    public void OnOwnerClose() {
+        StopPlay();
+        StopRecord(false); // stop recording, and don't save anything.
     }
-    private void SetCurrTerm(Term currTerm) {
+    public void OnOwnerOpen(Term currTerm) {
         this.currTerm = currTerm;
-        t_termName.text = currTerm.foreign;
+        this.gameObject.SetActive(true);
 
         StopPlay();
         StopRecord();
         OnClick_HidePreDelete();
 
         LoadClipForCurrTerm();
-    }
-    public void Close() {
-        StopPlay();
-        StopRecord(false); // stop recording, and don't save anything.
-
-        this.gameObject.SetActive(false);
     }
 
 
@@ -103,12 +87,12 @@ public class RecordAudioPopup : MonoBehaviour {
 
     private void UpdateVisualsForClip(AudioClip clip) {
         b_play.interactable = true;
-        b_preDelete.interactable = true;
+        b_preDelete.gameObject.SetActive(true);
         t_audioDuration.text = clip.length.ToString();
     }
     private void UpdateVisualsForNoClip() {
         b_play.interactable = false;
-        b_preDelete.interactable = false;
+        b_preDelete.gameObject.SetActive(false);
         t_audioDuration.text = "";
         b_record.gameObject.SetActive(true);
     }
@@ -136,9 +120,9 @@ public class RecordAudioPopup : MonoBehaviour {
     // ----------------------------------------------------------------
     //  Events
     // ----------------------------------------------------------------
-    public void OnClick_HidePreDelete() { go_preDelete.SetActive(false); }
-    public void OnClick_ShowPreDelete() { go_preDelete.SetActive(true); }
-    public void OnClick_Delete() {
+    public void OnClick_HidePreDelete() { go_deleteConfirmation.SetActive(false); }
+    public void OnClick_ShowPreDelete() { go_deleteConfirmation.SetActive(true); }
+    public void OnClick_ConfirmDelete() {
         dm.DeleteTermAudio0(currTerm);
         clipPlayer.SetClip(null);
         UpdateVisualsForNoClip();
@@ -151,13 +135,14 @@ public class RecordAudioPopup : MonoBehaviour {
         isPlayingClip = false;
         b_play.gameObject.SetActive(false);
         b_record.gameObject.SetActive(false);
-        b_stopPlay.gameObject.SetActive(false);
-        b_stopRecord.gameObject.SetActive(true);
+        b_stop.gameObject.SetActive(true);
         isRecordingClip = true;
         clipPlayer.SetClip(Microphone.Start(null, false, MaxAudioFileDuration, 44100));//"Built-in Microphone"
     }
-        public void OnClick_StopPlay() { StopPlay(); }
-    public void OnClick_StopRecord() { StopRecord(); }
+    public void OnClick_Stop() {
+        if (isRecordingClip) { StopRecord(); }
+        else { StopPlay(); }
+    }
 
     private void StartPlay() {
         isPlayingClip = true;
@@ -166,22 +151,21 @@ public class RecordAudioPopup : MonoBehaviour {
         clipPlayer.PlayTermClip(currTerm);
         b_play.gameObject.SetActive(false);
         b_record.gameObject.SetActive(false);
-        b_stopPlay.gameObject.SetActive(true);
-        b_stopRecord.gameObject.SetActive(false);
+        b_stop.gameObject.SetActive(true);
     }
     private void StopPlay() {
         isPlayingClip = false;
         isRecordingClip = false;
         clipPlayer.Stop();
-        b_play.gameObject.SetActive(true);
-        b_record.gameObject.SetActive(currTerm!=null && !currTerm.HasAudio0());
-        b_stopPlay.gameObject.SetActive(false);
-        b_stopRecord.gameObject.SetActive(false);
+        bool isAudio0 = currTerm!=null && currTerm.HasAudio0();
+        b_play.gameObject.SetActive(isAudio0);
+        b_record.gameObject.SetActive(!isAudio0);
+        b_stop.gameObject.SetActive(false);
     }
-    private IEnumerator StartRecord_Coroutine() {
-        yield return null; // Skip a frame before ACTually starting, so the buttons look right while we load to start recording!
-    }
-    private void StopRecord(bool doSaveFile=true) {
+    //private IEnumerator StartRecord_Coroutine() {
+    //    yield return null; // Skip a frame before ACTually starting, so the buttons look right while we load to start recording!
+    //}
+    private void StopRecord(bool doSaveFile = true) {
         // If we're actually recording, stop, and save!
         if (isRecordingClip) {
             Microphone.End(null);
@@ -193,11 +177,10 @@ public class RecordAudioPopup : MonoBehaviour {
         isPlayingClip = false;
         isRecordingClip = false;
         clipPlayer.Stop();
-        b_play.gameObject.SetActive(true);
-        //Debug.Log("is Clip: " + clipPlayer.IsClip() + "   "+ clipPlayer.GetClip());
-        b_record.gameObject.SetActive(currTerm != null && !currTerm.HasAudio0());
-        b_stopPlay.gameObject.SetActive(false);
-        b_stopRecord.gameObject.SetActive(false);
+        bool isAudio0 = currTerm!=null && currTerm.HasAudio0();
+        b_play.gameObject.SetActive(isAudio0);
+        b_record.gameObject.SetActive(!isAudio0);
+        b_stop.gameObject.SetActive(false);
     }
 
     private void SaveAndAffiliateAudioFile() {
@@ -225,4 +208,3 @@ public class RecordAudioPopup : MonoBehaviour {
 
 
 }
-*/

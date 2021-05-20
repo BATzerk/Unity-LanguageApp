@@ -13,9 +13,6 @@ public class TermEditableTile : MonoBehaviour
     [SerializeField] private RectTransform myRectTransform;
     [SerializeField] private TextMeshProUGUI t_myNumber;
     [SerializeField] private TextMeshProUGUI t_setName;
-    //[SerializeField] private TextMeshProUGUI t_native;
-    //[SerializeField] private TextMeshProUGUI t_foreign;
-    //[SerializeField] private TextMeshProUGUI t_phonetic;
     [SerializeField] private TMP_InputField if_native;
     [SerializeField] private TMP_InputField if_foreign;
     [SerializeField] private TMP_InputField if_phonetic;
@@ -27,12 +24,12 @@ public class TermEditableTile : MonoBehaviour
     // ================================================================
     //  Start / Destroy
     // ================================================================
-    private void Start() {
-        GameManagers.Instance.EventManager.SetContentsChangedEvent += RefreshVisuals;
-    }
-    private void OnDestroy() {
-        GameManagers.Instance.EventManager.SetContentsChangedEvent -= RefreshVisuals;
-    }
+    //private void Start() {
+    //    GameManagers.Instance.EventManager.SetContentsChangedEvent += RefreshVisuals;
+    //}
+    //private void OnDestroy() {
+    //    GameManagers.Instance.EventManager.SetContentsChangedEvent -= RefreshVisuals;
+    //}
 
 
     // ----------------------------------------------------------------
@@ -114,9 +111,9 @@ public class TermEditableTile : MonoBehaviour
         GameManagers.Instance.EventManager.ShowPopup_TermOptions(myTerm);
         //rt_options.gameObject.SetActive(true);
     }
-    public void OnClickOpenRecordPopup() {
-        GameManagers.Instance.EventManager.OpenRecordPopup(myTerm);
-    }
+    //public void OnClickOpenRecordPopup() {
+    //    GameManagers.Instance.EventManager.OpenRecordPopup(myTerm);
+    //}
     public void OnClickEditMySet() {
         GameManagers.Instance.EventManager.OpenPanelEditSet(myTerm.mySet);
     }

@@ -7,14 +7,18 @@ using TMPro;
 public class CardView : MonoBehaviour {
     // Components
     [SerializeField] private Button b_playClip;
+    [SerializeField] private GameObject go_memorableDots;
     [SerializeField] private GameObject go_swipeBannerNo;
     [SerializeField] private GameObject go_swipeBannerYes;
+    [SerializeField] private Image i_dot0;
+    [SerializeField] private Image i_dot1;
     [SerializeField] private RectTransform myRectTransform;
     [SerializeField] private RectTransform rt_sideNative;
     [SerializeField] private RectTransform rt_sideForeign;
     [SerializeField] TextMeshProUGUI t_native;
     [SerializeField] TextMeshProUGUI t_foreign;
     [SerializeField] TextMeshProUGUI t_phonetic;
+    [SerializeField] TextMeshProUGUI t_stats;
     // References
     //private PanelStudyFlashcards myPanel;
     //private TermAudioClipPlayer clipPlayer;
@@ -22,6 +26,8 @@ public class CardView : MonoBehaviour {
     [SerializeField] private TermAudioClipPlayer clipPlayer;
     public Term MyTerm { get; private set; }
     // Properties
+    private static float DotDiameterMin = 8;
+    private static float DotDiameterMax = 180;
     private bool isNativeSide; // if FALSE, we're showing the foreign side.
     private float timeWhenSetTerm; // Time.time when we last called SetMyTerm.
     //private Vector2 targetPos;
@@ -34,10 +40,12 @@ public class CardView : MonoBehaviour {
     void Start() {
         // Add event listeners
         GameManagers.Instance.EventManager.SetContentsChangedEvent += UpdateTextFieldsFromTerm;
+        GameManagers.Instance.EventManager.PopupAppOptionsClosedEvent += UpdateCardDotsVisuals;
     }
     private void OnDestroy() {
         // Remove event listeners
         GameManagers.Instance.EventManager.SetContentsChangedEvent -= UpdateTextFieldsFromTerm;
+        GameManagers.Instance.EventManager.PopupAppOptionsClosedEvent -= UpdateCardDotsVisuals;
     }
 
 
@@ -57,6 +65,7 @@ public class CardView : MonoBehaviour {
         UpdateTextFieldsFromTerm();
         ShowSideNative(true);
         b_playClip.gameObject.SetActive(term.HasAudio0());
+        UpdateCardDotsVisuals();
 
         // Reset swipiness.
         go_swipeBannerNo.SetActive(false);
@@ -64,12 +73,36 @@ public class CardView : MonoBehaviour {
         myRectTransform.anchoredPosition = posNeutral;
         myRectTransform.localEulerAngles = Vector3.zero;
     }
+    private void UpdateCardDotsVisuals() {
+        if (MyTerm == null) { return; } // No term yet? Do nothin'.
+        // Memorable dots!
+        if (GameManagers.Instance.SettingsManager.DoShowCardDots) {
+            go_memorableDots.SetActive(true);
+            System.Random rand = new System.Random(MyTerm.myGuid.GetHashCode());
+            float x, y, diameter;
+            x = rand.Next(10000) / 10000f * myRectTransform.rect.width;
+            y = rand.Next(10000) / 10000f * myRectTransform.rect.height;
+            diameter = Mathf.Lerp(DotDiameterMin, DotDiameterMax, rand.Next(10000) / 10000f);
+            i_dot0.rectTransform.anchoredPosition = new Vector2(x, y);
+            i_dot0.rectTransform.sizeDelta = new Vector2(diameter, diameter);
+            x = rand.Next(10000) / 10000f * myRectTransform.rect.width;
+            y = rand.Next(10000) / 10000f * myRectTransform.rect.height;
+            diameter = Mathf.Lerp(DotDiameterMin, DotDiameterMax, rand.Next(10000) / 10000f);
+            i_dot1.rectTransform.anchoredPosition = new Vector2(x, y);
+            i_dot1.rectTransform.sizeDelta = new Vector2(diameter, diameter);
+        }
+        else {
+            go_memorableDots.SetActive(false);
+        }
 
+    }
     private void UpdateTextFieldsFromTerm() {
         if (MyTerm != null) {
             t_native.text = MyTerm.native;
             t_foreign.text = MyTerm.foreign;
             t_phonetic.text = MyTerm.phonetic;
+            t_stats.enabled = GameManagers.Instance.SettingsManager.DoShowCardStats;
+            t_stats.text = "Y: " + MyTerm.totalYeses + "\nN: " + MyTerm.totalNos;
         }
     }
 

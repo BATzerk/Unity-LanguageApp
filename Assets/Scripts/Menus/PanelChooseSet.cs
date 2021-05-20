@@ -45,7 +45,7 @@ public class PanelChooseSet : BasePanel
             StudySetTileView tile = tileViews[tileViews.Count - 1];
             tileViews.Remove(tile);
             Destroy(tile.gameObject);
-            if (count++ > 9999) { Debug.LogError("Oops, count got too big in while loop in UpdateTileList."); break; }
+            if (count++ > 9999) { AppDebugLog.LogError("Oops, count got too big in while loop in UpdateTileList."); break; }
         }
         // Add any missing.
         count = 0;
@@ -53,7 +53,7 @@ public class PanelChooseSet : BasePanel
             StudySetTileView newTile = Instantiate(ResourcesHandler.Instance.StudySetTileView).GetComponent<StudySetTileView>();
             newTile.Initialize(this, rt_tilesContent);
             tileViews.Add(newTile);
-            if (count++ > 9999) { Debug.LogError("Oops, count got too big in while loop in UpdateTileList."); break; }
+            if (count++ > 9999) { AppDebugLog.LogError("Oops, count got too big in while loop in UpdateTileList."); break; }
         }
 
         // Now update all the existing tiles!

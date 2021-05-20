@@ -16,6 +16,9 @@ public class DataManager {
     // ----------------------------------------------------------------
     //  Getters
     // ----------------------------------------------------------------
+    public bool IsSourdoughSet(StudySet set) {
+        return library.setSourdough == set;
+    }
     public float GetHoursUntilNextSourdoughRefill() {
         DateTime timeLastRefilled = SaveStorage.GetDateTime(SaveKeys.SourdoughTimeLastRefilled);
         DateTime timeToNextRefill = timeLastRefilled.AddHours(SourdoughHoursBetweenRefill);
@@ -62,18 +65,40 @@ public class DataManager {
         // NO save data?! Ok, default to Quizlet hardcoded ones! :)
         if (!SaveStorage.HasKey(SaveKeys.StudySetLibrary)) {
             ReplaceAllStudySetsWithPremadeHardcodedOnes();
-            return;
+        }
+        // Otherwise, YES load what's been saved!
+        else {
+            string jsonString = SaveStorage.GetString(SaveKeys.StudySetLibrary);
+            library = JsonUtility.FromJson<StudySetLibrary>(jsonString);
+            // Convert the unpacked term list to our efficient dictionary.
+            library.RemakeTermsDictionaryFromList();
+
+            // Reaffiliate all terms with their sets.
+            foreach (StudySet set in library.GetMainAndSpecialSetsList()) {
+                set.SetMyLibraryAndGiveMyTermsRefToMe(library);
+            }
         }
 
-        // Otherwise, YES load what's been saved!
-        string jsonString = SaveStorage.GetString(SaveKeys.StudySetLibrary);
-        library = JsonUtility.FromJson<StudySetLibrary>(jsonString);
-        // Convert the unpacked term list to our efficient dictionary.
-        library.RemakeTermsDictionaryFromList();
+        // Hardcoded. Set some properties manually.
+        library.setSourdough.doOwnMyTerms = false;
+        library.setAced.canIncludeMeInSourdough = false;
+        library.setShelved.canIncludeMeInSourdough = false;
+        library.setToValidate.canIncludeMeInSourdough = false;
+        library.setWantRecording.canIncludeMeInSourdough = false;
+        foreach (StudySet set in library.sets) {
+            set.canIncludeMeInSourdough = true;
+        }
 
-        // Reaffiliate all terms with their sets.
-        foreach (StudySet set in library.GetMainAndSpecialSetsList()) {
-            set.SetMyLibraryAndGiveMyTermsRefToMe(library);
+        // DEBUG. Print any terms that don't belong to the set they're in.
+        foreach (StudySet set in library.sets) {
+            for (int i=set.allTermGs.Count-1; i>=0; --i) {
+                string termG = set.allTermGs[i];
+                Term term = library.GetTerm(termG);
+                if (term.mySet != set) {
+                    AppDebugLog.LogError("MISMATCH BETWEEN SETS: " + set.name + ", " + term.mySet.name + ",   " + term.native);
+                    set.RemoveTerm(termG); // Remove it from this set! ONLY trust the Term's set.
+                }
+            }
         }
     }
     public void SaveStudySetLibrary() {
@@ -101,6 +126,10 @@ public class DataManager {
         StudySet prevSet = term.mySet;
         prevSet.RemoveTerm(term.myGuid);
         newSet.AddTerm(term.myGuid);
+        // If it's not a main set, then also attempt to remove from Sourdough set.
+        if (!newSet.canIncludeMeInSourdough) {
+            library.setSourdough.RemoveTerm(term.myGuid);
+        }
         // Save!
         SaveStudySetLibrary();
     }
@@ -315,7 +344,7 @@ public class DataManager {
             library.AddNewTerm(newTerm, set);
         }
         catch {
-            Debug.LogError("Issue with imported term string: " + str);
+            AppDebugLog.LogError("Issue with imported term string: " + str);
         }
     }
 

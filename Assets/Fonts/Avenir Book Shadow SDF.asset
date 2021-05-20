@@ -54,7 +54,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Avenir Book Atlas Material
   m_Shader: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: UNDERLAY_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -158,11 +158,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
-  m_Name: Avenir Book SDF
+  m_Name: Avenir Book Shadow SDF
   m_EditorClassIdentifier: 
-  hashCode: 1488061887
+  hashCode: -924431463
   material: {fileID: -505794673017559377}
-  materialHashCode: -1473482945
+  materialHashCode: -391612775
   m_Version: 1.1.0
   m_SourceFontFileGUID: 2854a95a4c8b4487ab616e70c6ef5867
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 2854a95a4c8b4487ab616e70c6ef5867, type: 3}

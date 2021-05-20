@@ -9,11 +9,13 @@ using GoodEnough.TextToSpeech;
 public class PanelStudyFlashcards : BasePanel {
     // Components
     [SerializeField] private Button b_undo;
+    [SerializeField] private Button b_resetSet;
     [SerializeField] private Button b_studyAgain;
     [SerializeField] private Button b_toggleTTS;
     [SerializeField] private CardView currCardView;
     [SerializeField] private Image i_progressBarBack;
-    [SerializeField] private Image i_progressBarFill;
+    [SerializeField] private Image i_progressBarFillRecent;
+    [SerializeField] private Image i_progressBarFillYeses;
     [SerializeField] private TextMeshProUGUI t_setName;
     [SerializeField] private TextMeshProUGUI t_progress;
     [SerializeField] private TextMeshProUGUI t_ttsSpeed;
@@ -23,16 +25,13 @@ public class PanelStudyFlashcards : BasePanel {
     //private List<CardView> cardViews;
     // References
     [SerializeField] private Sprite s_ttsButtonOn;
-    //[SerializeField] private Sprite s_ttsButtonOnSlow;
     [SerializeField] private Sprite s_ttsButtonOff;
-    private StudySet currStudySet;
-    // Properties
-    private bool isTTSOn;
-    private float ttsSpeechRate;
+    private StudySet currSet;
 
 
 
     // Getters
+    private SettingsManager sm { get { return GameManagers.Instance.SettingsManager; } }
     private static string GetRoundCompleteText(StudySet set) {
         //int numUnderstood = set.NumTotal - currStudySet.pileNo.Count;
         int numNewYeses = set.pileYesG.Count;
@@ -50,9 +49,7 @@ public class PanelStudyFlashcards : BasePanel {
     //  Start / Destroy
     // ================================================================
     private void Start() {
-        // Load TTS properties!
-        isTTSOn = SaveStorage.GetBool(SaveKeys.IsTTSOn);
-        ttsSpeechRate = SaveStorage.GetFloat(SaveKeys.TTSSpeechRate);
+        // Update TTS visuals
         UpdateTTSButtons();
 
         // Add event listeners.
@@ -62,15 +59,15 @@ public class PanelStudyFlashcards : BasePanel {
         // Remove event listeners.
         eventManager.SetContentsChangedEvent -= RefreshCardVisuals;
     }
-    public void OpenSet(StudySet currStudySet) {
-        this.currStudySet = currStudySet;
-        SaveStorage.SetString(SaveKeys.LastStudySetOpenName, currStudySet.name);
+    public void OpenSet(StudySet currSet) {
+        this.currSet = currSet;
+        SaveStorage.SetString(SaveKeys.LastStudySetOpenName, currSet.name);
 
-        t_setName.text = currStudySet.name;
+        t_setName.text = currSet.name;
 
         // Not in progress? Go ahead and reset the deck.
-        if (!currStudySet.IsInProgress) {
-            currStudySet.ShuffleAndRestartDeck();
+        if (!currSet.IsInProgress) {
+            currSet.ShuffleAndRestartDeck();
         }
 
         // Start us off, boi.
@@ -82,22 +79,27 @@ public class PanelStudyFlashcards : BasePanel {
     //  Update Visuals
     // ================================================================
     private void UpdateUndoButtonInteractable() {
-        b_undo.interactable = currStudySet.pileYesesAndNosG.Count > 0;
+        b_undo.interactable = currSet.pileYesesAndNosG.Count > 0;
     }
     private void RefreshCardVisuals() {
-        if (currStudySet == null) { return; } // No current StudySet? We're not in flashcard mode! Do nothin'.
+        if (currSet == null) { return; } // No current StudySet? We're not in flashcard mode! Do nothin'.
         // Update progress visuals
-        int numDone = currStudySet.NumDone;
-        int numInRound = currStudySet.NumInCurrentRound;
+        int numDone = currSet.NumDone;
+        int numInRound = currSet.NumInCurrentRound;
         t_progress.text = Mathf.Min(numInRound, numDone+1) + " / " + numInRound;
         float barWidth = i_progressBarBack.rectTransform.rect.width;
-        float progressLoc = numDone / (float)numInRound;
-        i_progressBarFill.rectTransform.sizeDelta = new Vector2(barWidth * progressLoc, i_progressBarFill.rectTransform.sizeDelta.y);
+        float progLocYeses = (currSet.NumTotal - (currSet.pileYesesAndNosG.Count + currSet.pileQueueG.Count)) / (float)currSet.NumTotal;
+        float progLocRecent = currSet.NumDone / (float)currSet.NumTotal;
+        float yesWidth = barWidth * progLocYeses;
+        i_progressBarFillYeses.rectTransform.sizeDelta = new Vector2(yesWidth, i_progressBarFillYeses.rectTransform.sizeDelta.y);
+        i_progressBarFillRecent.rectTransform.anchoredPosition = new Vector2(yesWidth, 0);
+        i_progressBarFillRecent.rectTransform.sizeDelta = new Vector2(barWidth * progLocRecent, i_progressBarFillRecent.rectTransform.sizeDelta.y);
 
         // We've finished the set??
-        if (currStudySet.NumDone >= currStudySet.NumInCurrentRound) {
-            t_finishedInformation.text = GetRoundCompleteText(currStudySet);
-            b_studyAgain.gameObject.SetActive(currStudySet.pileNoG.Count > 0); // only show "next round" button if there are cards to HAVE a next round with.
+        if (currSet.NumDone >= currSet.NumInCurrentRound) {
+            t_finishedInformation.text = GetRoundCompleteText(currSet);
+            b_resetSet.gameObject.SetActive(!dm.IsSourdoughSet(currSet)); // only show "reset deck" button if it's NOT the Sourdough set.
+            b_studyAgain.gameObject.SetActive(currSet.pileNoG.Count > 0); // only show "next round" button if there are cards to HAVE a next round with.
             rt_setFinished.gameObject.SetActive(true);
             rt_setInProgress.gameObject.SetActive(false);
         }
@@ -105,7 +107,7 @@ public class PanelStudyFlashcards : BasePanel {
         else {
             rt_setFinished.gameObject.SetActive(false);
             rt_setInProgress.gameObject.SetActive(true);
-            currCardView.SetMyTerm(currStudySet.GetCurrTerm());
+            currCardView.SetMyTerm(currSet.GetCurrTerm());
         }
 
         UpdateUndoButtonInteractable();
@@ -115,27 +117,27 @@ public class PanelStudyFlashcards : BasePanel {
     //  Events
     // ================================================================
     public void OnClickYes() {
-        currStudySet.OnClickCurrTermYes();
+        currSet.OnClickCurrTermYes();
         dm.SaveStudySetLibrary();
         RefreshCardVisuals();
     }
     public void OnClickNo() {
-        currStudySet.OnClickCurrTermNo();
+        currSet.OnClickCurrTermNo();
         dm.SaveStudySetLibrary();
         RefreshCardVisuals();
     }
     public void OnClickUndo() {
-        currStudySet.RewindOneCard();
+        currSet.RewindOneCard();
         dm.SaveStudySetLibrary();
         RefreshCardVisuals();
     }
     public void OnClickShuffleAndReset() {
-        currStudySet.ShuffleAndRestartDeck();
+        currSet.ShuffleAndRestartDeck();
         dm.SaveStudySetLibrary();
         RefreshCardVisuals();
     }
     public void OnClickStudyAgain() {
-        currStudySet.RestartNewRound();
+        currSet.RestartNewRound();
         dm.SaveStudySetLibrary();
         RefreshCardVisuals();
     }
@@ -161,49 +163,51 @@ public class PanelStudyFlashcards : BasePanel {
 
 
     public void OnShowSideNative() {
-        //Debug.Log("GetAllAvailableLanguages: ");
-        //foreach (string str in TTS.GetAllAvailableLanguages()) {
-        //    Debug.Log(str);
+        //if (isTTSOn) {
+        //    SpeakTTSNative();
         //}
-        ////SpeechUtteranceParameters parameters = new SpeechUtteranceParameters();
-        //ISpeechSynthesisVoice voice = TTS.GetVoiceForLanguage("en");
-        //Debug.Log("English voice: " + voice);
-        //TTS.Speak(MyTerm.native, voice);
     }
     public void OnShowSideForeign() {
-        if (isTTSOn) {
+        if (sm.IsTTSOn) {
             SpeakTTSForeign();
         }
     }
-    public void SpeakTTSForeign() {
+    public void SpeakTTSNative() {
+        if (TTS.IsSpeaking) { return; } // Already talking? Don't queue anything up.
         SpeechUtteranceParameters parameters = new SpeechUtteranceParameters();
-        parameters.SpeechRate = ttsSpeechRate;
-        ISpeechSynthesisVoice voice = TTS.GetVoiceForLanguage("da");
-        TTS.Speak(currCardView.MyTerm.foreign, voice);
+        parameters.Voice = TTS.GetVoiceForLanguage("en");
+        parameters.PitchMultiplier = UnityEngine.Random.Range(0.3f, 2f);
+        parameters.SpeechRate = sm.TTSSpeechRate / 2f; // note: divide by 2: 0.5 is actually normal-speed.
+        TTS.Speak(currCardView.MyTerm.native, parameters);
+    }
+    public void SpeakTTSForeign() {
+        if (TTS.IsSpeaking) { return; } // Already talking? Don't queue anything up.
+        SpeechUtteranceParameters parameters = new SpeechUtteranceParameters();
+        parameters.Voice = TTS.GetVoiceForLanguage("da");
+        parameters.PitchMultiplier = UnityEngine.Random.Range(0.9f, 1.1f);
+        parameters.SpeechRate = sm.TTSSpeechRate / 2f; // note: divide by 2: 0.5 is actually normal-speed.
+        TTS.Speak(currCardView.MyTerm.foreign, parameters);
     }
 
-    public void OnClickToggleTTS() {
-        isTTSOn = !isTTSOn;
-        UpdateTTSButtons();
-        // Save the values!
-        SaveStorage.SetBool(SaveKeys.IsTTSOn, isTTSOn);
-    }
-    public void OnClickCycleTTSSpeed() {
-        if (ttsSpeechRate >= 1) {
-            ttsSpeechRate = 0.75f;
+    public void OnClickCycleTTSSettings() {
+        if (!sm.IsTTSOn) { // off to on.
+            sm.IsTTSOn = true;
+            sm.TTSSpeechRate = 1;
         }
-        else if (ttsSpeechRate >= 0.75f) {
-            ttsSpeechRate = 0.5f;
+        else if (sm.TTSSpeechRate >= 1) { // on 1x to 0.75x.
+            sm.TTSSpeechRate = 0.75f;
         }
-        else {
-            ttsSpeechRate = 1;
+        else if (sm.TTSSpeechRate >= 0.75f) { // on 0.75x to 0.5x.
+            sm.TTSSpeechRate = 0.5f;
+        }
+        else { // on 0.5x to off.
+            sm.IsTTSOn = false;
         }
         UpdateTTSButtons();
-        SaveStorage.SetFloat(SaveKeys.TTSSpeechRate, ttsSpeechRate);
     }
     private void UpdateTTSButtons() {
-        t_ttsSpeed.text = ttsSpeechRate + "x";
-        b_toggleTTS.image.sprite = isTTSOn ? s_ttsButtonOn : s_ttsButtonOff;
+        t_ttsSpeed.text = sm.IsTTSOn ? (sm.TTSSpeechRate + "x") : "";
+        b_toggleTTS.image.sprite = sm.IsTTSOn ? s_ttsButtonOn : s_ttsButtonOff;
         //if (!isTTSOn) {
         //    b_toggleTTS.image.sprite = s_ttsButtonOff;
         //}

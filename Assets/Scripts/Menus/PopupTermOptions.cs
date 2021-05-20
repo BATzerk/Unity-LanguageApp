@@ -13,6 +13,7 @@ public class PopupTermOptions : MonoBehaviour {
     [SerializeField] TMP_InputField if_phonetic;
     // References
     [SerializeField] MoveTermPopup moveTermPopup;
+    [SerializeField] SubPopupRecordAudioClip recordAudioClipSP;
     private Term currTerm;
 
 
@@ -25,21 +26,25 @@ public class PopupTermOptions : MonoBehaviour {
 
         // Add event listeners
         GameManagers.Instance.EventManager.ShowPopup_TermOptionsEvent += OpenPopup;
+        GameManagers.Instance.EventManager.CloseTermOptionsPopupEvent += ClosePopup;
     }
     private void OnDestroy() {
         // Remove event listeners
         GameManagers.Instance.EventManager.ShowPopup_TermOptionsEvent -= OpenPopup;
+        GameManagers.Instance.EventManager.CloseTermOptionsPopupEvent -= ClosePopup;
     }
 
     // ----------------------------------------------------------------
     //  Open / Close
     // ----------------------------------------------------------------
     public void ClosePopup() {
+        recordAudioClipSP.OnOwnerClose();
         this.gameObject.SetActive(false);
     }
     public void OpenPopup(Term currTerm) {
         this.currTerm = currTerm;
         this.gameObject.SetActive(true);
+        recordAudioClipSP.OnOwnerOpen(currTerm);
 
         UpdateTextFields();
         HideDeleteConfirmation();
@@ -55,6 +60,7 @@ public class PopupTermOptions : MonoBehaviour {
         if_foreign.text = currTerm.foreign;
         if_phonetic.text = currTerm.phonetic;
         string debugStr = "";
+        debugStr += "mySet: " + currTerm.mySet.name + "\n";
         debugStr += "nos: " + currTerm.totalNos + ", yeses: " + currTerm.totalYeses + "\n";
         debugStr += "nSDStays: " + currTerm.nSDStays + ", nSDLeaves: " + currTerm.nSDLeaves + "\n";
         debugStr += "myGuid:     " + currTerm.myGuid + "\n";
