@@ -23,7 +23,7 @@ public class StudySetToughiesTile : MonoBehaviour {
     //  Start
     // ----------------------------------------------------------------
     private void Start() {
-        mySet = GameManagers.Instance.DataManager.library.setSourdough;
+        mySet = GameManagers.Instance.DataManager.library.setToughies;
         rt_numTermsCardIcon.localEulerAngles = new Vector3(0, 0, Random.Range(-5f, 5f));
 
         UpdateVisuals();
@@ -58,10 +58,10 @@ public class StudySetToughiesTile : MonoBehaviour {
     public void OnClickedStudyMe() {
         GameManagers.Instance.EventManager.OpenPanel_StudyFlashcards(mySet);
     }
-    //public void OnClick_RemakeSet() {
-    //    GameManagers.Instance.DataManager.RefillSourdoughSet();
-    //    UpdateVisuals();
-    //}
+    public void OnClick_RemakeSet() {
+        GameManagers.Instance.DataManager.RemakeToughiesSet();
+        UpdateVisuals();
+    }
     //public void OnClickedEditMe() {
     //    myPanel.OnClickedEditASet(mySet);
     //}

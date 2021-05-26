@@ -3773,7 +3773,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5740615604776882111, guid: 5e0de14d990e94bcebd0b6fe9c85e1ae, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5740615604776882111, guid: 5e0de14d990e94bcebd0b6fe9c85e1ae, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -16008,15 +16008,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1380084600}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9190113fc92c34bf09dde6021f485504, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a8463109bd914bdeba90763d51ae259, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  b_refillSourdoughSet: {fileID: 2121801987}
   myRectTransform: {fileID: 1380084601}
   rt_numTermsCardIcon: {fileID: 232912834}
   t_name: {fileID: 48391460}
   t_numTerms: {fileID: 232912833}
-  t_countdownValue: {fileID: 0}
   go_progressBar: {fileID: 93636842}
   i_progressBarBack: {fileID: 1076917432}
   i_progressBarFillRecent: {fileID: 1477672842}
@@ -16065,7 +16063,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1380084602}
-        m_TargetAssemblyTypeName: StudySetSourdoughTile, Assembly-CSharp
+        m_TargetAssemblyTypeName: StudySetToughiesTile, Assembly-CSharp
         m_MethodName: OnClickedStudyMe
         m_Mode: 1
         m_Arguments:
@@ -25938,8 +25936,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1380084602}
-        m_TargetAssemblyTypeName: StudySetSourdoughTile, Assembly-CSharp
-        m_MethodName: OnClick_RefillSourdoughSet
+        m_TargetAssemblyTypeName: StudySetToughiesTile, Assembly-CSharp
+        m_MethodName: OnClick_RemakeSet
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

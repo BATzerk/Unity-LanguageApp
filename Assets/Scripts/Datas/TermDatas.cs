@@ -26,16 +26,18 @@ public class StudySetLibrary {
     private Dictionary<string, Term> allTermsD = new Dictionary<string, Term>(); // this is NOT serialized in C#!
     public List<Term> allTermsL = new List<Term>(); // this IS serialized
     public List<StudySet> sets = new List<StudySet>(); // the main sets.
-    public StudySet setAced;// = new StudySet(this, "ACED");
-    public StudySet setShelved;// = new StudySet(this, "SHELVED");
-    public StudySet setToValidate;// = new StudySet("TO VALIDATE");
-    public StudySet setWantRecording;// = new StudySet("WANT RECORDING");
-    public StudySet setSourdough;// = new StudySet("SOURDOUGH SET", true);
+    public StudySet setAced;
+    public StudySet setShelved;
+    public StudySet setToValidate;
+    public StudySet setWantRecording;
+    public StudySet setToughies;
+    public StudySet setSourdough;
     public StudySetLibrary() {
         setAced = new StudySet(this, "ACED");
         setShelved = new StudySet(this, "SHELVED");
         setToValidate = new StudySet(this, "TO VALIDATE");
         setWantRecording = new StudySet(this, "WANT RECORDING");
+        setToughies = new StudySet(this, "TOUGHIES", false);
         setSourdough = new StudySet(this, "SOURDOUGH SET", false);
     }
 
@@ -79,6 +81,7 @@ public class StudySetLibrary {
         list.Add(setShelved);
         list.Add(setToValidate);
         list.Add(setWantRecording);
+        list.Add(setToughies);
         list.Add(setSourdough);
         return list;
     }
@@ -104,6 +107,7 @@ public class StudySetLibrary {
         allTermsD.Remove(term.myGuid);
         allTermsL.Remove(term);
         term.mySet.RemoveTerm(term.myGuid);
+        setToughies.RemoveTerm(term.myGuid);
         setSourdough.RemoveTerm(term.myGuid);
         // TODO: Delete the audio file, right?
     }
@@ -138,6 +142,7 @@ public class Term {
     public string foreign;
     public string phonetic;
     public string audio0Guid;
+    [NonSerialized] public float yToNPlusRatio=-1; // JUST for Toughies set. Update this MANUALLY if you want to sort us by it!
     [NonSerialized] public StudySet mySet;
 
     public bool HasAudio0() { return !string.IsNullOrEmpty(audio0Guid); }
@@ -157,6 +162,10 @@ public class Term {
         myGuid = Guid.NewGuid().ToString();
     }
 
+
+    public void UpdateYToNPlusRatio() {
+        yToNPlusRatio = (totalYeses+2) / (totalNos+2);
+    }
 
     // Getters
     //public bool IsEmpty() { return String.IsNullOrWhiteSpace(belief) && String.IsNullOrWhiteSpace(debate); }
@@ -285,6 +294,22 @@ public class StudySet {
         // Shuffle 'em!
         GameUtils.Shuffle(pileQueueG);
         numRoundsStarted++; // Increment numRoundsStarted.
+    }
+
+    public void ReplaceAllTermsAndShuffleStartNewRound(List<Term> newTerms) {
+        if (doOwnMyTerms) { AppDebugLog.LogError("Whoa! Trying to ReplaceAndShuffleAllTerms on a set that OWNS its terms. This function is only meant for sets that DON'T own their terms, like the Sourdough/Toughies sets."); }
+        // Clear lists.
+        allTermGs.Clear();
+        pileYesG.Clear();
+        pileNoG.Clear();
+        pileQueueG.Clear();
+        pileYesesAndNosG.Clear();
+        // Replenish me.
+        for (int i=0; i<newTerms.Count; i++) {
+            allTermGs.Add(newTerms[i].myGuid);
+        }
+        // Make that sweet, sweet new round.
+        ShuffleAndRestartDeck();
     }
 
     // Events

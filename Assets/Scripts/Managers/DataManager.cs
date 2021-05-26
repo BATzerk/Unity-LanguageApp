@@ -10,6 +10,7 @@ public class DataManager {
     // Properties
     private static float SourdoughHoursBetweenRefill = 4;
     private static int SourdoughMaxTerms = 20;
+    private static int NumToughiesInSet = 20;
     public StudySetLibrary library;
 
 
@@ -211,6 +212,33 @@ public class DataManager {
         }
         // Now just refill it like normal.
         RefillSourdoughSet();
+    }
+
+
+
+
+    public void RemakeToughiesSet() {
+        // Make, then shuffle (for proper, Xtra randomness), a safe copy-list of all terms!
+        List<Term> allTerms = library.GetOnlyMainTerms();
+        GameUtils.Shuffle(allTerms);
+        // NOW (and only now) update the YToNPlusRatio.
+        foreach (Term term in allTerms) {
+            term.UpdateYToNPlusRatio();
+        }
+        allTerms = allTerms.OrderBy(c => c.yToNPlusRatio).ToList();
+        // Now, cull out all the ones that AREN'T beyond the 1.7 threshold.
+        //TODO: This!
+
+        // Pluck out a good 20 of 'em.
+        List<Term> setTerms = new List<Term>();
+        for (int i=0; i<NumToughiesInSet&&i<allTerms.Count; i++) {
+            setTerms.Add(allTerms[i]);
+        }
+        // Shuffle what we got.
+        library.setToughies.ReplaceAllTermsAndShuffleStartNewRound(setTerms);
+
+        // Save library
+        SaveStudySetLibrary();
     }
 
 
