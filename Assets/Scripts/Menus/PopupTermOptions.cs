@@ -67,6 +67,10 @@ public class PopupTermOptions : MonoBehaviour {
         debugStr += "audio0Guid: " + currTerm.audio0Guid;
         t_debugStats.text = debugStr;
     }
+
+    public void OnClick_TopBanner() {
+        GameManagers.Instance.EventManager.SpeakTTSForeign(currTerm);
+    }
     public void OnClick_MoveTermButton() {
         moveTermPopup.Show(currTerm);
     }

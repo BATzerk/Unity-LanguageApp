@@ -121,6 +121,22 @@ public class DataManager {
         SceneHelper.ReloadScene();
 	}
 
+
+
+    // ----------------------------------------------------------------
+    //  Set Doers
+    // ----------------------------------------------------------------
+    public void CopyAllSetsToClipboard() {
+        string wholeStr = "";
+        List<StudySet> everySet = library.GetMainAndSpecialSetsList();
+        foreach (StudySet set in everySet) {
+            wholeStr += set.name + "\n";
+            wholeStr += GetStudySetExportedString_ForeignBracketPhoneticNative(set);
+            wholeStr += "\n\n";
+        }
+        GameUtils.CopyToClipboard(wholeStr);
+    }
+
     public void MoveTermToSet(Term term, StudySet newSet) {
         // Swap its set.
         StudySet prevSet = term.mySet;
@@ -133,18 +149,6 @@ public class DataManager {
         // Save!
         SaveStudySetLibrary();
     }
-
-    public void CopyAllSetsToClipboard() {
-        string wholeStr = "";
-        List<StudySet> everySet = library.GetMainAndSpecialSetsList();
-        foreach (StudySet set in everySet) {
-            wholeStr += set.name+"\n";
-            wholeStr += GetStudySetExportedString_ForeignBracketPhoneticNative(set);
-            wholeStr += "\n\n";
-        }
-        GameUtils.CopyToClipboard(wholeStr);
-    }
-
     public void DeleteSet(StudySet set) {
         // First, delete all audio from any terms.
         foreach (string termG in set.allTermGs) {
@@ -157,6 +161,11 @@ public class DataManager {
         library.sets.Remove(set);
     }
 
+
+
+    // ----------------------------------------------------------------
+    //  Sourdough Handling
+    // ----------------------------------------------------------------
     public void RefillSourdoughSet() {
         // FIRST, update the terms in the sourdough set!
         StudySet setSD = library.setSourdough;
@@ -193,6 +202,15 @@ public class DataManager {
 
         // Finally, save WHEN we last refilled (now)!
         SaveStorage.SetDateTime(SaveKeys.SourdoughTimeLastRefilled, DateTime.Now);
+    }
+    public void Debug_RebuildSourdoughSet() {
+        StudySet setSD = library.setSourdough;
+        // Remove all terms from Sourdough set.
+        for (int i=setSD.allTermGs.Count-1; i>=0; --i) {
+            setSD.RemoveTerm(setSD.allTermGs[i]);
+        }
+        // Now just refill it like normal.
+        RefillSourdoughSet();
     }
 
 

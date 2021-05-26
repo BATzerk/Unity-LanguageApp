@@ -20,6 +20,8 @@ public class SettingsManager {
     // ----------------------------------------------------------------
     //  Getters
     // ----------------------------------------------------------------
+    public string NativeLanguageKey { get { return "en"; } }
+    public string ForeignLanguageKey { get { return "da"; } }
     public bool DoShowCardDots {
         get { return doShowCardDots; }
         set {

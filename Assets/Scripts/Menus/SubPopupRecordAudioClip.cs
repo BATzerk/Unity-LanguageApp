@@ -188,6 +188,7 @@ public class SubPopupRecordAudioClip : MonoBehaviour {
         dm.DeleteTermAudio0(currTerm);
 
         AudioClip clip = clipPlayer.GetClip();
+        clip = AudioEditor.GetTrailingSilenceTrimmed(clip);
         Guid newGuid = Guid.NewGuid();
 
         // Assign it to the Term!
@@ -204,6 +205,8 @@ public class SubPopupRecordAudioClip : MonoBehaviour {
         UpdateVisualsForClip(clip);
         GameManagers.Instance.EventManager.OnAnySetContentsChanged();
     }
+
+
 
 
 

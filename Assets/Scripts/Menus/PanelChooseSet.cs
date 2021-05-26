@@ -5,8 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PanelChooseSet : BasePanel
-{
+public class PanelChooseSet : BasePanel {
     // Components
     [SerializeField] private StudySetSpecialTile setTile_aced;
     [SerializeField] private StudySetSpecialTile setTile_shelved;
@@ -18,6 +17,9 @@ public class PanelChooseSet : BasePanel
     private List<StudySetTileView> tileViews=new List<StudySetTileView>();
     // References
     [SerializeField] private MenuController menuController;
+    // Properties
+    const float tileHeight = 56;
+    const float tileSpacing = 2;
 
 
 
@@ -62,8 +64,6 @@ public class PanelChooseSet : BasePanel
         }
 
         // Update the parent content RT height!
-        const float tileHeight = 60;
-        const float tileSpacing = 10;
         float contentHeight = tileViews.Count * (tileHeight+tileSpacing) + 200;
         rt_scrollContent.sizeDelta = new Vector2(rt_scrollContent.sizeDelta.x, contentHeight);
     }

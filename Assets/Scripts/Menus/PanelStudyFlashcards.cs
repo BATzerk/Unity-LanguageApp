@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using GoodEnough.TextToSpeech;
 
 public class PanelStudyFlashcards : BasePanel {
     // Components
@@ -164,29 +163,13 @@ public class PanelStudyFlashcards : BasePanel {
 
     public void OnShowSideNative() {
         //if (isTTSOn) {
-        //    SpeakTTSNative();
+        //    SpeakTTSNative(currCardView.MyTerm);
         //}
     }
     public void OnShowSideForeign() {
         if (sm.IsTTSOn) {
-            SpeakTTSForeign();
+            GameManagers.Instance.EventManager.SpeakTTSForeign(currCardView.MyTerm);
         }
-    }
-    public void SpeakTTSNative() {
-        if (TTS.IsSpeaking) { return; } // Already talking? Don't queue anything up.
-        SpeechUtteranceParameters parameters = new SpeechUtteranceParameters();
-        parameters.Voice = TTS.GetVoiceForLanguage("en");
-        parameters.PitchMultiplier = UnityEngine.Random.Range(0.3f, 2f);
-        parameters.SpeechRate = sm.TTSSpeechRate / 2f; // note: divide by 2: 0.5 is actually normal-speed.
-        TTS.Speak(currCardView.MyTerm.native, parameters);
-    }
-    public void SpeakTTSForeign() {
-        if (TTS.IsSpeaking) { return; } // Already talking? Don't queue anything up.
-        SpeechUtteranceParameters parameters = new SpeechUtteranceParameters();
-        parameters.Voice = TTS.GetVoiceForLanguage("da");
-        parameters.PitchMultiplier = UnityEngine.Random.Range(0.9f, 1.1f);
-        parameters.SpeechRate = sm.TTSSpeechRate / 2f; // note: divide by 2: 0.5 is actually normal-speed.
-        TTS.Speak(currCardView.MyTerm.foreign, parameters);
     }
 
     public void OnClickCycleTTSSettings() {

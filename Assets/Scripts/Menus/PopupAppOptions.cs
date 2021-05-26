@@ -53,9 +53,8 @@ public class PopupAppOptions : MonoBehaviour {
         GameManagers.Instance.DataManager.RefillSourdoughSet();
         SceneHelper.ReloadScene();
     }
-    public void OnClick_ReshuffleAllSets() {
-        GameManagers.Instance.DataManager.library.Debug_ReshuffleAllSets();
-        GameManagers.Instance.DataManager.SaveStudySetLibrary();
+    public void OnClick_RebuildSourdoughSet() {
+        GameManagers.Instance.DataManager.Debug_RebuildSourdoughSet();
         SceneHelper.ReloadScene();
     }
     public void OnValueChanged_DoShowCardDots() {

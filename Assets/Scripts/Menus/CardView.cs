@@ -7,11 +7,14 @@ using TMPro;
 public class CardView : MonoBehaviour {
     // Components
     [SerializeField] private Button b_playClip;
-    [SerializeField] private GameObject go_memorableDots;
+    [SerializeField] private GameObject go_dotsNative; // the dots on the native side
+    [SerializeField] private GameObject go_dotsForeign; // the matching dots on the native side
     [SerializeField] private GameObject go_swipeBannerNo;
     [SerializeField] private GameObject go_swipeBannerYes;
-    [SerializeField] private Image i_dot0;
-    [SerializeField] private Image i_dot1;
+    [SerializeField] private Image i_dot0Native;
+    [SerializeField] private Image i_dot1Native;
+    [SerializeField] private Image i_dot0Foreign;
+    [SerializeField] private Image i_dot1Foreign;
     [SerializeField] private RectTransform myRectTransform;
     [SerializeField] private RectTransform rt_sideNative;
     [SerializeField] private RectTransform rt_sideForeign;
@@ -77,22 +80,28 @@ public class CardView : MonoBehaviour {
         if (MyTerm == null) { return; } // No term yet? Do nothin'.
         // Memorable dots!
         if (GameManagers.Instance.SettingsManager.DoShowCardDots) {
-            go_memorableDots.SetActive(true);
+            go_dotsNative.SetActive(true);
+            go_dotsForeign.SetActive(true);
             System.Random rand = new System.Random(MyTerm.myGuid.GetHashCode());
             float x, y, diameter;
             x = rand.Next(10000) / 10000f * myRectTransform.rect.width;
             y = rand.Next(10000) / 10000f * myRectTransform.rect.height;
             diameter = Mathf.Lerp(DotDiameterMin, DotDiameterMax, rand.Next(10000) / 10000f);
-            i_dot0.rectTransform.anchoredPosition = new Vector2(x, y);
-            i_dot0.rectTransform.sizeDelta = new Vector2(diameter, diameter);
+            i_dot0Native.rectTransform.anchoredPosition = new Vector2(x, y);
+            i_dot0Native.rectTransform.sizeDelta = new Vector2(diameter, diameter);
+            i_dot0Foreign.rectTransform.anchoredPosition = new Vector2(x, y);
+            i_dot0Foreign.rectTransform.sizeDelta = new Vector2(diameter, diameter);
             x = rand.Next(10000) / 10000f * myRectTransform.rect.width;
             y = rand.Next(10000) / 10000f * myRectTransform.rect.height;
             diameter = Mathf.Lerp(DotDiameterMin, DotDiameterMax, rand.Next(10000) / 10000f);
-            i_dot1.rectTransform.anchoredPosition = new Vector2(x, y);
-            i_dot1.rectTransform.sizeDelta = new Vector2(diameter, diameter);
+            i_dot1Native.rectTransform.anchoredPosition = new Vector2(x, y);
+            i_dot1Native.rectTransform.sizeDelta = new Vector2(diameter, diameter);
+            i_dot1Foreign.rectTransform.anchoredPosition = new Vector2(x, y);
+            i_dot1Foreign.rectTransform.sizeDelta = new Vector2(diameter, diameter);
         }
         else {
-            go_memorableDots.SetActive(false);
+            go_dotsNative.SetActive(false);
+            go_dotsForeign.SetActive(false);
         }
 
     }
@@ -142,7 +151,7 @@ public class CardView : MonoBehaviour {
         clipPlayer.PlayTermClip(MyTerm);
     }
     public void OnClickSpeakTTSForeign() {
-        myPanel.SpeakTTSForeign();
+        GameManagers.Instance.EventManager.SpeakTTSForeign(MyTerm);
     }
 
 
