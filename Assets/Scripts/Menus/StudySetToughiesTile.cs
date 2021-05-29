@@ -14,8 +14,10 @@ public class StudySetToughiesTile : MonoBehaviour {
     [SerializeField] private Image i_progressBarBack;
     [SerializeField] private Image i_progressBarFillRecent;
     [SerializeField] private Image i_progressBarFillYeses;
-    // References
-    private StudySet mySet;
+
+
+    // Getters
+    private StudySet mySet { get { return GameManagers.Instance.DataManager.library.setToughies; } }
 
 
 
@@ -23,7 +25,6 @@ public class StudySetToughiesTile : MonoBehaviour {
     //  Start
     // ----------------------------------------------------------------
     private void Start() {
-        mySet = GameManagers.Instance.DataManager.library.setToughies;
         rt_numTermsCardIcon.localEulerAngles = new Vector3(0, 0, Random.Range(-5f, 5f));
 
         UpdateVisuals();

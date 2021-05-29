@@ -6,12 +6,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class PanelChooseSet : BasePanel {
+    // Overrides
+    override public PanelTypes MyPanelType { get { return PanelTypes.ChooseSet; } }
     // Components
     [SerializeField] private StudySetSpecialTile setTile_aced;
     [SerializeField] private StudySetSpecialTile setTile_shelved;
     [SerializeField] private StudySetSpecialTile setTile_toValidate;
     [SerializeField] private StudySetSpecialTile setTile_wantRecording;
-    //[SerializeField] private StudySetSourdoughTile setTile_sourdough;
+    [SerializeField] private StudySetToughiesTile setTile_toughies;
     [SerializeField] public RectTransform rt_scrollContent; // we just control the size of this. rt_tilesContent is parented to this.
     [SerializeField] public RectTransform rt_tilesContent; // all the TileViews go on here.
     private List<StudySetTileView> tileViews=new List<StudySetTileView>();
@@ -37,7 +39,7 @@ public class PanelChooseSet : BasePanel {
         setTile_shelved.UpdateVisuals(this, dm.library.setShelved);
         setTile_toValidate.UpdateVisuals(this, dm.library.setToValidate);
         setTile_wantRecording.UpdateVisuals(this, dm.library.setWantRecording);
-        //setTile_sourdough.UpdateVisuals(this, dm.library.setSourdough);
+        setTile_toughies.UpdateVisuals();
 
         List<StudySet> sets = dm.library.sets;
 
@@ -78,11 +80,11 @@ public class PanelChooseSet : BasePanel {
     // ================================================================
     //  Events
     // ================================================================
-    public void OnClickedStudyASet(StudySet studySet) {
-        menuController.OpenPanel_StudyFlashcards(studySet);
+    public void OnClickedStudyASet(StudySet set) {
+        menuController.OpenPanel_StudyFlashcards(set);
     }
-    public void OnClickedEditASet(StudySet studySet) {
-        menuController.OpenPanel_EditSet(studySet);
+    public void OnClickedEditASet(StudySet set) {
+        menuController.OpenPanel_EditSet(set);
     }
 
     public void OnClick_EditSet_Aced() {

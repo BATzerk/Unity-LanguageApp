@@ -11,7 +11,7 @@ public class StudySetTileView : MonoBehaviour
     [SerializeField] private RectTransform rt_numTermsCardIcon;
     [SerializeField] private TextMeshProUGUI t_name;
     [SerializeField] private TextMeshProUGUI t_numTerms;
-    [SerializeField] private TextMeshProUGUI t_numRoundsStarted;
+    [SerializeField] private TextMeshProUGUI t_avgTimesCompleted;
     [SerializeField] private GameObject go_progressBar;
     [SerializeField] private Image i_progressBarBack;
     [SerializeField] private Image i_progressBarFillRecent;
@@ -34,7 +34,7 @@ public class StudySetTileView : MonoBehaviour
         // Update visuals
         t_name.text = mySet.name;
         t_numTerms.text = mySet.NumTotal.ToString();// + " terms";
-        t_numRoundsStarted.text = mySet.numRoundsFinished.ToString();
+        t_avgTimesCompleted.text = TextUtils.DecimalPlaces1(mySet.GetAverageTimesCompleted());// numRoundsFinished.ToString();
         go_progressBar.SetActive(mySet.IsInProgress);
         if (mySet.IsInProgress) {
             float barWidth = i_progressBarBack.rectTransform.rect.width;

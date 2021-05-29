@@ -6,17 +6,18 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class PanelStudyFlashcards : BasePanel {
+    // Overrides
+    override public PanelTypes MyPanelType { get { return PanelTypes.StudyFlashcards; } }
     // Components
     [SerializeField] private Button b_undo;
     [SerializeField] private Button b_resetSet;
     [SerializeField] private Button b_studyAgain;
+    [SerializeField] private Button b_makeNewToughiesSet;
     [SerializeField] private Button b_toggleTTS;
     [SerializeField] private CardView currCardView;
-    [SerializeField] private Image i_progressBarBack;
-    [SerializeField] private Image i_progressBarFillRecent;
-    [SerializeField] private Image i_progressBarFillYeses;
+    [SerializeField] private StudySetProgressBar progressBar;
     [SerializeField] private TextMeshProUGUI t_setName;
-    [SerializeField] private TextMeshProUGUI t_progress;
+    [SerializeField] private TextMeshProUGUI t_progress; //TODO: Cut this.
     [SerializeField] private TextMeshProUGUI t_ttsSpeed;
     [SerializeField] private TextMeshProUGUI t_finishedInformation;
     [SerializeField] private RectTransform rt_setFinished;
@@ -25,8 +26,6 @@ public class PanelStudyFlashcards : BasePanel {
     // References
     [SerializeField] private Sprite s_ttsButtonOn;
     [SerializeField] private Sprite s_ttsButtonOff;
-    private StudySet currSet;
-
 
 
     // Getters
@@ -52,25 +51,23 @@ public class PanelStudyFlashcards : BasePanel {
         UpdateTTSButtons();
 
         // Add event listeners.
-        eventManager.SetContentsChangedEvent += RefreshCardVisuals;
+        eventManager.SetContentsChangedEvent += RefreshVisuals;
     }
     private void OnDestroy() {
         // Remove event listeners.
-        eventManager.SetContentsChangedEvent -= RefreshCardVisuals;
+        eventManager.SetContentsChangedEvent -= RefreshVisuals;
     }
-    public void OpenSet(StudySet currSet) {
-        this.currSet = currSet;
-        SaveStorage.SetString(SaveKeys.LastStudySetOpenName, currSet.name);
 
-        t_setName.text = currSet.name;
 
+
+    protected override void OnOpened() {
         // Not in progress? Go ahead and reset the deck.
         if (!currSet.IsInProgress) {
             currSet.ShuffleAndRestartDeck();
         }
 
         // Start us off, boi.
-        RefreshCardVisuals();
+        RefreshVisuals();
     }
 
 
@@ -80,27 +77,25 @@ public class PanelStudyFlashcards : BasePanel {
     private void UpdateUndoButtonInteractable() {
         b_undo.interactable = currSet.pileYesesAndNosG.Count > 0;
     }
-    private void RefreshCardVisuals() {
+    private void RefreshVisuals() {
         if (currSet == null) { return; } // No current StudySet? We're not in flashcard mode! Do nothin'.
-        // Update progress visuals
+        // -- BAR AND TEXTS --
         int numDone = currSet.NumDone;
         int numInRound = currSet.NumInCurrentRound;
-        t_progress.text = Mathf.Min(numInRound, numDone+1) + " / " + numInRound;
-        float barWidth = i_progressBarBack.rectTransform.rect.width;
-        float progLocYeses = (currSet.NumTotal - (currSet.pileYesesAndNosG.Count + currSet.pileQueueG.Count)) / (float)currSet.NumTotal;
-        float progLocRecent = currSet.NumDone / (float)currSet.NumTotal;
-        float yesWidth = barWidth * progLocYeses;
-        i_progressBarFillYeses.rectTransform.sizeDelta = new Vector2(yesWidth, i_progressBarFillYeses.rectTransform.sizeDelta.y);
-        i_progressBarFillRecent.rectTransform.anchoredPosition = new Vector2(yesWidth, 0);
-        i_progressBarFillRecent.rectTransform.sizeDelta = new Vector2(barWidth * progLocRecent, i_progressBarFillRecent.rectTransform.sizeDelta.y);
+        t_progress.text = Mathf.Min(numInRound, numDone + 1) + " / " + numInRound;
+        progressBar.UpdateVisuals();
+        t_setName.text = currSet.name;
 
+        // -- FINISHED/UNFINISHED COMPONENTS --
         // We've finished the set??
         if (currSet.NumDone >= currSet.NumInCurrentRound) {
+            bool isToughies = currSet == dm.library.setToughies;
             t_finishedInformation.text = GetRoundCompleteText(currSet);
             b_resetSet.gameObject.SetActive(!dm.IsSourdoughSet(currSet)); // only show "reset deck" button if it's NOT the Sourdough set.
             b_studyAgain.gameObject.SetActive(currSet.pileNoG.Count > 0); // only show "next round" button if there are cards to HAVE a next round with.
             rt_setFinished.gameObject.SetActive(true);
             rt_setInProgress.gameObject.SetActive(false);
+            b_makeNewToughiesSet.gameObject.SetActive(isToughies);
         }
         // There are still cards left. Show the next!
         else {
@@ -118,27 +113,31 @@ public class PanelStudyFlashcards : BasePanel {
     public void OnClickYes() {
         currSet.OnClickCurrTermYes();
         dm.SaveStudySetLibrary();
-        RefreshCardVisuals();
+        RefreshVisuals();
     }
     public void OnClickNo() {
         currSet.OnClickCurrTermNo();
         dm.SaveStudySetLibrary();
-        RefreshCardVisuals();
+        RefreshVisuals();
     }
     public void OnClickUndo() {
         currSet.RewindOneCard();
         dm.SaveStudySetLibrary();
-        RefreshCardVisuals();
+        RefreshVisuals();
     }
     public void OnClickShuffleAndReset() {
         currSet.ShuffleAndRestartDeck();
         dm.SaveStudySetLibrary();
-        RefreshCardVisuals();
+        RefreshVisuals();
     }
     public void OnClickStudyAgain() {
-        currSet.RestartNewRound();
+        currSet.StartNewRound();
         dm.SaveStudySetLibrary();
-        RefreshCardVisuals();
+        RefreshVisuals();
+    }
+    public void OnClickRemakeToughiesSet() {
+        dm.RemakeToughiesSet();
+        RefreshVisuals();
     }
 
 

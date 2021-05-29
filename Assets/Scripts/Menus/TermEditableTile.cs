@@ -61,7 +61,7 @@ public class TermEditableTile : MonoBehaviour
     public void SetMyTerm(int myIndex, Term myTerm) {
         this.myTerm = myTerm;
         t_myNumber.text = (myIndex + 1).ToString();
-        t_setName.text = myTerm.mySet.name;
+        t_setName.text = myTerm.MySetName();
 
         RefreshVisuals();
     }
@@ -115,6 +115,7 @@ public class TermEditableTile : MonoBehaviour
     //    GameManagers.Instance.EventManager.OpenRecordPopup(myTerm);
     //}
     public void OnClickEditMySet() {
+        //GameManagers.Instance.DataManager.SetCurrSet(myTerm.mySet);
         GameManagers.Instance.EventManager.OpenPanelEditSet(myTerm.mySet);
     }
     public void OnClickPlayClip() {

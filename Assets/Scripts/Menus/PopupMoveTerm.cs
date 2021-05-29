@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class MoveTermPopup : MonoBehaviour
+public class PopupMoveTerm : BasePopup
 {
     // Components
     [SerializeField] public RectTransform rt_scrollContent; // we just control the size of this. rt_tilesContent is parented to this.
     [SerializeField] public RectTransform rt_tilesContent; // all the TileViews go on here.
     [SerializeField] private TextMeshProUGUI t_currTermName;
-    private List<MoveTermPopupSetTile> tiles=new List<MoveTermPopupSetTile>();
+    private List<PopupMoveTermSetTile> tiles=new List<PopupMoveTermSetTile>();
     // References
     private Term currTerm;
 
@@ -43,7 +43,7 @@ public class MoveTermPopup : MonoBehaviour
         for (int i = tiles.Count-1; i>=0; i--) {
             Destroy(tiles[i].gameObject);
         }
-        tiles = new List<MoveTermPopupSetTile>();
+        tiles = new List<PopupMoveTermSetTile>();
 
         // Make 'em all.
         StudySetLibrary library = GameManagers.Instance.DataManager.library;
@@ -57,7 +57,7 @@ public class MoveTermPopup : MonoBehaviour
         setsToShow.Add(library.setWantRecording);
 
         foreach (StudySet set in setsToShow) {
-            MoveTermPopupSetTile newView = Instantiate(ResourcesHandler.Instance.MoveTermPopupSetTile).GetComponent<MoveTermPopupSetTile>();
+            PopupMoveTermSetTile newView = Instantiate(ResourcesHandler.Instance.PopupMoveTermSetTile).GetComponent<PopupMoveTermSetTile>();
             bool isSameSet = set == currTerm.mySet;
             newView.Initialize(this, rt_tilesContent, set, isSameSet);
             tiles.Add(newView);

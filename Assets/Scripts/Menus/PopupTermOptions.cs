@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class PopupTermOptions : MonoBehaviour {
+public class PopupTermOptions : BasePopup {
     // Components
     [SerializeField] GameObject go_deleteConfirmation;
     [SerializeField] TextMeshProUGUI t_foreignHeader;
@@ -12,7 +12,7 @@ public class PopupTermOptions : MonoBehaviour {
     [SerializeField] TMP_InputField if_foreign;
     [SerializeField] TMP_InputField if_phonetic;
     // References
-    [SerializeField] MoveTermPopup moveTermPopup;
+    [SerializeField] PopupMoveTerm moveTermPopup;
     [SerializeField] SubPopupRecordAudioClip recordAudioClipSP;
     private Term currTerm;
 
@@ -60,7 +60,7 @@ public class PopupTermOptions : MonoBehaviour {
         if_foreign.text = currTerm.foreign;
         if_phonetic.text = currTerm.phonetic;
         string debugStr = "";
-        debugStr += "mySet: " + currTerm.mySet.name + "\n";
+        debugStr += "mySet: " + currTerm.MySetName() + "\n";
         debugStr += "nos: " + currTerm.totalNos + ", yeses: " + currTerm.totalYeses + "\n";
         debugStr += "nSDStays: " + currTerm.nSDStays + ", nSDLeaves: " + currTerm.nSDLeaves + "\n";
         debugStr += "myGuid:     " + currTerm.myGuid + "\n";
@@ -93,8 +93,7 @@ public class PopupTermOptions : MonoBehaviour {
         go_deleteConfirmation.SetActive(false);
     }
     public void OnClickDeleteConfirmed() {
-        GameManagers.Instance.DataManager.library.RemoveTerm(currTerm);
-        GameManagers.Instance.DataManager.SaveStudySetLibrary();
+        GameManagers.Instance.DataManager.DeleteTerm(currTerm);
         GameManagers.Instance.EventManager.OnAnySetContentsChanged();
         ClosePopup();
     }

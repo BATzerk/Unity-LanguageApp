@@ -43,12 +43,12 @@ public class CardView : MonoBehaviour {
     void Start() {
         // Add event listeners
         GameManagers.Instance.EventManager.SetContentsChangedEvent += UpdateTextFieldsFromTerm;
-        GameManagers.Instance.EventManager.PopupAppOptionsClosedEvent += UpdateCardDotsVisuals;
+        //GameManagers.Instance.EventManager.PopupAppOptionsClosedEvent += UpdateCardDotsVisuals;
     }
     private void OnDestroy() {
         // Remove event listeners
         GameManagers.Instance.EventManager.SetContentsChangedEvent -= UpdateTextFieldsFromTerm;
-        GameManagers.Instance.EventManager.PopupAppOptionsClosedEvent -= UpdateCardDotsVisuals;
+        //GameManagers.Instance.EventManager.PopupAppOptionsClosedEvent -= UpdateCardDotsVisuals;
     }
 
 

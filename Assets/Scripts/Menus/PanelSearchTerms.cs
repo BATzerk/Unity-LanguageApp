@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class PanelSearchTerms : BasePanel
-{
+public class PanelSearchTerms : BasePanel {
+    // Overrides
+    override public PanelTypes MyPanelType { get { return PanelTypes.SearchTerms; } }
     // Components
     [SerializeField] private TMP_InputField if_search;
     [SerializeField] private TextMeshProUGUI t_numResults;

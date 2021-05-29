@@ -12,6 +12,15 @@ public class DataManager {
     private static int SourdoughMaxTerms = 20;
     private static int NumToughiesInSet = 20;
     public StudySetLibrary library;
+    private StudySet _currSet; // whatever set we're editing, or playing.
+
+
+
+    public StudySet CurrSet { get { return _currSet; } }
+    public void SetCurrSet(StudySet set) {
+        _currSet = set;
+        SaveStorage.SetString(SaveKeys.LastStudySetOpenName, _currSet.name);
+    }
 
 
     // ----------------------------------------------------------------
@@ -81,13 +90,14 @@ public class DataManager {
         }
 
         // Hardcoded. Set some properties manually.
+        library.setToughies.doOwnMyTerms = false;
         library.setSourdough.doOwnMyTerms = false;
-        library.setAced.canIncludeMeInSourdough = false;
-        library.setShelved.canIncludeMeInSourdough = false;
-        library.setToValidate.canIncludeMeInSourdough = false;
-        library.setWantRecording.canIncludeMeInSourdough = false;
+        library.setAced.canIncludeMeInRemixes = false;
+        library.setShelved.canIncludeMeInRemixes = false;
+        library.setToValidate.canIncludeMeInRemixes = false;
+        library.setWantRecording.canIncludeMeInRemixes = false;
         foreach (StudySet set in library.sets) {
-            set.canIncludeMeInSourdough = true;
+            set.canIncludeMeInRemixes = true;
         }
 
         // DEBUG. Print any terms that don't belong to the set they're in.
@@ -96,7 +106,7 @@ public class DataManager {
                 string termG = set.allTermGs[i];
                 Term term = library.GetTerm(termG);
                 if (term.mySet != set) {
-                    AppDebugLog.LogError("MISMATCH BETWEEN SETS: " + set.name + ", " + term.mySet.name + ",   " + term.native);
+                    AppDebugLog.LogError("MISMATCH BETWEEN SETS: " + set.name + ", " + term.MySetName() + ",   " + term.native);
                     set.RemoveTerm(termG); // Remove it from this set! ONLY trust the Term's set.
                 }
             }
@@ -143,20 +153,23 @@ public class DataManager {
         StudySet prevSet = term.mySet;
         prevSet.RemoveTerm(term.myGuid);
         newSet.AddTerm(term.myGuid);
-        // If it's not a main set, then also attempt to remove from Sourdough set.
-        if (!newSet.canIncludeMeInSourdough) {
-            library.setSourdough.RemoveTerm(term.myGuid);
+        // If it's not a main set, then also attempt to remove from the remix sets.
+        if (!newSet.canIncludeMeInRemixes) {
+            library.RemoveTermFromRemixSets(term.myGuid);
         }
         // Save!
         SaveStudySetLibrary();
+    }
+    public void DeleteTerm(Term term) {
+        DeleteTermAudio0(term); // delete any audio files!
+        library.DeleteTerm(term); // remove it from all sets.
+        SaveStudySetLibrary(); // Save!
     }
     public void DeleteSet(StudySet set) {
         // First, delete all audio from any terms.
         foreach (string termG in set.allTermGs) {
             Term term = library.GetTerm(termG);
-            if (term.HasAudio0()) {
-                DeleteTermAudio0(term);
-            }
+            DeleteTermAudio0(term);
         }
         // Now, remove the set from the library!
         library.sets.Remove(set);
@@ -225,13 +238,18 @@ public class DataManager {
         foreach (Term term in allTerms) {
             term.UpdateYToNPlusRatio();
         }
+        // FIRST, sort by y-to-n-plus ratio.
         allTerms = allTerms.OrderBy(c => c.yToNPlusRatio).ToList();
-        // Now, cull out all the ones that AREN'T beyond the 1.7 threshold.
-        //TODO: This!
+        // NEXT, sort by how many times they've been IN the Toughies Set already!
+        allTerms = allTerms.OrderBy(c => c.nTITS).ToList();
 
-        // Pluck out a good 20 of 'em.
+
+        // MAYBE: Now, cull out all the ones that AREN'T beyond the 1.7 threshold.
+
+        // Pluck out a good 20 of 'em, and let them *know* they're in the Toughies Set, officially.
         List<Term> setTerms = new List<Term>();
         for (int i=0; i<NumToughiesInSet&&i<allTerms.Count; i++) {
+            allTerms[i].nTITS ++;
             setTerms.Add(allTerms[i]);
         }
         // Shuffle what we got.
@@ -252,8 +270,8 @@ public class DataManager {
     //  Audio
     // ----------------------------------------------------------------
     public void DeleteTermAudio0(Term term) {
-        // No guid? Get outta here.
-        if (string.IsNullOrEmpty(term.audio0Guid)) {
+        // No audio? Get outta here.
+        if (!term.HasAudio0()) { //string.IsNullOrEmpty(term.audio0Guid)
             return;
         }
         // Delete the actual file!
@@ -297,7 +315,6 @@ public class DataManager {
             AddTermFromExportedString(currSet, line);
             wasPrevLineEmpty = false;
         }
-
 
 
 

@@ -11,7 +11,7 @@ public class ResourcesHandler : MonoBehaviour {
     [Header("LanguageApp")]
     [SerializeField] public GameObject TermEditableTile;
     [SerializeField] public GameObject StudySetTileView;
-    [SerializeField] public GameObject MoveTermPopupSetTile;
+    [SerializeField] public GameObject PopupMoveTermSetTile;
 
 
 

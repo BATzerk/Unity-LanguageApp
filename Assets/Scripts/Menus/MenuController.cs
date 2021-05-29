@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MenuController : MonoBehaviour
-{
+public class MenuController : MonoBehaviour {
     // References
+    [SerializeField] private BottomTabBar bottomTabBar;
+    [SerializeField] private PanelAppSettings panel_appSettings;
     [SerializeField] private PanelEditSet panel_editSet;
     [SerializeField] private BasePanel panel_searchTerms;
     [SerializeField] private BasePanel panel_chooseSet;
@@ -19,13 +20,13 @@ public class MenuController : MonoBehaviour
     // ================================================================
     void Start() {
         // Open the last panel that was open!
-        string lastPanelOpenType = SaveStorage.GetString(SaveKeys.LastPanelOpen);
+        PanelTypes lastPanelOpenType = (PanelTypes) SaveStorage.GetInt(SaveKeys.LastPanelOpen);
         string lastSetName = SaveStorage.GetString(SaveKeys.LastStudySetOpenName);
         StudySet lastSet = dm.library.GetSetByName(lastSetName);
-        if (lastSet != null && lastPanelOpenType == "PanelEditSet") {
+        if (lastSet != null && lastPanelOpenType == PanelTypes.EditSet) {
             OpenPanel_EditSet(lastSet);
         }
-        else if (lastSet != null && lastPanelOpenType == "PanelStudyFlashcards") {
+        else if (lastSet != null && lastPanelOpenType == PanelTypes.StudyFlashcards) {
             OpenPanel_StudyFlashcards(lastSet);
         }
         else {
@@ -47,25 +48,38 @@ public class MenuController : MonoBehaviour
     //  Doers
     // ================================================================
     public void ShowPanel(BasePanel _panel) {
+        panel_appSettings.SetVisibility(false);
         panel_editSet.SetVisibility(false);
         panel_searchTerms.SetVisibility(false);
         panel_chooseSet.SetVisibility(false);
         panel_studyFlashcards.SetVisibility(false);
 
         _panel.SetVisibility(true);
+        bottomTabBar.UpdateTabHighlighted(_panel.MyPanelType);
 
         // Save this was the last panel opened!
-        SaveStorage.SetString(SaveKeys.LastPanelOpen, _panel.GetType().ToString());
+        SaveStorage.SetInt(SaveKeys.LastPanelOpen, _panel.MyPanelType.GetHashCode());
     }
 
 
     // ================================================================
     //  Events
     // ================================================================
-    public void OpenPanel_EditSet(StudySet set) { ShowPanel(panel_editSet); panel_editSet.OpenSet(set); }
+    public void OpenPanel_AppSettings() { ShowPanel(panel_appSettings); }
+    public void OpenPanel_EditSet() { ShowPanel(panel_editSet); }
     public void OpenPanel_SearchTerms() { ShowPanel(panel_searchTerms); }
     public void OpenPanel_ChooseSet() { ShowPanel(panel_chooseSet); }
-    public void OpenPanel_StudyFlashcards(StudySet set) { ShowPanel(panel_studyFlashcards); panel_studyFlashcards.OpenSet(set); }
+    public void OpenPanel_StudyFlashcards() { ShowPanel(panel_studyFlashcards); }
+    public void OpenPanel_EditSet(StudySet set) {
+        dm.SetCurrSet(set);
+        OpenPanel_EditSet();
+    }
+    public void OpenPanel_StudyFlashcards(StudySet set) {
+        dm.SetCurrSet(set);
+        OpenPanel_StudyFlashcards();
+    }
+
+
 
 #if UNITY_EDITOR
     [UnityEditor.Callbacks.DidReloadScripts]
@@ -81,7 +95,6 @@ public class MenuController : MonoBehaviour
     //  Update
     // ================================================================
     void Update() {
-
         // Key Inputs
         if (Input.GetKeyDown(KeyCode.Delete)) dm.ClearAllSaveData();
         // CTRL + ___

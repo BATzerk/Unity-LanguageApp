@@ -133,7 +133,7 @@ MonoBehaviour:
   ImageLinesJoint: {fileID: 1586272661960996, guid: 6d0cc624a21c645cc81a888903aa4d14, type: 3}
   TermEditableTile: {fileID: 5657792996969880692, guid: a51cae6895f27435280f28f3864f6be7, type: 3}
   StudySetTileView: {fileID: 5657792996969880692, guid: 8c9947dcac5cc4c1681259592582cf7c, type: 3}
-  MoveTermPopupSetTile: {fileID: 5657792996969880692, guid: 91a5186405e1d4334b5d7fb4bd41d4c2, type: 3}
+  PopupMoveTermSetTile: {fileID: 5657792996969880692, guid: 91a5186405e1d4334b5d7fb4bd41d4c2, type: 3}
 --- !u!1 &1742042021377422
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,7 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class PopupAppOptions : MonoBehaviour {
+public class PanelAppSettings : BasePanel {
+    // Overrides
+    override public PanelTypes MyPanelType { get { return PanelTypes.AppSettings; } }
     // Components
     [SerializeField] private Toggle toggle_doShowCardDots;
     [SerializeField] private Toggle toggle_doShowCardStats;
@@ -15,27 +17,27 @@ public class PopupAppOptions : MonoBehaviour {
     // ----------------------------------------------------------------
     //  Start / Destroy
     // ----------------------------------------------------------------
-    void Start() {
-        // Start closed.
-        ClosePopup();
+    //void Start() {
+    //    // Start closed.
+    //    ClosePopup();
 
-        //// Add event listeners
-        //GameManagers.Instance.EventManager.ShowPopup_TermOptionsEvent += OpenPopup;
-    }
-    //private void OnDestroy() {
-    //    // Remove event listeners
-    //    GameManagers.Instance.EventManager.ShowPopup_TermOptionsEvent -= OpenPopup;
+    //    //// Add event listeners
+    //    //GameManagers.Instance.EventManager.ShowPopup_TermOptionsEvent += OpenPopup;
     //}
+    ////private void OnDestroy() {
+    ////    // Remove event listeners
+    ////    GameManagers.Instance.EventManager.ShowPopup_TermOptionsEvent -= OpenPopup;
+    ////}
 
     // ----------------------------------------------------------------
     //  Open / Close
     // ----------------------------------------------------------------
-    public void ClosePopup() {
-        this.gameObject.SetActive(false);
-        GameManagers.Instance.EventManager.OnPopupAppOptionsClosed();
-    }
-    public void OpenPopup() {
-        this.gameObject.SetActive(true);
+    //public void ClosePopup() {
+    //    this.gameObject.SetActive(false);
+    //    GameManagers.Instance.EventManager.OnPopupAppOptionsClosed();
+    //}
+    override protected void OnOpened() {
+        base.OnOpened();
         toggle_doShowCardDots.isOn = GameManagers.Instance.SettingsManager.DoShowCardDots;
         toggle_doShowCardStats.isOn = GameManagers.Instance.SettingsManager.DoShowCardStats;
         toggle_doAutoTrimAudioClips.isOn = GameManagers.Instance.SettingsManager.DoTrimAudioClips;
@@ -51,11 +53,13 @@ public class PopupAppOptions : MonoBehaviour {
     }
     public void OnClick_ForceRefillSourdoughSet() {
         GameManagers.Instance.DataManager.RefillSourdoughSet();
-        SceneHelper.ReloadScene();
+        //GameManagers.Instance.EventManager.open//TODO: Open ChooseSet panel.
+        //SceneHelper.ReloadScene();
     }
     public void OnClick_RebuildSourdoughSet() {
         GameManagers.Instance.DataManager.Debug_RebuildSourdoughSet();
-        SceneHelper.ReloadScene();
+        //GameManagers.Instance.EventManager.open//TODO: Open ChooseSet panel.
+        //SceneHelper.ReloadScene();
     }
     public void OnValueChanged_DoShowCardDots() {
         GameManagers.Instance.SettingsManager.DoShowCardDots = toggle_doShowCardDots.isOn;

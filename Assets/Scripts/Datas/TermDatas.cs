@@ -102,14 +102,16 @@ public class StudySetLibrary {
         term.mySet = set; // set ref to set.
         set.AddTerm(term.myGuid);
     }
-    /// Removes a term from the main list, and all references to its set.
-    public void RemoveTerm(Term term) {
+    /// Removes a term from ALL sets, all references to any sets it was in, AND all terms lists. NOTE: This doesn't delete its audio. Make sure to call this in tandem with calling that.
+    public void DeleteTerm(Term term) {
         allTermsD.Remove(term.myGuid);
         allTermsL.Remove(term);
         term.mySet.RemoveTerm(term.myGuid);
-        setToughies.RemoveTerm(term.myGuid);
-        setSourdough.RemoveTerm(term.myGuid);
-        // TODO: Delete the audio file, right?
+        RemoveTermFromRemixSets(term.myGuid);
+    }
+    public void RemoveTermFromRemixSets(string termG) {
+        setSourdough.RemoveTerm(termG);
+        setToughies.RemoveTerm(termG);
     }
 
     public void ChangeSetIndexInList(StudySet set, int indexDelta) {
@@ -120,6 +122,7 @@ public class StudySetLibrary {
         sets.Remove(set);
         sets.Insert(newIndex, set);
     }
+
 
     public void Debug_ReshuffleAllSets() {
         List<StudySet> allSets = GetEverySingleSet();
@@ -138,6 +141,7 @@ public class Term {
     public int totalNos=0;
     public int nSDLeaves = 0; // numSourdoughLeaves (how many times we left the SourdoughSet)
     public int nSDStays = 0; // numSourdoughStays (how many times we stayed in the SourdoughSet, for the next loaf)
+    public int nTITS = 0; // numTimesInToughiesSet
     public string native;
     public string foreign;
     public string phonetic;
@@ -146,6 +150,7 @@ public class Term {
     [NonSerialized] public StudySet mySet;
 
     public bool HasAudio0() { return !string.IsNullOrEmpty(audio0Guid); }
+    public string MySetName() { return mySet==null ? "NULL" : mySet.name; }
 
 
     public Term() {
@@ -178,7 +183,7 @@ public class Term {
 public class StudySet {
     // Properties and Components
     [NonSerialized] public bool doOwnMyTerms; // if TRUE (usually true), I'm the set my terms belong to. False for Sourdough set.
-    [NonSerialized] public bool canIncludeMeInSourdough=true; // true for all main sets; false for Aced, To Validate, etc.
+    [NonSerialized] public bool canIncludeMeInRemixes=true; // true for all main sets; false for Aced, To Validate, etc.
     public List<string> allTermGs; // guids.
     public string name;
     public int numRoundsFinished;
@@ -199,6 +204,17 @@ public class StudySet {
         // Safety check.
         if (pileQueueG==null || pileQueueG.Count<=0) { AppDebugLog.LogError("Oops! Trying to GetCurrTerm, but there's nothing in this StudySet's pileQueue."); return null; }
         return myLibrary.GetTerm(pileQueueG[0]);
+    }
+    // How many times we've gone through this pack, but based on the TERMS' info. So it can be like 1.228, if we've removed some terms or something (or are midway through it).
+    public float GetAverageTimesCompleted() {
+        if (NumTotal == 0) { return 0; } // Safety check.
+        float termsSum = 0;
+        Term term;
+        foreach (string termG in allTermGs) {
+            term = myLibrary.GetTerm(termG);
+            termsSum += term.totalNos + term.totalYeses;
+        }
+        return termsSum / (float)NumTotal;
     }
 
     // Initialize
@@ -260,7 +276,7 @@ public class StudySet {
     public void AddTerm(string termGuid) {
         Term term = myLibrary.GetTerm(termGuid);
         if (allTermGs.Contains(termGuid)) { AppDebugLog.LogError("Oops! Attempting to add a Term to a list it's already in. Add aborted. Term: " + term.native); return; } // Safety check! ONLY add if it's not already in our list. No dupes.
-        if (doOwnMyTerms) term.mySet = this; // ONLY set mySet if I own my terms! (So, don't do it for the Sourdough set.)
+        if (doOwnMyTerms) term.mySet = this; // ONLY set mySet if I own my terms! (So, don't do it for the Remix sets.)
         allTermGs.Add(termGuid);
         // Are we in a round? Great, insert it randomly into the queue!
         if (pileQueueG.Count > 0) {
@@ -286,7 +302,7 @@ public class StudySet {
         numRoundsStarted++; // Increment numRoundsStarted.
     }
     /// Makes a new round, but made up of the "no" pile terms.
-    public void RestartNewRound() {
+    public void StartNewRound() {
         pileQueueG = new List<string>(pileNoG);
         pileYesG = new List<string>();
         pileNoG = new List<string>();

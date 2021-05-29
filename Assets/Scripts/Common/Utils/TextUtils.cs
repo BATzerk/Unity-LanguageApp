@@ -126,10 +126,17 @@ public class TextUtils {
         int seconds = timeInt % 60;
         return string.Format ("{0}:{1:00}", minutes, seconds);
     }
-    static public string DecimalPlaces (float timeFloat) {
+    static public string Time_DecimalPlaces (float timeFloat) {
         int millis = (int) ((timeFloat*100) % 100);
         return string.Format ("{0:00}", millis);
     }
+
+
+    // Converts "1.2345678" to "1.2"
+    static public string DecimalPlaces1(float val) {
+        return (Mathf.Round(val*10f)/10f).ToString();
+    }
+
 
     static public string RemoveWhitespace (string _string) {
 //      return Regex.Replace(_string, @"\s+", "");public static string RemoveWhitespace(this string str) {
