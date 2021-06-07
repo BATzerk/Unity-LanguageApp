@@ -15,6 +15,7 @@ public class SubPopupRecordAudioClip : MonoBehaviour {
     [SerializeField] private Button b_record;
     [SerializeField] private Button b_preDelete;
     [SerializeField] private GameObject go_deleteConfirmation;
+    [SerializeField] private Image i_recordingScrim;
     [SerializeField] private TextMeshProUGUI t_audioDuration;
     // Properties
     private const int MaxAudioFileDuration = 5; // in SECONDS.
@@ -136,6 +137,7 @@ public class SubPopupRecordAudioClip : MonoBehaviour {
         b_play.gameObject.SetActive(false);
         b_record.gameObject.SetActive(false);
         b_stop.gameObject.SetActive(true);
+        i_recordingScrim.enabled = true;
         isRecordingClip = true;
         clipPlayer.SetClip(Microphone.Start(null, false, MaxAudioFileDuration, 44100));//"Built-in Microphone"
     }
@@ -181,6 +183,7 @@ public class SubPopupRecordAudioClip : MonoBehaviour {
         b_play.gameObject.SetActive(isAudio0);
         b_record.gameObject.SetActive(!isAudio0);
         b_stop.gameObject.SetActive(false);
+        i_recordingScrim.enabled = false;
     }
 
     private void SaveAndAffiliateAudioFile() {

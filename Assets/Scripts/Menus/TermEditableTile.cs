@@ -17,6 +17,8 @@ public class TermEditableTile : MonoBehaviour
     [SerializeField] private TMP_InputField if_foreign;
     [SerializeField] private TMP_InputField if_phonetic;
     [SerializeField] private VerticalLayoutGroup vertLayoutGroup;
+    // Properties
+    private bool amIFocused;
     // References
     private Term myTerm;
 
@@ -24,12 +26,12 @@ public class TermEditableTile : MonoBehaviour
     // ================================================================
     //  Start / Destroy
     // ================================================================
-    //private void Start() {
-    //    GameManagers.Instance.EventManager.SetContentsChangedEvent += RefreshVisuals;
-    //}
-    //private void OnDestroy() {
-    //    GameManagers.Instance.EventManager.SetContentsChangedEvent -= RefreshVisuals;
-    //}
+    private void Start() {
+        GameManagers.Instance.EventManager.GiveTermTileFocusEvent += OnGiveTermTileFocus;
+    }
+    private void OnDestroy() {
+        GameManagers.Instance.EventManager.GiveTermTileFocusEvent -= OnGiveTermTileFocus;
+    }
 
 
     // ----------------------------------------------------------------
@@ -70,32 +72,41 @@ public class TermEditableTile : MonoBehaviour
         if_native.text = myTerm.native;
         if_foreign.text = myTerm.foreign;
         if_phonetic.text = myTerm.phonetic;
-        //Hack_RefreshSize();
-        //Invoke("Hack_RefreshSize", 1.1f);
+        UpdatePhoneticFieldEnabled(false); // update phonetic field but DON'T request refreshing the layout (I'm about to do that in 2 lines).
         b_playClip.gameObject.SetActive(myTerm.HasAudio0());
-        //HideOptions();
-        //HideDeleteConfirmation();
         StartCoroutine(RefreshLayoutCoroutine());
     }
     private IEnumerator RefreshLayoutCoroutine() {
         yield return null; // skip a frame. Wait until canvases are done updating.
-        //Canvas.ForceUpdateCanvases();// HACK Temp here.
         vertLayoutGroup.CalculateLayoutInputVertical();
         vertLayoutGroup.SetLayoutVertical();
         //LayoutRebuilder.ForceRebuildLayoutImmediate(myRectTransform);
         float groupHeight = vertLayoutGroup.preferredHeight;
-        //if (groupHeight == 0) { // Don't have a preferred height yet? No worries; invoke this again until we do!
-        //    Invoke("Hack_RefreshSize", 0.1f);
-        //}
-        //else { // We've got a proper height. Apply it!
-            myRectTransform.sizeDelta = new Vector2(myRectTransform.sizeDelta.x, groupHeight + 20);// Mathf.Abs(rt_if_phonetic.anchoredPosition.y)+rt_if_phonetic.rect.size.y);
-        //}
+        // Apply the proper height.
+        myRectTransform.sizeDelta = new Vector2(myRectTransform.sizeDelta.x, groupHeight + 20);// Mathf.Abs(rt_if_phonetic.anchoredPosition.y)+rt_if_phonetic.rect.size.y);
     }
 
 
     // ----------------------------------------------------------------
     //  Events
     // ----------------------------------------------------------------
+    private void OnGiveTermTileFocus(Term _term) {
+        amIFocused = _term == myTerm;
+        UpdatePhoneticFieldEnabled(true);
+    }
+    private void UpdatePhoneticFieldEnabled(bool doRefreshLayout) {
+        bool doShowPhonetic = amIFocused || !string.IsNullOrWhiteSpace(myTerm.phonetic); // ONLY show phonetic field if I'm focused, OR if there's phonetic text!
+        // If I should show or hide it, do!
+        if (if_phonetic.gameObject.activeSelf != doShowPhonetic) {
+            if_phonetic.gameObject.SetActive(doShowPhonetic);
+            if (doRefreshLayout) {
+                StartCoroutine(RefreshLayoutCoroutine());
+            }
+        }
+    }
+    public void OnSelectAnyField() {
+        GameManagers.Instance.EventManager.OnGiveTermTileFocus(myTerm);
+    }
     public void OnFinishedEditingAnyField() {
         // Update my term by my texts.
         myTerm.native = if_native.text;
@@ -111,9 +122,6 @@ public class TermEditableTile : MonoBehaviour
         GameManagers.Instance.EventManager.ShowPopup_TermOptions(myTerm);
         //rt_options.gameObject.SetActive(true);
     }
-    //public void OnClickOpenRecordPopup() {
-    //    GameManagers.Instance.EventManager.OpenRecordPopup(myTerm);
-    //}
     public void OnClickEditMySet() {
         //GameManagers.Instance.DataManager.SetCurrSet(myTerm.mySet);
         GameManagers.Instance.EventManager.OpenPanelEditSet(myTerm.mySet);

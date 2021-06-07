@@ -39,7 +39,7 @@ public class PopupSetOptions : BasePopup {
         progressBar.UpdateVisuals();
 
         // Hide/Show components
-        bool isRemixSet = !currSet.doOwnMyTerms;
+        bool isRemixSet = currSet.isRemixSet;
         b_preDelete.gameObject.SetActive(!isRemixSet);
         if_pastedTerms.gameObject.SetActive(!isRemixSet);
         

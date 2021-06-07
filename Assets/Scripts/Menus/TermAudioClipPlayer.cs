@@ -9,6 +9,9 @@ public class TermAudioClipPlayer : MonoBehaviour {
     [SerializeField] private AudioSource audioSource;
     // Properties
     private string currClipGuid; // so we know if we need to load a new clip
+    private int numTimesTTSSpokeCurrTermForeign; // so we can say it slowly every other play.
+    // References
+    private Term prevTermTTSForeign; // every time we speak foreign, we update this. So we can know if it has changed.
 
 
     // Getters
@@ -48,11 +51,21 @@ public class TermAudioClipPlayer : MonoBehaviour {
     }
     private void SpeakTTSForeign(Term term) {
         if (TTS.IsSpeaking) { return; } // Already talking? Don't queue anything up.
+        // Update our tracking of what's been said recently.
+        if (term == prevTermTTSForeign) {
+            numTimesTTSSpokeCurrTermForeign ++; // increment this here.
+        }
+        else {
+            numTimesTTSSpokeCurrTermForeign = 0;
+            prevTermTTSForeign = term;
+        }
         SpeechUtteranceParameters parameters = new SpeechUtteranceParameters();
         parameters.Voice = TTS.GetVoiceForLanguage(sm.ForeignLanguageKey);
         parameters.PitchMultiplier = UnityEngine.Random.Range(0.9f, 1.1f);
-        parameters.SpeechRate = sm.TTSSpeechRate / 2f; // note: divide by 2: 0.5 is actually normal-speed.
+        //parameters.SpeechRate = sm.TTSSpeechRate / 2f; // note: divide by 2: 0.5 is actually normal-speed.
+        parameters.SpeechRate = (numTimesTTSSpokeCurrTermForeign%2==0) ? 0.5f : 0.3f; // speak SLOWLY every OTHER play!
         TTS.Speak(term.foreign, parameters);
+        Debug.Log("SpeechRate: " + parameters.SpeechRate);
     }
 
 

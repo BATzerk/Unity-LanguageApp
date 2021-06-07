@@ -23,6 +23,7 @@ public class EventManager {
     public event AudioClipAction ClipLoadSuccessEvent;
     public event StudySetAction OpenPanelEditSetEvent;
     public event StudySetAction OpenPanelStudyFlashcardsEvent;
+    public event TermAction GiveTermTileFocusEvent;
     public event TermAction PlayTermClipEvent;
     public event TermAction SpeakTTSNativeEvent;
     public event TermAction SpeakTTSForeignEvent;
@@ -30,6 +31,7 @@ public class EventManager {
     public event TermAction ShowPopup_TermOptionsEvent;
 
     public void OnAnySetContentsChanged() { if (SetContentsChangedEvent != null) { SetContentsChangedEvent(); } }
+    public void OnGiveTermTileFocus(Term term) { if (GiveTermTileFocusEvent != null) { GiveTermTileFocusEvent(term); } }
 
     public void CloseTermOptionsPopup() { if (CloseTermOptionsPopupEvent != null) { CloseTermOptionsPopupEvent(); } }
     public void OpenPanelEditSet(StudySet set) { if (OpenPanelEditSetEvent != null) { OpenPanelEditSetEvent(set); } }

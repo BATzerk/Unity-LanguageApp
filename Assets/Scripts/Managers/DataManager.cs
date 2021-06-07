@@ -90,8 +90,8 @@ public class DataManager {
         }
 
         // Hardcoded. Set some properties manually.
-        library.setToughies.doOwnMyTerms = false;
-        library.setSourdough.doOwnMyTerms = false;
+        library.setToughies.isRemixSet = true;
+        library.setSourdough.isRemixSet = true;
         library.setAced.canIncludeMeInRemixes = false;
         library.setShelved.canIncludeMeInRemixes = false;
         library.setToValidate.canIncludeMeInRemixes = false;
@@ -203,6 +203,7 @@ public class DataManager {
         List<Term> allTerms = library.GetOnlyMainTerms();
         // Shuffle them all, then sort them by sourdough wins.
         GameUtils.Shuffle(allTerms);
+        allTerms = allTerms.OrderBy(c => c.yToNPlusRatio).ToList(); // TEST! Put the hard ones in first.
         allTerms = allTerms.OrderBy(c => c.nSDLeaves).ToList();
 
         // Add the right amount to the set.

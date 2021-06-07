@@ -12,6 +12,9 @@ public class PanelAppSettings : BasePanel {
     [SerializeField] private Toggle toggle_doShowCardStats;
     [SerializeField] private Toggle toggle_doAutoTrimAudioClips;
     [SerializeField] private Toggle toggle_doNormalizeAudioClips;
+    [SerializeField] private Toggle toggle_doAutoPlayTTS;
+    // References
+    [SerializeField] private MenuController menuController;
 
 
     // ----------------------------------------------------------------
@@ -42,6 +45,7 @@ public class PanelAppSettings : BasePanel {
         toggle_doShowCardStats.isOn = GameManagers.Instance.SettingsManager.DoShowCardStats;
         toggle_doAutoTrimAudioClips.isOn = GameManagers.Instance.SettingsManager.DoTrimAudioClips;
         toggle_doNormalizeAudioClips.isOn = GameManagers.Instance.SettingsManager.DoNormalizeAudioClips;
+        toggle_doAutoPlayTTS.isOn = GameManagers.Instance.SettingsManager.IsTTSOn;
     }
 
 
@@ -53,13 +57,11 @@ public class PanelAppSettings : BasePanel {
     }
     public void OnClick_ForceRefillSourdoughSet() {
         GameManagers.Instance.DataManager.RefillSourdoughSet();
-        //GameManagers.Instance.EventManager.open//TODO: Open ChooseSet panel.
-        //SceneHelper.ReloadScene();
+        menuController.OpenPanel_ChooseSet();
     }
     public void OnClick_RebuildSourdoughSet() {
         GameManagers.Instance.DataManager.Debug_RebuildSourdoughSet();
-        //GameManagers.Instance.EventManager.open//TODO: Open ChooseSet panel.
-        //SceneHelper.ReloadScene();
+        menuController.OpenPanel_ChooseSet();
     }
     public void OnValueChanged_DoShowCardDots() {
         GameManagers.Instance.SettingsManager.DoShowCardDots = toggle_doShowCardDots.isOn;
@@ -72,6 +74,9 @@ public class PanelAppSettings : BasePanel {
     }
     public void OnValueChanged_DoNormalizeAudioClips() {
         GameManagers.Instance.SettingsManager.DoNormalizeAudioClips = toggle_doNormalizeAudioClips.isOn;
+    }
+    public void OnValueChanged_DoAutoPlayTTS() {
+        GameManagers.Instance.SettingsManager.IsTTSOn = toggle_doAutoPlayTTS.isOn;
     }
 
 }

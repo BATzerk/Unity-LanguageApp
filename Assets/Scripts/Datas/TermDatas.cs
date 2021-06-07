@@ -37,8 +37,8 @@ public class StudySetLibrary {
         setShelved = new StudySet(this, "SHELVED");
         setToValidate = new StudySet(this, "TO VALIDATE");
         setWantRecording = new StudySet(this, "WANT RECORDING");
-        setToughies = new StudySet(this, "TOUGHIES", false);
-        setSourdough = new StudySet(this, "SOURDOUGH SET", false);
+        setToughies = new StudySet(this, "TOUGHIES", true);
+        setSourdough = new StudySet(this, "SOURDOUGH SET", true);
     }
 
     public void RemakeTermsDictionaryFromList() {
@@ -182,7 +182,7 @@ public class Term {
 [Serializable]
 public class StudySet {
     // Properties and Components
-    [NonSerialized] public bool doOwnMyTerms; // if TRUE (usually true), I'm the set my terms belong to. False for Sourdough set.
+    [NonSerialized] public bool isRemixSet=false; // if FALSE (usually false), I'm the set my terms belong to. True for Sourdough set.
     [NonSerialized] public bool canIncludeMeInRemixes=true; // true for all main sets; false for Aced, To Validate, etc.
     public List<string> allTermGs; // guids.
     public string name;
@@ -218,10 +218,10 @@ public class StudySet {
     }
 
     // Initialize
-    public StudySet(StudySetLibrary myLibrary, string name, bool doOwnMyTerms=true) {
+    public StudySet(StudySetLibrary myLibrary, string name, bool isRemixSet=false) {
         this.myLibrary = myLibrary;
         this.name = name;
-        this.doOwnMyTerms = doOwnMyTerms;
+        this.isRemixSet = isRemixSet;
         this.allTermGs = new List<string>();
     }
     public StudySet(StudySetLibrary myLibrary, string name, string allTermsStr) {
@@ -276,7 +276,7 @@ public class StudySet {
     public void AddTerm(string termGuid) {
         Term term = myLibrary.GetTerm(termGuid);
         if (allTermGs.Contains(termGuid)) { AppDebugLog.LogError("Oops! Attempting to add a Term to a list it's already in. Add aborted. Term: " + term.native); return; } // Safety check! ONLY add if it's not already in our list. No dupes.
-        if (doOwnMyTerms) term.mySet = this; // ONLY set mySet if I own my terms! (So, don't do it for the Remix sets.)
+        if (!isRemixSet) term.mySet = this; // ONLY set mySet if I own my terms! (So, don't do it for the Remix sets.)
         allTermGs.Add(termGuid);
         // Are we in a round? Great, insert it randomly into the queue!
         if (pileQueueG.Count > 0) {
@@ -313,7 +313,7 @@ public class StudySet {
     }
 
     public void ReplaceAllTermsAndShuffleStartNewRound(List<Term> newTerms) {
-        if (doOwnMyTerms) { AppDebugLog.LogError("Whoa! Trying to ReplaceAndShuffleAllTerms on a set that OWNS its terms. This function is only meant for sets that DON'T own their terms, like the Sourdough/Toughies sets."); }
+        if (!isRemixSet) { AppDebugLog.LogError("Whoa! Trying to ReplaceAndShuffleAllTerms on a set that OWNS its terms. This function is only meant for remix sets, which DON'T own their terms, like the Sourdough/Toughies sets."); }
         // Clear lists.
         allTermGs.Clear();
         pileYesG.Clear();
