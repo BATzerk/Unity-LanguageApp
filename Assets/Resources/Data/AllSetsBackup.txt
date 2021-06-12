@@ -1,453 +1,46 @@
-M2 #1
-Hvor dejligt! [die-leit] - How lovely!
-Fjollet [fjolD] - Silly
-Underlig [å-na-li] - Weird/strange
-Forskellige [fu-skæ-lee] - Different
-Jeg er den eneste amerikaner. [ae-neste am-Ree-khay-nah] - I'm the only American.
-Jeg tog module 1 for fem måneder siden. [toe] - I took module 1 five months ago.
-Jeg blev født i New Jersey. [ble] - I was born in New Jersey.
-Da jeg var barn... [daYAva ba'n] - When I was a kid...
-Jeg har hørt, at italiensk er svært. - I've heard that Italian is difficult.
-Møder [møD-a] - To meet
-Hold da op! - Oh, boy!
-Er du også lige kommet? - Have you just arrived, too?
-Vi snakket i tre timer. - We talked for three hours.
-Ja, det kan man godt sige. [ka] - Yeah, you could say that.
-For pokker! [po-ga] - Damn!
-Hente [hen-d(e)] - Fetch
-Ah, så løber jeg. - Ah, I gotta run.
-Hvordan fik du den idé? - How did you get that idea?
-Fordi jeg gerne ville prøve at bo her. [gærn vil prø-ah] - Because I wanted to try to live here.
-Tidligt [tiD-leet] - Early
-Hvad lavede du egentlig, før du kom hertil? [ve laveD du æ'ng-lee før du kom her-tih] - What did you actually do before you came here?
-Har du haft din egen bil? [ai-n bil] - Did you have your own car?
-Jeg lavede mine egne videospil. [ai-neh] - I made my own video games.
-Jeg havde mit eget firma. [heD mit ahD fee-erma] - I had my own company.
 
 
-M2 #2
-Jeg kunne godt tænke mig at tage til Bornholm. [ku ... ta tih] - I would like to go to Bornholm.
-Taknemmelig - Grateful
-Mest [may'st] - Most
-Mindre [min-dRa] - Less
-Bedre [biDa, maybe a ghost of an R] - Better
-Værre [væ-ah] - Worse
-Den værste [værst-eh] - The worst
-For det meste [fuh de mæ'steh] - Mostly
-Liv [lee-yu, but very quick] - Life
-Vi talte [tæl-deh] for det meste [de mæ'ste] på dansk. - We mostly spoke Danish.
-Jeg forstår ikke helt. [hæ-lt] - I don't totally understand.
-Jeg glemmer [glæm-ah] - I forget
-Jeg glemte [glem-t(d)e] - I forgot
-Glem det. - Never mind.
-Sidste gang - Last time
-Fem måneder siden - Five months ago
-Jeg studerede for at lære. [stu-dæ'-D før-a læ-ah] - I studied in order to learn.
-Jeg kan godt lige Danmark på grund af danskerne. - I like Denmark because of the Danes.
-i halvandet år [hal-lanneD år] - For a year and a half
-Nemlig - Exactly
-Før i dag, vidste jeg det ikke. - Before today, I didn't know.
-Før han fik jobbet [jobbeD] i Århus, arbejdede [ah-bi-dD] han som kok i Rom. - Before he got the job in Århus, he worked as a chef in Rome.
-Vælg. [væl-je] - Choose.
-De boede i Danmark, fordi de gerne ville prøver noget nyt. - They lived in Denmark because they wanted to try something new.
-Hvis det ikke er sjovt, så gør jeg det sjovt, ellers tager jeg en pause! - If it's not fun, I'll make it fun, or take a break!
-Hvad hvis jeg gjorde det? [gyort(d)] - What if I did?
+#35
+Jeg laver hjemmearbejde - I do homework
+Jeg ved ikke alt. - I don’t know everything.
+At lyve - To lie
+Han var sådan... [snn] - He was like…
+Det er en god mulighed. - It’s a good opportunity.
+Jeg respekterer dig. - I respect you.
+Jeg ønsker at skabe noget smukt. - I wish to create something beautiful.
+Jeg vil skabe noget smukt. - I will create something beautiful.
+En anden måde - Another way
+Hvis man ikke har en bil… - If one doesn’t have a car…
+Jeg vil gerne blive forstået. - I’d like to be understood
+Lad os går videre. - Let’s move on.
+Kom så, folkens. - Come on, people.
+Kan vi godt tale dansk? - Can we please (good) speak Danish?
+At bede om - To ask for
+Det var rigtig sødt af dig. [adda] - That was really sweet of you.
+Et godt humor - A good mood
+Stærk - Strong
+Jeg er meget stærk. - I’m very strong.
+Det er meget sandsynligt. - That’s very probable.
+Jeg har været sød ved mig selv. - I have been kind to myself.
+I slutningen af august… / Sidst i august… - At the end of August…
+Jeg har en gulerod i mit røvhul. - I have a carrot in my butthole.
+At blive forstået - To be understood
 
 
-M2 #3
-Resultatet betyder ikke noget. Bare have det sjovt. [re-su-táy-diD] - The result doesn't matter. Just have fun!
-Lignende [lee-neh] - Similar
-Han så sport. - He watched sports.
-Det gik godt! Jeg tror, ​​han gik ud. [geek] - It went well! I think he went outside.
-Det skal jeg lære! [de ska-ja-læ-ya] - I need to learn that!
-Det er så fedt med vores nye køkken. Så du står i køkken? - It's so cool with our new kitchen. So you're in the kitchen?
-Jeg vil øve mere! [ja vi øø(a) mee-ya] - I'm going to practice more!
-Opgave [op-gæo] - Task
-Opgaver [op-gæowah] - Tasks
-Han er lige gået ned i kiosken. [gåeD niD i kioskn] - He's just gone down to the kiosk.
-For sent [fuh saint] - Too late
-Lov mig, at du ikke bliver mærkelig. [Lo-ma, adu ik blee mæaklee] - Promise me you won't be weird.
-Spiludvikler - Game developer
-Lykkes [lygis] - Successful
-Kender du det? - Know what I mean?
-Skidegod [skiD-go] - Damn good
-Skønt [skønt] - Great/wonderful
-Må jeg bede om en øl? [må-ja béom en øl] - Can I ask for a beer?
-Vent lige lidt - Wait a second
-Ja, det har vi klaret. [klaD] - Yeah, we have done that.
-God pointe. [go po-eng^-deh] - Good point.
-Grunde [gRo-neh] - Reasons
-Nyttig [ny-dee] - Useful
+#36
+Skal vi oplever noget sammen i weekenden? - Shall we experience something together this weekend?
+Jeg skal ud at oplever noget i weekenden! - I’m going out to experience something this weekend!
+Min lytning og tale - My listening and speaking
 
 
-M2 #4
-Hvordan fik du den idé? [Hvordán fikdu dén idée?] - How's you get that idea?
-Skal jeg ikke lige hente et par øl? [Skayíkleehénd-et parø'l?] - Shall I not just fetch two beers?
-Butikken [butígn] - The store
-Arbejdede [ah-bi-dD] - Worked
-Jeg skal sig dig noget. [jaska séeda noD] - I'm going to tell you something.
-Bedre [biD-ah] - Better
-Hvornår flyttede du egentlig til Danmark? [hvornå' flýdDdu-énlee t-Dánmark?] - When did you actually move to Denmark?
-Men hvor længe skal du egentlig være her? [Menvor læ'ng skaduenglee væ' ha?] - But how long will you actually be here?
-Kontrakt [kontRakt] - Contract
-Optagelse [op-tael-se] - Recording
-Forkert [fu-kæ(r)t] - Wrong
-Det har du sagt [de há du-sa(u)gt] - You said that.
-Er du så glad for at være her? - Are you happy to be here, then?
-Men er der ikke noget, du savner fra Finland? - But isn't there something you miss from Finland?
-Næ, ikke rigtig. - No, not really.
-Livet her i Danmark er meget som i Finland. [lée-uD her i Dánmark er máhD som-i Finland] - Life here in Denmark is a lot like Finland.
-Men hvad med dit liv her i Danmark? [men veD-me déet lee-uD her i Danmark] - But what about your life here in Denmark?
-Det er noget helt andet end i USA. [de enoD héet anneD i USA] - It's something completey different than in USA.
-Tættere på [tædda på] - Closer to
-Vejret [ve-yuD] - The weather
-Hvis du synes, det er koldt i Danmark, så vent, til du kommer til Finland. - If you think it's cold in Denmark, just wait until you get to Finland.
-Nej, det var mest, fordi... [deva méest fodi] - No, it was mostly because...
-Naturen [na-too' ahn] - The nature
-Men jeg kunne godt tænke mig at bo tættere på min familie. [Me ja ko godt tænk ma-a-bo tæda(e) på min familie] - But I would like to live closer to my family.
-Da jeg begyndte at arbejde her [Daya begynd-a a arbejd her] - When I began to work here
-Stolt [sto(uh)lt] - Proud
-Men nu må vi se... [me-nu mó vi se] - But let's see...
-
-
-M2 #5
-Det gjorde vi allerede. [de gjóahvee aleReD] - We did that already
-Jeg havde det sjovt! [heD(-ah)] - I had fun!
-Læste du den bog, jeg sendte dig? [læste du-den bo, ja sendt(e) da?] - Did you read the book I sent you?
-Håber at du får en hyggelig aften. [as spelled] - Hope that you have a nice evening.
-Brug din fantasi. - Use your imagination.
-Han spillede også tennis. [spil-eD] - He also played tennis.
-Trist [tReest] - Sad
-i stedet for [i steDet'] - Instead of
-Jeg fik mange venner. [fick] - I made many friends.
-Tør [tø(r)ah] - Dry
-Det er den slags fyr, jeg er. [slahgs fY(r)ah] - That's the kind of guy I am.
-Forskel [fo(w)r-ske] - Difference
-Jeg kedede mig. [kiDD(th)] - I was bored.
-Hvor flyttede du hertil? [flY-deD(-th) du ha-til] - Why did you move here?
-Tidligere i dag sagde min ven... [tiD-lee-ah i dag sayy meen ven...] - Earier today, my friend said...
-Jeg tilføjer dem senere. [tíl-føjah] - I'll add them later.
-Jeg tilføjede dem til sætningerne. [til-føeD; saétning-ah-n(eh)] - I added them to the sentences.
-Tidligere [tiD-lee-ah] - Earlier
-Tættere på [tehdda på] - Closer to
-Kan du forklare? [kádu fo(r)-klaah] - Can you explain?
-Forvirret [fuh-vee-u(h)D] - Confused
-Hjerne [yuær-neh] - Brain
-De kom hertil for at opleve livet og mentaliteten i Skandinavien. [fo-a op-læwe-leewD o mentali-té-n i Skandinavien] - They came here to experience the life and mentality in Scandinavia.
-Tørsdig [tørus-dee] - Thirsty
-Flyttede [flY-deD(-th)] - Moved (pronunciation)
-helt andet end i USA [het annuhD enni USA] - completely different than the USA
-Ingenting - Nothing
-
-
-M2 #6
-Keelomáyy-da - Kilometer pronunciation
-Sikke en sjov historie! [sig(ge) en sjov hih-stor-i-ah] - What a funny story!
-Er det det samme som...? [de sámm(e) som] - Is that the same as...?
-Er det lige som...? [er de lee sum...] - Is that similar to...?
-Er det (lidt/næsten) ligesom på engelsk? - Is that (almost) the same as in English?
-Det kan (jo) ske. - It happens. (As in, "It's all right... it happens.")
-Øv! [Øw] - Darn!
-Det var ærgerligt. [a-ouwlidt] - What a shame / I'm sorry to hear that
-Et grimt ord [gRemd] - A bad word
-Har du tid til et spil? [tiD ti ah spil] - Do you have time for a game?
-Hvad er forskellen på de to? [hve fo(r)-skellen på dee to?] - What's the difference between the two?
-Det lige sket. [de lee skate] - It just happened.
-Formelt [fo-melt] - Formal
-Jeg har masser. [ma(e)ssa] - I have plenty.
-Livet er godt. [lee-wull, short wull] - Life is good.
-Du lever livet farligt! [du læwa-leewD fah-leet] - You live life dangerously!
-oplave livet [op-le-wah lee-wiD] - experience life
-Jeg finder ud af det med tiden. [úD er-day meh-tíDen] - I'll figure it out over time.
-Jeg var helt tabt. [as spelled] - I was totally lost.
-Er du klar over, hvor sej du er? - Do you realize how cool you are?
-Hvor længe skal du så være her? [voe læng skádusa væ-ah ha] - How long will you be here, then?
-Ingen [inng] - Nobody
-Typisk [tYpisk] - Typical
-Tørsdig [tør(u)s-dee] - Thirsty
-Blive ved. [bleeu viD] - Continue.
-
-
-M2 #7
-Undrer mig over - I wonder
-Jeg havde ret. Du tog fejl. [heD Rat. du to fai] - I was right. You were wrong.
-Skal vi se det? [skavi sæ de?] - Shall we watch it?
-Det har jeg glemt. - I have forgotten.
-Jeg er lige blevet [bliD] færdig med at spille. - I just finished playing.
-Speciel [Speshee-el] - Special
-Og hvad så? - So what?
-Falsk [faelsk] - False
-Modig [muDee] - Brave
-Løgner [løin-a] - Liar
-Jeg er enig. [æ-ni] - I agree.
-Jeg er uenig. [uu/oo Æh’nee, oo-æ-ni] - I disagree.
-Jeg er frisk! - I'm down! / Sign me up!
-De fleste af dem var ret gode. [dee flæyst-e adem va Rat goeD] - Most of them were pretty good.
-Kys og kram. - Kisses and hugs.
-Det er op til dig. - It's up to you.
-Jeg bliver rasende. - I'm getting furious.
-Hold kæft. - Shut up.
-Onde [o(e)neh] - Evil
-Bare sådan [baahh súddin] - Just like that
-Nyd det, mens det varer. [nYD de, mens de vaaa] - Enjoy it while it lasts.
-Hvordan har du det i hjertet? [ee-ah-diD] - How do you feel in your heart?
-Har du set det? [sæy de] - Have you seen it?
-Hvordan føles det? Føles det godt? [as spelled] - How does it feel? Does it feel good?
-Det er alt du skal vide. - That's all you need to know.
-
-
-M2 #8
-Jeg har lært [læaht, fast] - I have learned
-Det er jeg med på! [deya méh på!] - Count me in!
-Jeg fandt dig! [fan-t da] - I found you!
-At skifte - To change
-Er det en almindelig sætning? [al-méh-n-lee] - Is that a common phrase?
-Jeg troede, det var ret godt! [ja t(R)oh-eD] - I thought it was pretty good!
-Kontakte [kohn-tAch-de] - Contact (verb and noun)
-Hvorfor smutter du? [smooda] - Why are you going away? / Why are you hopping away?
-Jeg skal lige smut i kiosken. [smoot] - I'm just gonna hop down to the kiosk.
-Jeg er for de mest interesseret i... [intRuh-sæ(h)uD] - I'm mostly interested in...
-Det vil nok være/blive... [væ-yaa / blee] - It'll probably be...
-Sådan én som dig [suddin é'n som-da] - Someone like you
-Og hvad så? - So what?
-For nylig - Recently
-Jeg lærte for nylig... [lær-de fu-nY-lee] - I learned recently...
-Lad være. Seriøst. [La væya. Se(r)i-øst] - Do not. Seriously.
-Jeg har fundet [fu/o-niD] - I have found
-Siden sidste gang - Since last time
-Indenfor [inn-fuh] - Inside
-Udenfor [uDin-fuh] - Outside
-Vi har det på samme måde. [sa-mme mooD] - We feel the same way.
-Beslutter - To decide
-Vi sås i går. [sås i gå(r)] - We saw each other yesterday.
-Nu skal jeg skifte til løbetøj. - Now I have to change into running clothes.
-
-
-M2 #9
-Jeg har lyst til det. - I want it (in a lustful want-to-have way)
-Jeg er ikke sikker. [sih-gah] - I'm not sure.
-Lad os bare gør det. - Let's just do it.
-Kan du mind mig om...? [kadu mín-ma om] - Can you remind me about...?
-Tak for din tålmodighed. [tål-moo/uDiheD] - Thanks for your patience.
-Bare rolig! Det skal nok gå. [bah (r/R)olee, very soft R, almost W. de ska no(k)gå.] - Don't worry! It'll be okay.
-En af mine kollegaer [e'n a-meen kohlayya] - One of my colleagues
-Jeg tænkte over det. [tænk-de(h)] - I thought about it.
-Han skride [skRiDD, tongue comes forward] - He slipped/He left
-Oprigtig [op-Rie(k)-dee] - Sincere
-Jeg nød det. [ja nøD de] - I enjoyed it.
-Praktisk [pRaktisk] - Convenient
-Høflig - Polite
-Det ligner lort. [leena] - That looks like shit.
-Det ligner et glas vin! - That looks like a glass of wine!
-Vi får se. - We'll see.
-Lad os se. - Let's see.
-For en sikkerheds skyld [sigga-hiDs skYL'] - Just in case / Just to be safe
-Jeg er lige begynde [begYnt] på min dansk rejser [Rej-se]. - I have just begun my Danish journey.
-Lort - Shit (feces)
-
-
-M2 #10
-Jeg har taget tre jakke/bøger med. [tehD] - I brought three jackets/books.
-Jeg har taget tre jakke på. [tehD] - I have put three jackets on.
-Jeg har taget min vand. [Ja ha tehD min vand] - I brought my water.
-Det er det nok. [de-day nok] - It probably is.
-Sandsynligvis [san-sY*n-lee-vees] - Probably (one word)
-Jeg vil ikke tilføje hvert nyt ord. - I won't add every new word.
-Hvilken foretrækker du? [fo(r)e-tRægka] - Which do you prefer?
-Er der faktisk/egentlig et sted i nærheden? [et stehD i næ(r)-hiD'n] - Is there actually a place nearby?
-i nærheden [i næ(r)-hiDn] - Nearby
-ikke så langt herfra [lahngt heh-f(R)a] - not too far from here
-Mit vasketøj løber jo ingen steder. - My laundry isn't going anywhere.
-Ret tæt på [Rat tæt på] - Pretty close to
-Er der (egentlig) en sø her i nærheden? [i næ(r)-hiDn] - Is there (actually) a lake nearby?
-Min yndlingsfarve [Y*n-lings-fauww] - My favorite color
-Min yndlingshund [Y*n-lings-hUn'] - My favorite dog
-Hvor dumt! - How silly/dumb!
-Der ligger faktisk en biograf ikke så langt herfra. [lahngt heh-f(R)a] - There's actually a movie theater not too far from here.
-Måne [må/oon*-eh] - Moon
-Side [siD] - Page
-Venstre side [venstRa siD] - Left side
-Undertekster [u/åna-tehkstah] - Subtitles
-Oversætte [oVa-sædde] - Translate
-Oversættelse [óVa-sæddel-se] - Translation
-Heldigvis [hæ*l-divees] - Fortunately/Luckily
-Lige nu er jeg i gang med at designe et computerspil. [méya des-ái-neh] - Right now, I'm in the process of designing a computer game.
-
-
-M2 #11
-Hvad laver du så for tiden? - So what are you doing at the moment?
-Heller ikke mig - Me neither
-Jeg elsker det indtil videre. [ínt-ih víD-uh] - I love it so far.
-Indtil videre går det skidegodt. [ínt-ih víD-uh] - So far, it's going shittin' good.
-Har du noget imod hvis vi bliver forelsket? [nuD imoD viss fa/o-elskD] - Do you mind if we fall in love?
-i forhold til [fo(u)hh-hahl(d)  tih] - Compared to/In regards to/In relation to
-Forhold [fo(u)hh-hahl(d), fó(u)hh hu(l)d] - Relationship
-Selvføleglig! Klart! Fint! - Sure/Okay!
-Magi [maGEE] - Magic
-Jeg kan skrive. [skR-EE-euw] - I can write.
-Jeg har skrevet. [skRæ-wuD, just swallow the whole thing in there] - I have written.
-I går skrev jeg [skRéh(ww), 1 syllable, glottal stop at end] - Yesterday, I wrote
-Passe det kl 14? - Does 14:00 work?
-Passer det hvis vi mødes i morgen? - Does it work/fit if we meet tomorrow?
-Passer det hvis vi mødes ved 19-tiden? - Does it work/fit if we meet at 19-ish?
-Ja, det passer fint. - Yeah, that works/fits.
-Passe en baby [baby] - Take care of a baby
-Den her jakke passer (til) mig! - This jacket fits me!
-Passer det? - Does it fit?
-De passer fantastisk sammen. - They fit together wonderfully.
-Jeg vil gerne have noget løbetøj der passer til min hunds løbetøj. - I would like some running clothes that match my dog's running clothes.
-Vi har fået mange venner. [fåeD] - We have made many friends.
-Jeg har set det. [sæt/sate deh] - I have seen it.
-Det er endnu bedre. - That's even better.
-Det sidste spørgsmål - The last question
-
-
-M2 #12
-Det er da godt. - Well that's good.
-At blive forelsket i [a-blee-ah fu-élskeD] - To fall in love with
-Jeg blev bare forelsket i dansk. [ble-baah fu-élskeD] - I just fell in love with Danish.
-Hele tiden [hæle tiD'n] - All the time
-Endnu bedre end - Even better than
-Sikke en overraskelse! [ówa-(R)askul-se] - What a surprise!
-De er begge gode. [dee er begge gohh(D)] - They're both good.
-Jeg kan godt lide dem begge lige meget. - I like them both equally.
-Hvorfor ikke begge? - Why not both?
-Hvad skete der? [veh skáte dah] - What happened?
-Din hjerne er større end Texas! [støahh] - Your brain is bigger than Texas!
-Så få som muligt [så få^ som múl-eet] - As few as possible.
-Mindst to - At least two
-Har du flere spørgsmål? [flee/æ-ah] - Do you have (any) more questions?
-Der var langt færre skeletter i går. [dava lahngt fæ-ah] - There were way fewer skeletons yesterday.
-Jeg kan ikke lade være med at synge. [lavæah] - I can't stop myself from singing.
-De seneste nyheder - The latest news
-Er du i humør til en joke? [hoomø(r); (h)umør, like mmmwauh] - Are you in the mood for a joke?
-Besat af [bihsátt ae] - Obsessed with
-Imponeret [im-po-næ-uD] - Impressed
-Der var meget få problemer. - There were very few problems.
-Jeg tænker på dig hele tiden. [hee/æl tiDen] - I think about you all the time.
-Jeg forstod alt undtagen... [ja forst-uhD alt und-tay'n] - I understood everything except...
-Jeg er lidt imponeret over mig selv. [im-po-næ-uD óVa ma-sel'] - I'm a little impressed with myself.
-Jeg er lidt besat af det. [jaa lidt besétt-adáe] - I’m a little bit obsessed with it.
-
-
-M2 #13
-Du har min opmærksomhed. [op-mæ^-rksom-hiD] - You have my attention.
-Bemærke [be-mæærge(h)] - To notice
-Er der noget specielt, du kan lide? [speshiélt] - Is there anything special you like?
-(Det går) kanon. [kanón] - It's going really well. (Like a cannon)
-Det er enten A eller B. [end'n] - It's either A or B.
-Enten eller. [end'n] - Either or.
-Stemme [stemmm, stém-(meh)] - Voice
-Høj stemme [stemmm, stém-(meh)] - Loud voice
-Jeg er glad for at du spurgte! [fo-a-du spour-deh] - I'm glad you asked!
-Har du spurgt hende? [hadu spówutt hennn (oh)] - Have you asked her?
-Siger man bare...? - Do you just say...?
-Jeg er ikke bange for at lave fejl. [fai-l] - I'm not afraid of making mistakes.
-Jeg har en sang i mit hjerte. [(y)eaa-deh] - I have a song in my heart.
-Der er ikke noget at være bange for. - There’s nothing to be afraid of.
-Virkelig [véerglee] - Really
-
-
-M2 #14
-Jeg ombestemte mig. / Jeg skiftede mening. [om-be-stém-de má] - I changed my mind. (2)
-God beslutning [go be-slútning] - Good decision
-igåraftes - last night
-Jeg tror ikke det vil være... - I don’t think that will be...
-Godt forsøgt. - Nice try.
-Godt forsøgt, heks. - Nice try, witch.
-Er du glad i hjertet? - Are you happy in your heart?
-Jeg tror ikke du er klar over... - I don’t think you realize...
-Jeg er i gang med at lære dansk. - I’m in the process of learning Danish.
-Jeg brugte meget tid [b(R)úgde] - I spent a lot of time.
-At fokusere på [foku-sé-ah] - To focus on
-Vod - Wet
-En løn - A salary
-Grim [gRehm] - Ugly
-Tak fordi du spurgte om det. [spówett omde] - Thanks for asking about it.
-Har du set det endnu? [say-t] - Have you seen it yet?
-Nogle af dem [nohhn addmm] - Some of them
-Chef [ché’f] - Boss
-
-
-M2 #15
-Umuligt - Impossible
-Unge [uh/ohng-eh] - Young
-positiv [póh-si-tiVV, hang on the pOU] - positive
-Han finder sig ikke i noget. [finna sah íkke eenoD] - He doesn’t take any shit.
-Pas på. Jeg finder mig ikke i noget. [finna ma íkke eenoD] - Be careful. I don’t take any shit.
-At tage mad med - To bring food
-At tjene penge (chenne peng, chenn peng) - To earn money
-Jeg er en studerende - I am a student (an adult student)
-Det ville være sjovt. - That would be funny.
-Er du fuld? - Are you drunk?
-Mæt, Mætte - Full (from food)
-Ad hvor klamt [aD,eLL,quick short vo klamt] - Eww, disgusting.
-Hvorfor ville/skulle jeg tænke det? - Why would I think that?
-Kom nu / Kom så - Come on.
-Fuck det. - Fuck it.
-Sur - Sour (person or flavor), grumpy
-Jeg ombestemte mig. - I changed my mind.
-opmærksomhedskrævende [opmÆrksomheDs-kRéVenne] - attention-demanding
-Jeg tror på dig. - I believe you. / I believe in you.
-Han er tjekket [chEggeD, quick] - He’s organized (got his shit together, cool).
-Han er utjekket [UcheggeD] - He’s disorganized (doesn’t have his shit together).
-Synes du noget er ulækkert? - Do you think something is disgusting?
-Er du fuld eller bare opmærksomhedskrævende? [opmÆrksomheDs-kRéVenne?] - Are you drunk, or just thirsty for attention?
-
-
-M2 #16
-Jeg stoler ikke på... - I don’t trust...
-En stol - A chair
-Tak fordi du er så tjekket. [chEggeD, quick] - Thanks for being so cool/organized.
-Det du siger er fuldkommen rigtigt. - What you say is absolutely true.
-En skØnne dag - Someday
-Jeg har brugt hele min weekend - I spent my entire weekend
-Det er den ondsag den femte maj. - Today is Wednesday May 5th.
-Du gætter [gææda] - You guess
-Hvad er klokken? Den er cirka/omkring fem. - What time is it? It’s about 5.
-Vi mødes ved fem(-)tiden. / Vi mødes cirka kl. fem. - We’ll meet around 5 o’clock.
-Et møde [møøD] - A meeting
-Jeg er nysgerrig [nY!-skæ(r)ee] - I am curious…
-En undervisning [UHNaveesning] - A lesson
-Så længe som det tager [LÆnge] - As long as it takes
-Du er ustoppelig! - You are unstoppable!
-Populær [poppu-LÆa] - Popular
-Tro mig. - Believe me.
-Det var ærgerligt. - Too bad.
-Hvad fuck? - What the fuck?
-
-
-M2 #17
-Du lukker lort ud. [loe-ka lo/uet uD] - You’re talking bullshit. (You’re letting shit out.)
-Kan nogen fortælle mig hvad fuck der sker? [no-(e)n ... da skÆa] - Can someone tell me what the fuck is going on?
-Hvad fuck sker der? - What the fuck is happening?
-Hamrende godt [ham(R)-ahn(eh), or hahm-Re-ne, or hammena] - Hammeringly good
-Fuldkommen rigtigt - Absolutely true
-Vil du hellere...? - Would you rather...?
-Vil du foretrække...? [fow(ah)-tRaggeh] - Would you prefer...?
-Kigger på - Looking at
-Kigger efter - Looking for
-Jeg elsker at kigge på stjerner om natten. - I love looking at stars at night.
-Jeg leder efter mine nøgler. - I'm looking for my keys.
-Hun er altid så glad og positv. [póe-si-tiVV, hang on the pOE] - She's always so happy and positive.
-For at udfordre mig selv. [oouD-fådRah] - To challenge myself.
-For at give mig selv en udfordring. [fo-a gée ma sel en úDfordRing] - To give myself a challenge.
-Stjerne - Stars
-Beslutsomhed - Determination
-Jeg kan ikke finde det. - I can't find it.
-Nogen [no-(e)n] - Someone
- - TEST term
- - TESTY
-Solen skinner en lille smule. - The sun is shining a little bit.
-
-
-M2 #18
-For langsomt - Too slow
-Han kigger på sin mobiltelefon 5 gange i minuttet.  - He looks at his cell phone 5 times a minute.
-Noget andet [nueD anneD] - Something else
-Forfriskende - Refreshing
-Sjovere [shoVVahh] - More fun
-Det meste af tiden - Most of the time
+IN QUEUE
+Jeg vil gemmer den til senere. - I will save it for later.
+Hils dine roommies! - Say hi to your roommies for me!
+Jeg skal hilse (dig) fra… - I have greetings from…
+Jeg skal hilse mange gang fra… - I have many times greetings from…
+Selv om de ikke kender mig - Even if they don’t know me
+Jeg synes aldrig, man skal være bange for at bede om det, man vil have! - I think never, one should be afraid to ask for that, one wants!
+Kan jeg dog kun… [d(a)owh] - However, I can only…
 
 
 ACED
@@ -461,6 +54,21 @@ Besøgte [be-søgd] - Visited
 Kan du gentag? [kadu gentæ] - Can you repeat?
 Udtryk - Expression
 Hvad betyder det? [be-tyD-a] - What does that mean?
+Bedre [biDa, maybe a ghost of an R] - Better
+Liv [lee-yu, but very quick] - Life
+Lov mig, at du ikke bliver mærkelig. [Lo-ma, adu ik blee mæaklee] - Promise me you won't be weird.
+Bedre [biD-ah] - Better
+Men nu må vi se... [me-nu mó vi se] - But let's see...
+Hold kæft. - Shut up.
+Jeg er i gang med at lære dansk. - I’m in the process of learning Danish.
+Er det en almindelig sætning? [al-méh-n-lee] - Is that a common phrase?
+Forvirret [fuh-vee-u(h)D] - Confused
+Hvordan fik du den idé? [Hvordán fikdu dén idée?] - How'd you get that idea?
+Brug din fantasi. - Use your imagination.
+Virkelig [véerglee] - Really
+Er du klar over, hvor sej du er? - Do you realize how cool you are?
+Kan du forklare? [kádu fo(r)-klaah] - Can you explain?
+Det tror jeg også. - I think so too.
 
 
 SHELVED
@@ -469,42 +77,32 @@ Har du færdiggjorde [fæ^rdi-gyó(w)ah] - Have you completed
 Han skrider [slow: skR(i)eeh-Dah. fast: skRiDah] - He slips/He leaves
 Folk plejer at gå med til det. - People usually go with it. (As in, cooperate)
 Det plejer folk at acceptere. [plie-ya fo/ahlk a asseptáe-ah] - People usually accept it.
+Han er ikke vant til større hunde. - He is not used to larger dogs.
+Fuldstændigt. - Totally.
+Det kan ikke lade sig gøre at stå på hovedet og drikke et glas vand samtidig. [sáhm-tiD-(‘)ee] - It's not possible to stand on your head and drink a glass of water at the same time. 
+Jeg er lige blevet færdig med at spille. [bliD] - I just finished playing.
+Er du glad i hjertet? - Are you happy in your heart?
+Beslutsomhed - Determination (uncommon)
+Naturen [na-too' ahn] - The nature
+Hvorfor ville/skulle jeg tror det? - Why would I think that?
+Jeg er beslutsom. - I am a determined person.
+Er du lykkelig - Are you happy, in a deep way. Extrmely personal
+Jeg har besluttet mig. - I am determined. (In this situation.)
+Han står tit og vasker op. - He’s often washing the dishes.
+et stykke af mit sind. [Does this translate the same? A: No.] - A piece of my mind
+Hun er ved at synge. [Not that common] - She is currently singing.
+Jeg studerede IMM på min bachelor. [A little formal] - I studied IMM for my bachelor’s.
+Jeg har ligge og tænkt på dig hele dagen. [Only if you’ve actually been laying down.] - I’ve been thinking about you all day.
+Er du opmærksom på det her? - Are you aware of this?
+Min hjerne brænder. - My brain’s on fire.
+Hvad skete der så? [“What happened there then?”] - Then what happened?
+Hvad er det for noget pjat, du taler om? [What is it for some nonsense, you talk about?] - What is this nonsense you’re talking about?
+Lyst. Løst. - Desire. Solved.
 
 
 TO VALIDATE
-Jeg har en app som jeg kan bruge til at lære dansk. - I have an app that I can use to learn Danish.
-Det var (lige) det jeg troede. - That was what I thought.
-Vi er kun liger begundt. - We have only just begun.
-Jeg havde den næsten. - I almost had it.
-du er i stand. - You are capable.
-Helt ærlig! - /Please./
-Hvorfor ser du så overrasket ud? - Why do you look so surprised?
-Jeg er fyldt med beslutsomhed. - I am filled with determination.
-Hør her... - Listen here...
-Rag ikke uklar med mig. - Don’t mess with me.
-Du går an. - You’ll do. (As in slightly disrespectful, judgmental.)
-Åbenbart. - Apparently.
-Det er en mundfuld! - That’s a mouthful!
-Kom herud - Come on out
-Han er ikke plejer til større hunde. - He is not used to larger dogs.
-Glimrende - Splendid
-Der er alt for mange biler. - There are way too many cars.
-En lille smule - A little bit
-Jeg er beslutsom. - I am determined.
 
 
 WANT RECORDING
-For en sikkerheds skyld [siggahiDs skYld] - Just in case
-Luk munden, vend dig om og gå væk. - Close your mouth, turn around, and walk away.
-det meste af tiden - most of the time
-Jeg holde (virkelig/meget) af dig. [ja hulla ... adda] - I care about you.
-Undtagen [und-tay'n] - Except
-Kan du tage kage med? - Can you bring cake?
-Lyder rimeligt. [lYDa Ræmleet, little deep in throat tho] - Sounds reasonable.
-Overraskende - Surprisingly
-Kan du gætte [gæet] - Can you guess
-Jeg vidste, at det ville bliver godt. [visst] - I knew it was going to be good.
-Hvad er det galt med det? - What’s wrong with that?
-Jeg glæder mig til at se dig. - I look forward to seeing you.
 
 

@@ -12,10 +12,7 @@ public class StudySetTileView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI t_name;
     [SerializeField] private TextMeshProUGUI t_numTerms;
     [SerializeField] private TextMeshProUGUI t_avgTimesCompleted;
-    [SerializeField] private GameObject go_progressBar;
-    [SerializeField] private Image i_progressBarBack;
-    [SerializeField] private Image i_progressBarFillRecent;
-    [SerializeField] private Image i_progressBarFillYeses;
+    [SerializeField] private StudySetProgressBar_Dashed progressBar;
     // References
     private StudySet mySet;
     private PanelChooseSet myPanel;
@@ -35,16 +32,17 @@ public class StudySetTileView : MonoBehaviour
         t_name.text = mySet.name;
         t_numTerms.text = mySet.NumTotal.ToString();// + " terms";
         t_avgTimesCompleted.text = TextUtils.DecimalPlaces1(mySet.GetAverageTimesCompleted());// numRoundsFinished.ToString();
-        go_progressBar.SetActive(mySet.IsInProgress);
-        if (mySet.IsInProgress) {
-            float barWidth = i_progressBarBack.rectTransform.rect.width;
-            float progLocYeses = (mySet.NumTotal-(mySet.pileYesesAndNosG.Count+mySet.pileQueueG.Count)) / (float)mySet.NumTotal;
-            float progLocRecent = mySet.NumDone / (float)mySet.NumTotal;
-            float yesWidth = barWidth * progLocYeses;
-            i_progressBarFillYeses.rectTransform.sizeDelta = new Vector2(yesWidth, i_progressBarFillYeses.rectTransform.sizeDelta.y);
-            i_progressBarFillRecent.rectTransform.anchoredPosition = new Vector2(yesWidth, 0);
-            i_progressBarFillRecent.rectTransform.sizeDelta = new Vector2(barWidth * progLocRecent, i_progressBarFillRecent.rectTransform.sizeDelta.y);
-        }
+        //progressBar.SetActive(mySet.IsInProgress);
+        progressBar.UpdateVisuals(mySet);
+        //if (mySet.IsInProgress) {
+        //    float barWidth = i_progressBarBack.rectTransform.rect.width;
+        //    float progLocYeses = (mySet.NumTotal-(mySet.pileYesesAndNosG.Count+mySet.pileQueueG.Count)) / (float)mySet.NumTotal;
+        //    float progLocRecent = mySet.NumDone / (float)mySet.NumTotal;
+        //    float yesWidth = barWidth * progLocYeses;
+        //    i_progressBarFillYeses.rectTransform.sizeDelta = new Vector2(yesWidth, i_progressBarFillYeses.rectTransform.sizeDelta.y);
+        //    i_progressBarFillRecent.rectTransform.anchoredPosition = new Vector2(yesWidth, 0);
+        //    i_progressBarFillRecent.rectTransform.sizeDelta = new Vector2(barWidth * progLocRecent, i_progressBarFillRecent.rectTransform.sizeDelta.y);
+        //}
         rt_numTermsCardIcon.localEulerAngles = new Vector3(0, 0, Random.Range(-5f, 5f));
     }
 

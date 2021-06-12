@@ -19,7 +19,7 @@ public class EventManager {
     public event NoParamAction ClipLoadFailEvent;
     public event NoParamAction CloseTermOptionsPopupEvent;
     public event NoParamAction SetContentsChangedEvent;
-    //public event NoParamAction PopupAppOptionsClosedEvent;
+    public event NoParamAction OpenPanelChooseSetEvent;
     public event AudioClipAction ClipLoadSuccessEvent;
     public event StudySetAction OpenPanelEditSetEvent;
     public event StudySetAction OpenPanelStudyFlashcardsEvent;
@@ -34,13 +34,13 @@ public class EventManager {
     public void OnGiveTermTileFocus(Term term) { if (GiveTermTileFocusEvent != null) { GiveTermTileFocusEvent(term); } }
 
     public void CloseTermOptionsPopup() { if (CloseTermOptionsPopupEvent != null) { CloseTermOptionsPopupEvent(); } }
+    public void OpenPanelChooseSet() { if (OpenPanelChooseSetEvent != null) { OpenPanelChooseSetEvent(); } }
     public void OpenPanelEditSet(StudySet set) { if (OpenPanelEditSetEvent != null) { OpenPanelEditSetEvent(set); } }
     public void SpeakTTSNative(Term term) { if (SpeakTTSNativeEvent != null) { SpeakTTSNativeEvent(term); } }
     public void SpeakTTSForeign(Term term) { if (SpeakTTSForeignEvent != null) { SpeakTTSForeignEvent(term); } }
     public void OpenPanel_StudyFlashcards(StudySet set) { if (OpenPanelStudyFlashcardsEvent != null) { OpenPanelStudyFlashcardsEvent(set); } }
     public void ShowPopup_MoveTerm(Term term) { if (ShowPopup_MoveTermEvent != null) { ShowPopup_MoveTermEvent(term); } }
     public void ShowPopup_TermOptions(Term term) { if (ShowPopup_TermOptionsEvent != null) { ShowPopup_TermOptionsEvent(term); } }
-    //public void OnPopupAppOptionsClosed() { if (PopupAppOptionsClosedEvent != null) { PopupAppOptionsClosedEvent(); } }
 
     public void PlayTermClip(Term term) { if (PlayTermClipEvent != null) { PlayTermClipEvent(term); } }
     public void OnClipLoadFail() { if (ClipLoadFailEvent != null) { ClipLoadFailEvent(); } }

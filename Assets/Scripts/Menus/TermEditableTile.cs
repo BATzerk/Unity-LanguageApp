@@ -13,6 +13,7 @@ public class TermEditableTile : MonoBehaviour
     [SerializeField] private RectTransform myRectTransform;
     [SerializeField] private TextMeshProUGUI t_myNumber;
     [SerializeField] private TextMeshProUGUI t_setName;
+    [SerializeField] private TextMeshProUGUI t_foreignAbbr;
     [SerializeField] private TMP_InputField if_native;
     [SerializeField] private TMP_InputField if_foreign;
     [SerializeField] private TMP_InputField if_phonetic;
@@ -64,6 +65,7 @@ public class TermEditableTile : MonoBehaviour
         this.myTerm = myTerm;
         t_myNumber.text = (myIndex + 1).ToString();
         t_setName.text = myTerm.MySetName();
+        t_foreignAbbr.text = SettingsManager.Instance.CurrForeignNameAbbr.ToUpper();
 
         RefreshVisuals();
     }

@@ -79,7 +79,7 @@ public class CardView : MonoBehaviour {
     private void UpdateCardDotsVisuals() {
         if (MyTerm == null) { return; } // No term yet? Do nothin'.
         // Memorable dots!
-        if (GameManagers.Instance.SettingsManager.DoShowCardDots) {
+        if (SettingsManager.Instance.DoShowCardDots) {
             go_dotsNative.SetActive(true);
             go_dotsForeign.SetActive(true);
             System.Random rand = new System.Random(MyTerm.myGuid.GetHashCode());
@@ -110,7 +110,7 @@ public class CardView : MonoBehaviour {
             t_native.text = MyTerm.native;
             t_foreign.text = MyTerm.foreign;
             t_phonetic.text = MyTerm.phonetic;
-            t_stats.enabled = GameManagers.Instance.SettingsManager.DoShowCardStats;
+            t_stats.enabled = SettingsManager.Instance.DoShowCardStats;
             t_stats.text = "Y: " + MyTerm.totalYeses + "\nN: " + MyTerm.totalNos;
         }
     }

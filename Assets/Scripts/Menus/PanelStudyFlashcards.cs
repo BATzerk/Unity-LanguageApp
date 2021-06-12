@@ -15,7 +15,7 @@ public class PanelStudyFlashcards : BasePanel {
     [SerializeField] private Button b_makeNewToughiesSet;
     [SerializeField] private Button b_toggleTTS;
     [SerializeField] private CardView currCardView;
-    [SerializeField] private StudySetProgressBar progressBar;
+    [SerializeField] private StudySetProgressBar_Dashed progressBar;
     [SerializeField] private TextMeshProUGUI t_setName;
     [SerializeField] private TextMeshProUGUI t_progress; //TODO: Cut this.
     [SerializeField] private TextMeshProUGUI t_ttsSpeed;
@@ -29,7 +29,7 @@ public class PanelStudyFlashcards : BasePanel {
 
 
     // Getters
-    private SettingsManager sm { get { return GameManagers.Instance.SettingsManager; } }
+    private SettingsManager sm { get { return SettingsManager.Instance; } }
     private static string GetRoundCompleteText(StudySet set) {
         //int numUnderstood = set.NumTotal - currStudySet.pileNo.Count;
         int numNewYeses = set.pileYesG.Count;
@@ -83,7 +83,7 @@ public class PanelStudyFlashcards : BasePanel {
         int numDone = currSet.NumDone;
         int numInRound = currSet.NumInCurrentRound;
         t_progress.text = Mathf.Min(numInRound, numDone + 1) + " / " + numInRound;
-        progressBar.UpdateVisuals();
+        progressBar.UpdateVisuals(currSet);
         t_setName.text = currSet.name;
 
         // -- FINISHED/UNFINISHED COMPONENTS --

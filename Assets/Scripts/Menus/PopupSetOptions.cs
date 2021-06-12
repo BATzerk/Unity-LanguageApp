@@ -10,7 +10,7 @@ public class PopupSetOptions : BasePopup {
     [SerializeField] private TMP_InputField if_setName;
     [SerializeField] private TMP_InputField if_pastedTerms; // for Brett's usage! To unload notes from Notes app into here.
     [SerializeField] private RectTransform rt_preDelete;
-    [SerializeField] private StudySetProgressBar progressBar;
+    [SerializeField] private StudySetProgressBar_Solid progressBar;
     // References
     [SerializeField] private MenuController menuController;
 

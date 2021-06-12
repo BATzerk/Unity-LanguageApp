@@ -9,7 +9,9 @@ public class PanelChooseSet : BasePanel {
     // Overrides
     override public PanelTypes MyPanelType { get { return PanelTypes.ChooseSet; } }
     // Components
+    [SerializeField] private TextMeshProUGUI t_header;
     [SerializeField] private StudySetSpecialTile setTile_aced;
+    [SerializeField] private StudySetSpecialTile setTile_inQueue;
     [SerializeField] private StudySetSpecialTile setTile_shelved;
     [SerializeField] private StudySetSpecialTile setTile_toValidate;
     [SerializeField] private StudySetSpecialTile setTile_wantRecording;
@@ -29,13 +31,16 @@ public class PanelChooseSet : BasePanel {
     // ================================================================
     //  Start
     // ================================================================
-    void Start() {
+    private void Start() {
         UpdateAllTiles();
     }
 
     public void UpdateAllTiles() {
+        t_header.text = SettingsManager.Instance.CurrForeignNameFull.ToUpper();
+
         // First, let's update JUST the special ones.
         setTile_aced.UpdateVisuals(this, dm.library.setAced);
+        setTile_inQueue.UpdateVisuals(this, dm.library.setInQueue);
         setTile_shelved.UpdateVisuals(this, dm.library.setShelved);
         setTile_toValidate.UpdateVisuals(this, dm.library.setToValidate);
         setTile_wantRecording.UpdateVisuals(this, dm.library.setWantRecording);
@@ -87,23 +92,23 @@ public class PanelChooseSet : BasePanel {
         menuController.OpenPanel_EditSet(set);
     }
 
-    public void OnClick_EditSet_Aced() {
-        menuController.OpenPanel_EditSet(dm.library.setAced);
-    }
-    public void OnClick_EditSet_Shelved() {
-        menuController.OpenPanel_EditSet(dm.library.setShelved);
-    }
-    public void OnClick_EditSet_ToValidate() {
-        menuController.OpenPanel_EditSet(dm.library.setToValidate);
-    }
-    public void OnClick_EditSet_WantRecording() {
-        menuController.OpenPanel_EditSet(dm.library.setWantRecording);
-    }
+    //public void OnClick_EditSet_Aced() {
+    //    menuController.OpenPanel_EditSet(dm.library.setAced);
+    //}
+    //public void OnClick_EditSet_Shelved() {
+    //    menuController.OpenPanel_EditSet(dm.library.setShelved);
+    //}
+    //public void OnClick_EditSet_ToValidate() {
+    //    menuController.OpenPanel_EditSet(dm.library.setToValidate);
+    //}
+    //public void OnClick_EditSet_WantRecording() {
+    //    menuController.OpenPanel_EditSet(dm.library.setWantRecording);
+    //}
 
     public void OnClickAddSet() {
         //List<Term> startingTerms = new List<Term>();
         //startingTerms.Add(new Term());
-        dm.library.sets.Add(new StudySet(dm.library, "Untitled"));
+        dm.library.sets.Add(new StudySet(dm.library, "Untitled", SetTypes.Regular));
         UpdateAllTiles();
         GameManagers.Instance.DataManager.SaveStudySetLibrary();
     }

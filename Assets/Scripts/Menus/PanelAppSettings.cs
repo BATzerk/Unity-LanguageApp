@@ -8,6 +8,7 @@ public class PanelAppSettings : BasePanel {
     // Overrides
     override public PanelTypes MyPanelType { get { return PanelTypes.AppSettings; } }
     // Components
+    [SerializeField] private PopupSetCurrForeignLanguage popupSetCurrForeignLanguage;
     [SerializeField] private Toggle toggle_doShowCardDots;
     [SerializeField] private Toggle toggle_doShowCardStats;
     [SerializeField] private Toggle toggle_doAutoTrimAudioClips;
@@ -41,11 +42,13 @@ public class PanelAppSettings : BasePanel {
     //}
     override protected void OnOpened() {
         base.OnOpened();
-        toggle_doShowCardDots.isOn = GameManagers.Instance.SettingsManager.DoShowCardDots;
-        toggle_doShowCardStats.isOn = GameManagers.Instance.SettingsManager.DoShowCardStats;
-        toggle_doAutoTrimAudioClips.isOn = GameManagers.Instance.SettingsManager.DoTrimAudioClips;
-        toggle_doNormalizeAudioClips.isOn = GameManagers.Instance.SettingsManager.DoNormalizeAudioClips;
-        toggle_doAutoPlayTTS.isOn = GameManagers.Instance.SettingsManager.IsTTSOn;
+        toggle_doShowCardDots.isOn = SettingsManager.Instance.DoShowCardDots;
+        toggle_doShowCardStats.isOn = SettingsManager.Instance.DoShowCardStats;
+        toggle_doAutoTrimAudioClips.isOn = SettingsManager.Instance.DoTrimAudioClips;
+        toggle_doNormalizeAudioClips.isOn = SettingsManager.Instance.DoNormalizeAudioClips;
+        toggle_doAutoPlayTTS.isOn = SettingsManager.Instance.IsTTSOn;
+
+        popupSetCurrForeignLanguage.Hide(); // hide this by default.
     }
 
 
@@ -64,19 +67,19 @@ public class PanelAppSettings : BasePanel {
         menuController.OpenPanel_ChooseSet();
     }
     public void OnValueChanged_DoShowCardDots() {
-        GameManagers.Instance.SettingsManager.DoShowCardDots = toggle_doShowCardDots.isOn;
+        SettingsManager.Instance.DoShowCardDots = toggle_doShowCardDots.isOn;
     }
     public void OnValueChanged_DoShowCardStats() {
-        GameManagers.Instance.SettingsManager.DoShowCardStats = toggle_doShowCardStats.isOn;
+        SettingsManager.Instance.DoShowCardStats = toggle_doShowCardStats.isOn;
     }
     public void OnValueChanged_DoAutoTrimAudioClips() {
-        GameManagers.Instance.SettingsManager.DoTrimAudioClips = toggle_doAutoTrimAudioClips.isOn;
+        SettingsManager.Instance.DoTrimAudioClips = toggle_doAutoTrimAudioClips.isOn;
     }
     public void OnValueChanged_DoNormalizeAudioClips() {
-        GameManagers.Instance.SettingsManager.DoNormalizeAudioClips = toggle_doNormalizeAudioClips.isOn;
+        SettingsManager.Instance.DoNormalizeAudioClips = toggle_doNormalizeAudioClips.isOn;
     }
     public void OnValueChanged_DoAutoPlayTTS() {
-        GameManagers.Instance.SettingsManager.IsTTSOn = toggle_doAutoPlayTTS.isOn;
+        SettingsManager.Instance.IsTTSOn = toggle_doAutoPlayTTS.isOn;
     }
 
 }

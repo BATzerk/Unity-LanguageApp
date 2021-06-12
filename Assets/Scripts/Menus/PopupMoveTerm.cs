@@ -51,6 +51,7 @@ public class PopupMoveTerm : BasePopup
         // Add regular set list.
         foreach (StudySet set in library.sets) setsToShow.Add(set);
         // Add special sets.
+        setsToShow.Add(library.setInQueue);
         setsToShow.Add(library.setAced);
         setsToShow.Add(library.setShelved);
         setsToShow.Add(library.setToValidate);

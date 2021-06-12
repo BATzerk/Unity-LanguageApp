@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StudySetProgressBar : MonoBehaviour {
+public class StudySetProgressBar_Solid : MonoBehaviour {
     // Components
     [SerializeField] private Image i_barBack;
     [SerializeField] private Image i_barFillRecent;

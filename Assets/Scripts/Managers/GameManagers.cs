@@ -5,23 +5,18 @@ public class GameManagers {
 	// Managers
 	private DataManager dataManager;
 	private EventManager eventManager;
-	private SettingsManager settingsManager;
 	// Getters
 	public DataManager DataManager { get { return dataManager; } }
 	public EventManager EventManager { get { return eventManager; } }
-	public SettingsManager SettingsManager { get { return settingsManager; } }
 	// Properties
 	public static bool IsInitializing { get; private set; }
-
 
 
 	// Constructor / Initialize
 	private GameManagers () {
 		dataManager = new DataManager();
 		eventManager = new EventManager();
-		settingsManager = new SettingsManager();
 	}
-
 
 
 	// Instance

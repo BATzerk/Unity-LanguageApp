@@ -35,11 +35,13 @@ public class MenuController : MonoBehaviour {
 
         // Add event listeners.
         GameManagers.Instance.EventManager.OpenPanelEditSetEvent += OpenPanel_EditSet;
+        GameManagers.Instance.EventManager.OpenPanelChooseSetEvent += OpenPanel_ChooseSet;
         GameManagers.Instance.EventManager.OpenPanelStudyFlashcardsEvent += OpenPanel_StudyFlashcards;
     }
     private void OnDestroy() {
         // Remove event listeners.
         GameManagers.Instance.EventManager.OpenPanelEditSetEvent -= OpenPanel_EditSet;
+        GameManagers.Instance.EventManager.OpenPanelChooseSetEvent -= OpenPanel_ChooseSet;
         GameManagers.Instance.EventManager.OpenPanelStudyFlashcardsEvent -= OpenPanel_StudyFlashcards;
     }
 

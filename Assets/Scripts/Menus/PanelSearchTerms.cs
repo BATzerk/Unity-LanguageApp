@@ -17,20 +17,16 @@ public class PanelSearchTerms : BasePanel {
     // Properties
     private const int MaxResultsToShow = 30; // don't show more than this many tiles.
     // References
-    private List<Term> allTerms; // every single term ever!
     private List<Term> resultTerms; // just the terms that fit the search result!
+
+
+    // Getters
+    private List<Term> allTerms { get { return GameManagers.Instance.DataManager.library.allTermsL; } }
+
+
 
     protected override void OnOpened() {
         base.OnOpened();
-
-        // Remake allTerms.
-        allTerms = new List<Term>();
-        List<StudySet> everySet = GameManagers.Instance.DataManager.library.GetMainAndSpecialSetsList();
-        foreach (StudySet set in everySet) {
-            foreach (string termG in set.allTermGs) {
-                allTerms.Add(dm.library.GetTerm(termG));
-            }
-        }
 
         // Auto-focus on the search text field!
         UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(if_search.gameObject, null);

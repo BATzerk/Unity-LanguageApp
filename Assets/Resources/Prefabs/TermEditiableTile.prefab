@@ -2472,6 +2472,7 @@ MonoBehaviour:
   myRectTransform: {fileID: 5657792996969880693}
   t_myNumber: {fileID: 8664595499182067293}
   t_setName: {fileID: 8602507231540429883}
+  t_foreignAbbr: {fileID: 6365253054222031659}
   if_native: {fileID: 1965683629314513244}
   if_foreign: {fileID: 6974059828706053824}
   if_phonetic: {fileID: 5246290473313957856}

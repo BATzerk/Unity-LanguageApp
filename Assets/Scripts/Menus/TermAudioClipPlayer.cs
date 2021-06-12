@@ -16,7 +16,7 @@ public class TermAudioClipPlayer : MonoBehaviour {
 
     // Getters
     //public bool IsClip() { return audioSource.clip != null; }
-    private SettingsManager sm { get { return GameManagers.Instance.SettingsManager; } }
+    private SettingsManager sm { get { return SettingsManager.Instance; } }
 
 
 
@@ -44,7 +44,7 @@ public class TermAudioClipPlayer : MonoBehaviour {
     private void SpeakTTSNative(Term term) {
         if (TTS.IsSpeaking) { return; } // Already talking? Don't queue anything up.
         SpeechUtteranceParameters parameters = new SpeechUtteranceParameters();
-        parameters.Voice = TTS.GetVoiceForLanguage(sm.NativeLanguageKey);
+        parameters.Voice = TTS.GetVoiceForLanguage(sm.NativeLanguageCode);
         parameters.PitchMultiplier = UnityEngine.Random.Range(0.3f, 2f);
         parameters.SpeechRate = sm.TTSSpeechRate / 2f; // note: divide by 2: 0.5 is actually normal-speed.
         TTS.Speak(term.native, parameters);
@@ -60,7 +60,7 @@ public class TermAudioClipPlayer : MonoBehaviour {
             prevTermTTSForeign = term;
         }
         SpeechUtteranceParameters parameters = new SpeechUtteranceParameters();
-        parameters.Voice = TTS.GetVoiceForLanguage(sm.ForeignLanguageKey);
+        parameters.Voice = TTS.GetVoiceForLanguage(sm.CurrForeignCode);
         parameters.PitchMultiplier = UnityEngine.Random.Range(0.9f, 1.1f);
         //parameters.SpeechRate = sm.TTSSpeechRate / 2f; // note: divide by 2: 0.5 is actually normal-speed.
         parameters.SpeechRate = (numTimesTTSSpokeCurrTermForeign%2==0) ? 0.5f : 0.3f; // speak SLOWLY every OTHER play!
@@ -131,10 +131,10 @@ public class TermAudioClipPlayer : MonoBehaviour {
 
 
                     //AudioClip clip = DownloadHandlerAudioClip.GetContent(uwr);
-                    if (GameManagers.Instance.SettingsManager.DoTrimAudioClips) {
+                    if (SettingsManager.Instance.DoTrimAudioClips) {
                         clip = AudioEditor.GetQuietTrimmed(clip);
                     }
-                    if (GameManagers.Instance.SettingsManager.DoNormalizeAudioClips) {
+                    if (SettingsManager.Instance.DoNormalizeAudioClips) {
                         clip = AudioEditor.GetNormalized(clip);
                     }
                     audioSource.clip = clip;

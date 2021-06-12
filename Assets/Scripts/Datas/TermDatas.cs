@@ -19,7 +19,11 @@ public struct CustomDate {
     }
 }
 
-
+public enum SetTypes {
+    Regular, // regular sets CAN be included in remixes.
+    Benched, // benched sets CANNOT be included in remixes.
+    Remix, // remix sets contain just terms from other sets.
+}
 
 [Serializable]
 public class StudySetLibrary {
@@ -27,18 +31,20 @@ public class StudySetLibrary {
     public List<Term> allTermsL = new List<Term>(); // this IS serialized
     public List<StudySet> sets = new List<StudySet>(); // the main sets.
     public StudySet setAced;
+    public StudySet setInQueue;
     public StudySet setShelved;
     public StudySet setToValidate;
     public StudySet setWantRecording;
     public StudySet setToughies;
     public StudySet setSourdough;
     public StudySetLibrary() {
-        setAced = new StudySet(this, "ACED");
-        setShelved = new StudySet(this, "SHELVED");
-        setToValidate = new StudySet(this, "TO VALIDATE");
-        setWantRecording = new StudySet(this, "WANT RECORDING");
-        setToughies = new StudySet(this, "TOUGHIES", true);
-        setSourdough = new StudySet(this, "SOURDOUGH SET", true);
+        setAced = new StudySet(this, "ACED", SetTypes.Benched);
+        setInQueue = new StudySet(this, "IN QUEUE", SetTypes.Benched);
+        setShelved = new StudySet(this, "SHELVED", SetTypes.Benched);
+        setToValidate = new StudySet(this, "TO VALIDATE", SetTypes.Benched);
+        setWantRecording = new StudySet(this, "WANT RECORDING", SetTypes.Benched);
+        setToughies = new StudySet(this, "TOUGHIES", SetTypes.Remix);
+        setSourdough = new StudySet(this, "SOURDOUGH SET", SetTypes.Remix);
     }
 
     public void RemakeTermsDictionaryFromList() {
@@ -59,10 +65,11 @@ public class StudySetLibrary {
         }
         return mainTerms;
     }
-    public List<StudySet> GetMainAndSpecialSetsList() {
+    public List<StudySet> GetMainAndBenchedSetsList() {
         List<StudySet> list = new List<StudySet>();
         foreach (StudySet set in sets) list.Add(set);
         list.Add(setAced);
+        list.Add(setInQueue);
         list.Add(setShelved);
         list.Add(setToValidate);
         list.Add(setWantRecording);
@@ -78,6 +85,7 @@ public class StudySetLibrary {
         List<StudySet> list = new List<StudySet>();
         foreach (StudySet set in sets) list.Add(set);
         list.Add(setAced);
+        list.Add(setInQueue);
         list.Add(setShelved);
         list.Add(setToValidate);
         list.Add(setWantRecording);
@@ -88,7 +96,7 @@ public class StudySetLibrary {
 
 
     public StudySet GetSetByName(string name) {
-        foreach (StudySet set in GetMainAndSpecialSetsList()) {
+        foreach (StudySet set in GetMainAndBenchedSetsList()) {
             if (set.name == name) return set;
         }
         return null;
@@ -218,55 +226,57 @@ public class StudySet {
     }
 
     // Initialize
-    public StudySet(StudySetLibrary myLibrary, string name, bool isRemixSet=false) {
+    public StudySet(StudySetLibrary myLibrary, string name, SetTypes setType) {
         this.myLibrary = myLibrary;
         this.name = name;
-        this.isRemixSet = isRemixSet;
+        this.isRemixSet = setType == SetTypes.Remix;
+        this.canIncludeMeInRemixes = setType == SetTypes.Regular; // only regular sets can go into remixes.
         this.allTermGs = new List<string>();
     }
-    public StudySet(StudySetLibrary myLibrary, string name, string allTermsStr) {
-        this.myLibrary = myLibrary;
-        this.name = name;
-        string[] termStrings = allTermsStr.Split('\n');
+    //public StudySet(StudySetLibrary myLibrary, string name, bool isRemixSet, string allTermsStr) {
+    //    this.myLibrary = myLibrary;
+    //    this.name = name;
+    //    this.isRemixSet = isRemixSet;
+    //    string[] termStrings = allTermsStr.Split('\n');
 
-        this.allTermGs = new List<string>();
-        foreach (string str in termStrings) {
-            try {
-                int splitIndex;
-                if (str.Contains(" — ")) splitIndex = str.IndexOf(" — "); // use double-sized hyphen, if that's how it's (optionally) formatted.
-                else splitIndex = str.IndexOf(" - "); // otherwise, split by the regular hyphen.
-                string native = str.Substring(splitIndex + 3);
-                string foreign = str.Substring(0, splitIndex);
-                string phonetic = "";
-                // pull out the phonetic pronunciation
-                int lbIndex = foreign.LastIndexOf('['); // left bracket index
-                int rbIndex = foreign.LastIndexOf(']'); // right bracket index
-                if (rbIndex == foreign.Length - 1) { // if this one ENDS in a phonetic explanation...
-                    phonetic = foreign.Substring(lbIndex + 1);
-                    phonetic = phonetic.Substring(0, phonetic.Length - 1); // get rid of that last ] char.
-                    foreign = foreign.Substring(0, lbIndex - 1);
-                }
-                //int splitIndexA = str.IndexOf(" — ");
-                //int splitIndexB = str.LastIndexOf(" — ");
-                //string native = str.Substring(splitIndex + 3);
-                //string foreign = str.Substring(0, splitIndex);
-                //string phonetic = "";
-                //// pull out the phonetic pronunciation
-                //int lbIndex = foreign.LastIndexOf('['); // left bracket index
-                //int rbIndex = foreign.LastIndexOf(']'); // right bracket index
-                //if (rbIndex == foreign.Length - 1) { // if this one ENDS in a phonetic explanation...
-                //    phonetic = foreign.Substring(lbIndex + 1);
-                //    phonetic = phonetic.Substring(0, phonetic.Length - 1); // get rid of that last ] char.
-                //    foreign = foreign.Substring(0, lbIndex - 1);
-                //}
-                myLibrary.AddNewTerm(new Term(native, foreign, phonetic), this);
-            }
-            catch {
-                AppDebugLog.LogError("Issue with imported term string: " + str);
-            }
-        }
-        SetMyLibraryAndGiveMyTermsRefToMe(myLibrary);
-    }
+    //    this.allTermGs = new List<string>();
+    //    foreach (string str in termStrings) {
+    //        try {
+    //            int splitIndex;
+    //            if (str.Contains(" — ")) splitIndex = str.IndexOf(" — "); // use double-sized hyphen, if that's how it's (optionally) formatted.
+    //            else splitIndex = str.IndexOf(" - "); // otherwise, split by the regular hyphen.
+    //            string native = str.Substring(splitIndex + 3);
+    //            string foreign = str.Substring(0, splitIndex);
+    //            string phonetic = "";
+    //            // pull out the phonetic pronunciation
+    //            int lbIndex = foreign.LastIndexOf('['); // left bracket index
+    //            int rbIndex = foreign.LastIndexOf(']'); // right bracket index
+    //            if (rbIndex == foreign.Length - 1) { // if this one ENDS in a phonetic explanation...
+    //                phonetic = foreign.Substring(lbIndex + 1);
+    //                phonetic = phonetic.Substring(0, phonetic.Length - 1); // get rid of that last ] char.
+    //                foreign = foreign.Substring(0, lbIndex - 1);
+    //            }
+    //            //int splitIndexA = str.IndexOf(" — ");
+    //            //int splitIndexB = str.LastIndexOf(" — ");
+    //            //string native = str.Substring(splitIndex + 3);
+    //            //string foreign = str.Substring(0, splitIndex);
+    //            //string phonetic = "";
+    //            //// pull out the phonetic pronunciation
+    //            //int lbIndex = foreign.LastIndexOf('['); // left bracket index
+    //            //int rbIndex = foreign.LastIndexOf(']'); // right bracket index
+    //            //if (rbIndex == foreign.Length - 1) { // if this one ENDS in a phonetic explanation...
+    //            //    phonetic = foreign.Substring(lbIndex + 1);
+    //            //    phonetic = phonetic.Substring(0, phonetic.Length - 1); // get rid of that last ] char.
+    //            //    foreign = foreign.Substring(0, lbIndex - 1);
+    //            //}
+    //            myLibrary.AddNewTerm(new Term(native, foreign, phonetic), this);
+    //        }
+    //        catch {
+    //            AppDebugLog.LogError("Issue with imported term string: " + str);
+    //        }
+    //    }
+    //    SetMyLibraryAndGiveMyTermsRefToMe(myLibrary);
+    //}
 
     // Doers
     public void SetMyLibraryAndGiveMyTermsRefToMe(StudySetLibrary library) {
